@@ -19,7 +19,7 @@ tasks.withType<JavaCompile>().configureEach {
 application {
     // Use `./gradlew :limrun-java-example:run` to run `Main`
     // Use `./gradlew :limrun-java-example:run -Pexample=Something` to run `SomethingExample`
-    mainClass = "com.configure_me_limrun_v1.api.example.${
+    mainClass = "com.limrun.api.example.${
         if (project.hasProperty("example"))
             "${project.property("example")}Example"
         else
