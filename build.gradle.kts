@@ -8,8 +8,8 @@ repositories {
 }
 
 allprojects {
-    group = "com.CONFIGURE_ME_limrun_v1.api"
-    version = "0.0.1"
+    group = "com.limrun.api"
+    version = "0.0.1" // x-release-please-version
 }
 
 subprojects {

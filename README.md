@@ -1,31 +1,43 @@
 # Limrun Java API Library
 
-[![Maven Central](https://img.shields.io/maven-central/v/com.configure_me_limrun_v1.api/limrun-java)](https://central.sonatype.com/artifact/com.configure_me_limrun_v1.api/limrun-java/0.0.1)
-[![javadoc](https://javadoc.io/badge2/com.configure_me_limrun_v1.api/limrun-java/0.0.1/javadoc.svg)](https://javadoc.io/doc/com.configure_me_limrun_v1.api/limrun-java/0.0.1)
+<!-- x-release-please-start-version -->
+
+[![Maven Central](https://img.shields.io/maven-central/v/com.limrun.api/limrun-java)](https://central.sonatype.com/artifact/com.limrun.api/limrun-java/0.0.1)
+[![javadoc](https://javadoc.io/badge2/com.limrun.api/limrun-java/0.0.1/javadoc.svg)](https://javadoc.io/doc/com.limrun.api/limrun-java/0.0.1)
+
+<!-- x-release-please-end -->
 
 The Limrun Java SDK provides convenient access to the [Limrun REST API](https://lim.run) from applications written in Java.
 
 It is generated with [Stainless](https://www.stainless.com/).
 
-The REST API documentation can be found on [lim.run](https://lim.run). Javadocs are available on [javadoc.io](https://javadoc.io/doc/com.configure_me_limrun_v1.api/limrun-java/0.0.1).
+<!-- x-release-please-start-version -->
+
+The REST API documentation can be found on [lim.run](https://lim.run). Javadocs are available on [javadoc.io](https://javadoc.io/doc/com.limrun.api/limrun-java/0.0.1).
+
+<!-- x-release-please-end -->
 
 ## Installation
+
+<!-- x-release-please-start-version -->
 
 ### Gradle
 
 ```kotlin
-implementation("com.CONFIGURE_ME_limrun_v1.api:limrun-java:0.0.1")
+implementation("com.limrun.api:limrun-java:0.0.1")
 ```
 
 ### Maven
 
 ```xml
 <dependency>
-  <groupId>com.CONFIGURE_ME_limrun_v1.api</groupId>
+  <groupId>com.limrun.api</groupId>
   <artifactId>limrun-java</artifactId>
   <version>0.0.1</version>
 </dependency>
 ```
+
+<!-- x-release-please-end -->
 
 ## Requirements
 
@@ -34,10 +46,10 @@ This library requires Java 8 or later.
 ## Usage
 
 ```java
-import com.configure_me_limrun_v1.api.client.LimrunClient;
-import com.configure_me_limrun_v1.api.client.okhttp.LimrunOkHttpClient;
-import com.configure_me_limrun_v1.api.models.androidinstances.AndroidInstance;
-import com.configure_me_limrun_v1.api.models.androidinstances.AndroidInstanceCreateParams;
+import com.limrun.api.client.LimrunClient;
+import com.limrun.api.client.okhttp.LimrunOkHttpClient;
+import com.limrun.api.models.androidinstances.AndroidInstance;
+import com.limrun.api.models.androidinstances.AndroidInstanceCreateParams;
 
 // Configures using the `limrun.limToken` and `limrun.baseUrl` system properties
 // Or configures using the `LIM_TOKEN` and `LIMRUN_BASE_URL` environment variables
@@ -51,8 +63,8 @@ AndroidInstance androidInstance = client.androidInstances().create();
 Configure the client using system properties or environment variables:
 
 ```java
-import com.configure_me_limrun_v1.api.client.LimrunClient;
-import com.configure_me_limrun_v1.api.client.okhttp.LimrunOkHttpClient;
+import com.limrun.api.client.LimrunClient;
+import com.limrun.api.client.okhttp.LimrunOkHttpClient;
 
 // Configures using the `limrun.limToken` and `limrun.baseUrl` system properties
 // Or configures using the `LIM_TOKEN` and `LIMRUN_BASE_URL` environment variables
@@ -62,8 +74,8 @@ LimrunClient client = LimrunOkHttpClient.fromEnv();
 Or manually:
 
 ```java
-import com.configure_me_limrun_v1.api.client.LimrunClient;
-import com.configure_me_limrun_v1.api.client.okhttp.LimrunOkHttpClient;
+import com.limrun.api.client.LimrunClient;
+import com.limrun.api.client.okhttp.LimrunOkHttpClient;
 
 LimrunClient client = LimrunOkHttpClient.builder()
     .apiKey("My API Key")
@@ -73,8 +85,8 @@ LimrunClient client = LimrunOkHttpClient.builder()
 Or using a combination of the two approaches:
 
 ```java
-import com.configure_me_limrun_v1.api.client.LimrunClient;
-import com.configure_me_limrun_v1.api.client.okhttp.LimrunOkHttpClient;
+import com.limrun.api.client.LimrunClient;
+import com.limrun.api.client.okhttp.LimrunOkHttpClient;
 
 LimrunClient client = LimrunOkHttpClient.builder()
     // Configures using the `limrun.limToken` and `limrun.baseUrl` system properties
@@ -102,7 +114,7 @@ System properties take precedence over environment variables.
 To temporarily use a modified client configuration, while reusing the same connection and thread pools, call `withOptions()` on any client or service:
 
 ```java
-import com.configure_me_limrun_v1.api.client.LimrunClient;
+import com.limrun.api.client.LimrunClient;
 
 LimrunClient clientWithOptions = client.withOptions(optionsBuilder -> {
     optionsBuilder.baseUrl("https://example.com");
@@ -131,10 +143,10 @@ Because each class is immutable, builder modification will _never_ affect alread
 The default client is synchronous. To switch to asynchronous execution, call the `async()` method:
 
 ```java
-import com.configure_me_limrun_v1.api.client.LimrunClient;
-import com.configure_me_limrun_v1.api.client.okhttp.LimrunOkHttpClient;
-import com.configure_me_limrun_v1.api.models.androidinstances.AndroidInstance;
-import com.configure_me_limrun_v1.api.models.androidinstances.AndroidInstanceCreateParams;
+import com.limrun.api.client.LimrunClient;
+import com.limrun.api.client.okhttp.LimrunOkHttpClient;
+import com.limrun.api.models.androidinstances.AndroidInstance;
+import com.limrun.api.models.androidinstances.AndroidInstanceCreateParams;
 import java.util.concurrent.CompletableFuture;
 
 // Configures using the `limrun.limToken` and `limrun.baseUrl` system properties
@@ -147,10 +159,10 @@ CompletableFuture<AndroidInstance> androidInstance = client.async().androidInsta
 Or create an asynchronous client from the beginning:
 
 ```java
-import com.configure_me_limrun_v1.api.client.LimrunClientAsync;
-import com.configure_me_limrun_v1.api.client.okhttp.LimrunOkHttpClientAsync;
-import com.configure_me_limrun_v1.api.models.androidinstances.AndroidInstance;
-import com.configure_me_limrun_v1.api.models.androidinstances.AndroidInstanceCreateParams;
+import com.limrun.api.client.LimrunClientAsync;
+import com.limrun.api.client.okhttp.LimrunOkHttpClientAsync;
+import com.limrun.api.models.androidinstances.AndroidInstance;
+import com.limrun.api.models.androidinstances.AndroidInstanceCreateParams;
 import java.util.concurrent.CompletableFuture;
 
 // Configures using the `limrun.limToken` and `limrun.baseUrl` system properties
@@ -169,10 +181,10 @@ The SDK defines methods that deserialize responses into instances of Java classe
 To access this data, prefix any HTTP method call on a client or service with `withRawResponse()`:
 
 ```java
-import com.configure_me_limrun_v1.api.core.http.Headers;
-import com.configure_me_limrun_v1.api.core.http.HttpResponseFor;
-import com.configure_me_limrun_v1.api.models.androidinstances.AndroidInstance;
-import com.configure_me_limrun_v1.api.models.androidinstances.AndroidInstanceCreateParams;
+import com.limrun.api.core.http.Headers;
+import com.limrun.api.core.http.HttpResponseFor;
+import com.limrun.api.models.androidinstances.AndroidInstance;
+import com.limrun.api.models.androidinstances.AndroidInstanceCreateParams;
 
 HttpResponseFor<AndroidInstance> androidInstance = client.androidInstances().withRawResponse().create();
 
@@ -183,7 +195,7 @@ Headers headers = androidInstance.headers();
 You can still deserialize the response into an instance of a Java class if needed:
 
 ```java
-import com.configure_me_limrun_v1.api.models.androidinstances.AndroidInstance;
+import com.limrun.api.models.androidinstances.AndroidInstance;
 
 AndroidInstance parsedAndroidInstance = androidInstance.parse();
 ```
@@ -192,26 +204,26 @@ AndroidInstance parsedAndroidInstance = androidInstance.parse();
 
 The SDK throws custom unchecked exception types:
 
-- [`LimrunServiceException`](limrun-java-core/src/main/kotlin/com/configure_me_limrun_v1/api/errors/LimrunServiceException.kt): Base class for HTTP errors. See this table for which exception subclass is thrown for each HTTP status code:
+- [`LimrunServiceException`](limrun-java-core/src/main/kotlin/com/limrun/api/errors/LimrunServiceException.kt): Base class for HTTP errors. See this table for which exception subclass is thrown for each HTTP status code:
 
-  | Status | Exception                                                                                                                                  |
-  | ------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
-  | 400    | [`BadRequestException`](limrun-java-core/src/main/kotlin/com/configure_me_limrun_v1/api/errors/BadRequestException.kt)                     |
-  | 401    | [`UnauthorizedException`](limrun-java-core/src/main/kotlin/com/configure_me_limrun_v1/api/errors/UnauthorizedException.kt)                 |
-  | 403    | [`PermissionDeniedException`](limrun-java-core/src/main/kotlin/com/configure_me_limrun_v1/api/errors/PermissionDeniedException.kt)         |
-  | 404    | [`NotFoundException`](limrun-java-core/src/main/kotlin/com/configure_me_limrun_v1/api/errors/NotFoundException.kt)                         |
-  | 422    | [`UnprocessableEntityException`](limrun-java-core/src/main/kotlin/com/configure_me_limrun_v1/api/errors/UnprocessableEntityException.kt)   |
-  | 429    | [`RateLimitException`](limrun-java-core/src/main/kotlin/com/configure_me_limrun_v1/api/errors/RateLimitException.kt)                       |
-  | 5xx    | [`InternalServerException`](limrun-java-core/src/main/kotlin/com/configure_me_limrun_v1/api/errors/InternalServerException.kt)             |
-  | others | [`UnexpectedStatusCodeException`](limrun-java-core/src/main/kotlin/com/configure_me_limrun_v1/api/errors/UnexpectedStatusCodeException.kt) |
+  | Status | Exception                                                                                                                  |
+  | ------ | -------------------------------------------------------------------------------------------------------------------------- |
+  | 400    | [`BadRequestException`](limrun-java-core/src/main/kotlin/com/limrun/api/errors/BadRequestException.kt)                     |
+  | 401    | [`UnauthorizedException`](limrun-java-core/src/main/kotlin/com/limrun/api/errors/UnauthorizedException.kt)                 |
+  | 403    | [`PermissionDeniedException`](limrun-java-core/src/main/kotlin/com/limrun/api/errors/PermissionDeniedException.kt)         |
+  | 404    | [`NotFoundException`](limrun-java-core/src/main/kotlin/com/limrun/api/errors/NotFoundException.kt)                         |
+  | 422    | [`UnprocessableEntityException`](limrun-java-core/src/main/kotlin/com/limrun/api/errors/UnprocessableEntityException.kt)   |
+  | 429    | [`RateLimitException`](limrun-java-core/src/main/kotlin/com/limrun/api/errors/RateLimitException.kt)                       |
+  | 5xx    | [`InternalServerException`](limrun-java-core/src/main/kotlin/com/limrun/api/errors/InternalServerException.kt)             |
+  | others | [`UnexpectedStatusCodeException`](limrun-java-core/src/main/kotlin/com/limrun/api/errors/UnexpectedStatusCodeException.kt) |
 
-- [`LimrunIoException`](limrun-java-core/src/main/kotlin/com/configure_me_limrun_v1/api/errors/LimrunIoException.kt): I/O networking errors.
+- [`LimrunIoException`](limrun-java-core/src/main/kotlin/com/limrun/api/errors/LimrunIoException.kt): I/O networking errors.
 
-- [`LimrunRetryableException`](limrun-java-core/src/main/kotlin/com/configure_me_limrun_v1/api/errors/LimrunRetryableException.kt): Generic error indicating a failure that could be retried by the client.
+- [`LimrunRetryableException`](limrun-java-core/src/main/kotlin/com/limrun/api/errors/LimrunRetryableException.kt): Generic error indicating a failure that could be retried by the client.
 
-- [`LimrunInvalidDataException`](limrun-java-core/src/main/kotlin/com/configure_me_limrun_v1/api/errors/LimrunInvalidDataException.kt): Failure to interpret successfully parsed data. For example, when accessing a property that's supposed to be required, but the API unexpectedly omitted it from the response.
+- [`LimrunInvalidDataException`](limrun-java-core/src/main/kotlin/com/limrun/api/errors/LimrunInvalidDataException.kt): Failure to interpret successfully parsed data. For example, when accessing a property that's supposed to be required, but the API unexpectedly omitted it from the response.
 
-- [`LimrunException`](limrun-java-core/src/main/kotlin/com/configure_me_limrun_v1/api/errors/LimrunException.kt): Base class for all exceptions. Most errors will result in one of the previously mentioned ones, but completely generic errors may be thrown using the base class.
+- [`LimrunException`](limrun-java-core/src/main/kotlin/com/limrun/api/errors/LimrunException.kt): Base class for all exceptions. Most errors will result in one of the previously mentioned ones, but completely generic errors may be thrown using the base class.
 
 ## Logging
 
@@ -241,7 +253,7 @@ The SDK depends on [Jackson](https://github.com/FasterXML/jackson) for JSON seri
 
 The SDK throws an exception if it detects an incompatible Jackson version at runtime (e.g. if the default version was overridden in your Maven or Gradle config).
 
-If the SDK threw an exception, but you're _certain_ the version is compatible, then disable the version check using the `checkJacksonVersionCompatibility` on [`LimrunOkHttpClient`](limrun-java-client-okhttp/src/main/kotlin/com/configure_me_limrun_v1/api/client/okhttp/LimrunOkHttpClient.kt) or [`LimrunOkHttpClientAsync`](limrun-java-client-okhttp/src/main/kotlin/com/configure_me_limrun_v1/api/client/okhttp/LimrunOkHttpClientAsync.kt).
+If the SDK threw an exception, but you're _certain_ the version is compatible, then disable the version check using the `checkJacksonVersionCompatibility` on [`LimrunOkHttpClient`](limrun-java-client-okhttp/src/main/kotlin/com/limrun/api/client/okhttp/LimrunOkHttpClient.kt) or [`LimrunOkHttpClientAsync`](limrun-java-client-okhttp/src/main/kotlin/com/limrun/api/client/okhttp/LimrunOkHttpClientAsync.kt).
 
 > [!CAUTION]
 > We make no guarantee that the SDK works correctly when the Jackson version check is disabled.
@@ -265,8 +277,8 @@ The API may also explicitly instruct the SDK to retry or not retry a request.
 To set a custom number of retries, configure the client using the `maxRetries` method:
 
 ```java
-import com.configure_me_limrun_v1.api.client.LimrunClient;
-import com.configure_me_limrun_v1.api.client.okhttp.LimrunOkHttpClient;
+import com.limrun.api.client.LimrunClient;
+import com.limrun.api.client.okhttp.LimrunOkHttpClient;
 
 LimrunClient client = LimrunOkHttpClient.builder()
     .fromEnv()
@@ -281,7 +293,7 @@ Requests time out after 1 minute by default.
 To set a custom timeout, configure the method call using the `timeout` method:
 
 ```java
-import com.configure_me_limrun_v1.api.models.androidinstances.AndroidInstance;
+import com.limrun.api.models.androidinstances.AndroidInstance;
 
 AndroidInstance androidInstance = client.androidInstances().create(RequestOptions.builder().timeout(Duration.ofSeconds(30)).build());
 ```
@@ -289,8 +301,8 @@ AndroidInstance androidInstance = client.androidInstances().create(RequestOption
 Or configure the default for all method calls at the client level:
 
 ```java
-import com.configure_me_limrun_v1.api.client.LimrunClient;
-import com.configure_me_limrun_v1.api.client.okhttp.LimrunOkHttpClient;
+import com.limrun.api.client.LimrunClient;
+import com.limrun.api.client.okhttp.LimrunOkHttpClient;
 import java.time.Duration;
 
 LimrunClient client = LimrunOkHttpClient.builder()
@@ -304,8 +316,8 @@ LimrunClient client = LimrunOkHttpClient.builder()
 To route requests through a proxy, configure the client using the `proxy` method:
 
 ```java
-import com.configure_me_limrun_v1.api.client.LimrunClient;
-import com.configure_me_limrun_v1.api.client.okhttp.LimrunOkHttpClient;
+import com.limrun.api.client.LimrunClient;
+import com.limrun.api.client.okhttp.LimrunOkHttpClient;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 
@@ -328,8 +340,8 @@ LimrunClient client = LimrunOkHttpClient.builder()
 To configure how HTTPS connections are secured, configure the client using the `sslSocketFactory`, `trustManager`, and `hostnameVerifier` methods:
 
 ```java
-import com.configure_me_limrun_v1.api.client.LimrunClient;
-import com.configure_me_limrun_v1.api.client.okhttp.LimrunOkHttpClient;
+import com.limrun.api.client.LimrunClient;
+import com.limrun.api.client.okhttp.LimrunOkHttpClient;
 
 LimrunClient client = LimrunOkHttpClient.builder()
     .fromEnv()
@@ -347,10 +359,10 @@ The SDK consists of three artifacts:
 - `limrun-java-core`
   - Contains core SDK logic
   - Does not depend on [OkHttp](https://square.github.io/okhttp)
-  - Exposes [`LimrunClient`](limrun-java-core/src/main/kotlin/com/configure_me_limrun_v1/api/client/LimrunClient.kt), [`LimrunClientAsync`](limrun-java-core/src/main/kotlin/com/configure_me_limrun_v1/api/client/LimrunClientAsync.kt), [`LimrunClientImpl`](limrun-java-core/src/main/kotlin/com/configure_me_limrun_v1/api/client/LimrunClientImpl.kt), and [`LimrunClientAsyncImpl`](limrun-java-core/src/main/kotlin/com/configure_me_limrun_v1/api/client/LimrunClientAsyncImpl.kt), all of which can work with any HTTP client
+  - Exposes [`LimrunClient`](limrun-java-core/src/main/kotlin/com/limrun/api/client/LimrunClient.kt), [`LimrunClientAsync`](limrun-java-core/src/main/kotlin/com/limrun/api/client/LimrunClientAsync.kt), [`LimrunClientImpl`](limrun-java-core/src/main/kotlin/com/limrun/api/client/LimrunClientImpl.kt), and [`LimrunClientAsyncImpl`](limrun-java-core/src/main/kotlin/com/limrun/api/client/LimrunClientAsyncImpl.kt), all of which can work with any HTTP client
 - `limrun-java-client-okhttp`
   - Depends on [OkHttp](https://square.github.io/okhttp)
-  - Exposes [`LimrunOkHttpClient`](limrun-java-client-okhttp/src/main/kotlin/com/configure_me_limrun_v1/api/client/okhttp/LimrunOkHttpClient.kt) and [`LimrunOkHttpClientAsync`](limrun-java-client-okhttp/src/main/kotlin/com/configure_me_limrun_v1/api/client/okhttp/LimrunOkHttpClientAsync.kt), which provide a way to construct [`LimrunClientImpl`](limrun-java-core/src/main/kotlin/com/configure_me_limrun_v1/api/client/LimrunClientImpl.kt) and [`LimrunClientAsyncImpl`](limrun-java-core/src/main/kotlin/com/configure_me_limrun_v1/api/client/LimrunClientAsyncImpl.kt), respectively, using OkHttp
+  - Exposes [`LimrunOkHttpClient`](limrun-java-client-okhttp/src/main/kotlin/com/limrun/api/client/okhttp/LimrunOkHttpClient.kt) and [`LimrunOkHttpClientAsync`](limrun-java-client-okhttp/src/main/kotlin/com/limrun/api/client/okhttp/LimrunOkHttpClientAsync.kt), which provide a way to construct [`LimrunClientImpl`](limrun-java-core/src/main/kotlin/com/limrun/api/client/LimrunClientImpl.kt) and [`LimrunClientAsyncImpl`](limrun-java-core/src/main/kotlin/com/limrun/api/client/LimrunClientAsyncImpl.kt), respectively, using OkHttp
 - `limrun-java`
   - Depends on and exposes the APIs of both `limrun-java-core` and `limrun-java-client-okhttp`
   - Does not have its own logic
@@ -365,16 +377,16 @@ This structure allows replacing the SDK's default HTTP client without pulling in
 To use a customized `OkHttpClient`:
 
 1. Replace your [`limrun-java` dependency](#installation) with `limrun-java-core`
-2. Copy `limrun-java-client-okhttp`'s [`OkHttpClient`](limrun-java-client-okhttp/src/main/kotlin/com/configure_me_limrun_v1/api/client/okhttp/OkHttpClient.kt) class into your code and customize it
-3. Construct [`LimrunClientImpl`](limrun-java-core/src/main/kotlin/com/configure_me_limrun_v1/api/client/LimrunClientImpl.kt) or [`LimrunClientAsyncImpl`](limrun-java-core/src/main/kotlin/com/configure_me_limrun_v1/api/client/LimrunClientAsyncImpl.kt), similarly to [`LimrunOkHttpClient`](limrun-java-client-okhttp/src/main/kotlin/com/configure_me_limrun_v1/api/client/okhttp/LimrunOkHttpClient.kt) or [`LimrunOkHttpClientAsync`](limrun-java-client-okhttp/src/main/kotlin/com/configure_me_limrun_v1/api/client/okhttp/LimrunOkHttpClientAsync.kt), using your customized client
+2. Copy `limrun-java-client-okhttp`'s [`OkHttpClient`](limrun-java-client-okhttp/src/main/kotlin/com/limrun/api/client/okhttp/OkHttpClient.kt) class into your code and customize it
+3. Construct [`LimrunClientImpl`](limrun-java-core/src/main/kotlin/com/limrun/api/client/LimrunClientImpl.kt) or [`LimrunClientAsyncImpl`](limrun-java-core/src/main/kotlin/com/limrun/api/client/LimrunClientAsyncImpl.kt), similarly to [`LimrunOkHttpClient`](limrun-java-client-okhttp/src/main/kotlin/com/limrun/api/client/okhttp/LimrunOkHttpClient.kt) or [`LimrunOkHttpClientAsync`](limrun-java-client-okhttp/src/main/kotlin/com/limrun/api/client/okhttp/LimrunOkHttpClientAsync.kt), using your customized client
 
 ### Completely custom HTTP client
 
 To use a completely custom HTTP client:
 
 1. Replace your [`limrun-java` dependency](#installation) with `limrun-java-core`
-2. Write a class that implements the [`HttpClient`](limrun-java-core/src/main/kotlin/com/configure_me_limrun_v1/api/core/http/HttpClient.kt) interface
-3. Construct [`LimrunClientImpl`](limrun-java-core/src/main/kotlin/com/configure_me_limrun_v1/api/client/LimrunClientImpl.kt) or [`LimrunClientAsyncImpl`](limrun-java-core/src/main/kotlin/com/configure_me_limrun_v1/api/client/LimrunClientAsyncImpl.kt), similarly to [`LimrunOkHttpClient`](limrun-java-client-okhttp/src/main/kotlin/com/configure_me_limrun_v1/api/client/okhttp/LimrunOkHttpClient.kt) or [`LimrunOkHttpClientAsync`](limrun-java-client-okhttp/src/main/kotlin/com/configure_me_limrun_v1/api/client/okhttp/LimrunOkHttpClientAsync.kt), using your new client class
+2. Write a class that implements the [`HttpClient`](limrun-java-core/src/main/kotlin/com/limrun/api/core/http/HttpClient.kt) interface
+3. Construct [`LimrunClientImpl`](limrun-java-core/src/main/kotlin/com/limrun/api/client/LimrunClientImpl.kt) or [`LimrunClientAsyncImpl`](limrun-java-core/src/main/kotlin/com/limrun/api/client/LimrunClientAsyncImpl.kt), similarly to [`LimrunOkHttpClient`](limrun-java-client-okhttp/src/main/kotlin/com/limrun/api/client/okhttp/LimrunOkHttpClient.kt) or [`LimrunOkHttpClientAsync`](limrun-java-client-okhttp/src/main/kotlin/com/limrun/api/client/okhttp/LimrunOkHttpClientAsync.kt), using your new client class
 
 ## Undocumented API functionality
 
@@ -385,8 +397,8 @@ The SDK is typed for convenient usage of the documented API. However, it also su
 To set undocumented parameters, call the `putAdditionalHeader`, `putAdditionalQueryParam`, or `putAdditionalBodyProperty` methods on any `Params` class:
 
 ```java
-import com.configure_me_limrun_v1.api.core.JsonValue;
-import com.configure_me_limrun_v1.api.models.androidinstances.AndroidInstanceCreateParams;
+import com.limrun.api.core.JsonValue;
+import com.limrun.api.models.androidinstances.AndroidInstanceCreateParams;
 
 AndroidInstanceCreateParams params = AndroidInstanceCreateParams.builder()
     .putAdditionalHeader("Secret-Header", "42")
@@ -400,8 +412,8 @@ These can be accessed on the built object later using the `_additionalHeaders()`
 To set undocumented parameters on _nested_ headers, query params, or body classes, call the `putAdditionalProperty` method on the nested class:
 
 ```java
-import com.configure_me_limrun_v1.api.core.JsonValue;
-import com.configure_me_limrun_v1.api.models.androidinstances.AndroidInstanceCreateParams;
+import com.limrun.api.core.JsonValue;
+import com.limrun.api.models.androidinstances.AndroidInstanceCreateParams;
 
 AndroidInstanceCreateParams params = AndroidInstanceCreateParams.builder()
     .metadata(AndroidInstanceCreateParams.Metadata.builder()
@@ -412,18 +424,18 @@ AndroidInstanceCreateParams params = AndroidInstanceCreateParams.builder()
 
 These properties can be accessed on the nested built object later using the `_additionalProperties()` method.
 
-To set a documented parameter or property to an undocumented or not yet supported _value_, pass a [`JsonValue`](limrun-java-core/src/main/kotlin/com/configure_me_limrun_v1/api/core/Values.kt) object to its setter:
+To set a documented parameter or property to an undocumented or not yet supported _value_, pass a [`JsonValue`](limrun-java-core/src/main/kotlin/com/limrun/api/core/Values.kt) object to its setter:
 
 ```java
-import com.configure_me_limrun_v1.api.models.androidinstances.AndroidInstanceCreateParams;
+import com.limrun.api.models.androidinstances.AndroidInstanceCreateParams;
 
 AndroidInstanceCreateParams params = AndroidInstanceCreateParams.builder().build();
 ```
 
-The most straightforward way to create a [`JsonValue`](limrun-java-core/src/main/kotlin/com/configure_me_limrun_v1/api/core/Values.kt) is using its `from(...)` method:
+The most straightforward way to create a [`JsonValue`](limrun-java-core/src/main/kotlin/com/limrun/api/core/Values.kt) is using its `from(...)` method:
 
 ```java
-import com.configure_me_limrun_v1.api.core.JsonValue;
+import com.limrun.api.core.JsonValue;
 import java.util.List;
 import java.util.Map;
 
@@ -461,12 +473,12 @@ JsonValue complexValue = JsonValue.from(Map.of(
 
 Normally a `Builder` class's `build` method will throw [`IllegalStateException`](https://docs.oracle.com/javase/8/docs/api/java/lang/IllegalStateException.html) if any required parameter or property is unset.
 
-To forcibly omit a required parameter or property, pass [`JsonMissing`](limrun-java-core/src/main/kotlin/com/configure_me_limrun_v1/api/core/Values.kt):
+To forcibly omit a required parameter or property, pass [`JsonMissing`](limrun-java-core/src/main/kotlin/com/limrun/api/core/Values.kt):
 
 ```java
-import com.configure_me_limrun_v1.api.core.JsonMissing;
-import com.configure_me_limrun_v1.api.models.androidinstances.AndroidInstanceCreateParams;
-import com.configure_me_limrun_v1.api.models.androidinstances.AndroidInstanceDeleteParams;
+import com.limrun.api.core.JsonMissing;
+import com.limrun.api.models.androidinstances.AndroidInstanceCreateParams;
+import com.limrun.api.models.androidinstances.AndroidInstanceDeleteParams;
 
 AndroidInstanceCreateParams params = AndroidInstanceDeleteParams.builder()
     .id(JsonMissing.of())
@@ -478,7 +490,7 @@ AndroidInstanceCreateParams params = AndroidInstanceDeleteParams.builder()
 To access undocumented response properties, call the `_additionalProperties()` method:
 
 ```java
-import com.configure_me_limrun_v1.api.core.JsonValue;
+import com.limrun.api.core.JsonValue;
 import java.util.Map;
 
 Map<String, JsonValue> additionalProperties = client.androidInstances().create(params)._additionalProperties();
@@ -508,8 +520,8 @@ String result = secretPropertyValue.accept(new JsonValue.Visitor<>() {
 To access a property's raw JSON value, which may be undocumented, call its `_` prefixed method:
 
 ```java
-import com.configure_me_limrun_v1.api.core.JsonField;
-import com.configure_me_limrun_v1.api.models.androidinstances.AndroidInstanceCreateParams;
+import com.limrun.api.core.JsonField;
+import com.limrun.api.models.androidinstances.AndroidInstanceCreateParams;
 import java.util.Optional;
 
 JsonField<AndroidInstanceCreateParams.Metadata> metadata = client.androidInstances().create(params)._metadata();
@@ -532,12 +544,12 @@ if (metadata.isMissing()) {
 
 In rare cases, the API may return a response that doesn't match the expected type. For example, the SDK may expect a property to contain a `String`, but the API could return something else.
 
-By default, the SDK will not throw an exception in this case. It will throw [`LimrunInvalidDataException`](limrun-java-core/src/main/kotlin/com/configure_me_limrun_v1/api/errors/LimrunInvalidDataException.kt) only if you directly access the property.
+By default, the SDK will not throw an exception in this case. It will throw [`LimrunInvalidDataException`](limrun-java-core/src/main/kotlin/com/limrun/api/errors/LimrunInvalidDataException.kt) only if you directly access the property.
 
 If you would prefer to check that the response is completely well-typed upfront, then either call `validate()`:
 
 ```java
-import com.configure_me_limrun_v1.api.models.androidinstances.AndroidInstance;
+import com.limrun.api.models.androidinstances.AndroidInstance;
 
 AndroidInstance androidInstance = client.androidInstances().create(params).validate();
 ```
@@ -545,7 +557,7 @@ AndroidInstance androidInstance = client.androidInstances().create(params).valid
 Or configure the method call to validate the response using the `responseValidation` method:
 
 ```java
-import com.configure_me_limrun_v1.api.models.androidinstances.AndroidInstance;
+import com.limrun.api.models.androidinstances.AndroidInstance;
 
 AndroidInstance androidInstance = client.androidInstances().create(RequestOptions.builder().responseValidation(true).build());
 ```
@@ -553,8 +565,8 @@ AndroidInstance androidInstance = client.androidInstances().create(RequestOption
 Or configure the default for all method calls at the client level:
 
 ```java
-import com.configure_me_limrun_v1.api.client.LimrunClient;
-import com.configure_me_limrun_v1.api.client.okhttp.LimrunOkHttpClient;
+import com.limrun.api.client.LimrunClient;
+import com.limrun.api.client.okhttp.LimrunOkHttpClient;
 
 LimrunClient client = LimrunOkHttpClient.builder()
     .fromEnv()
@@ -600,4 +612,4 @@ This package generally follows [SemVer](https://semver.org/spec/v2.0.0.html) con
 
 We take backwards-compatibility seriously and work hard to ensure you can rely on a smooth upgrade experience.
 
-We are keen for your feedback; please open an [issue](https://www.github.com/stainless-sdks/limrun-v1-java/issues) with questions, bugs, or suggestions.
+We are keen for your feedback; please open an [issue](https://www.github.com/limrun-inc/java-sdk/issues) with questions, bugs, or suggestions.

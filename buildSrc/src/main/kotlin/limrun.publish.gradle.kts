@@ -27,9 +27,9 @@ configure<PublishingExtension> {
                 }
 
                 scm {
-                    connection.set("scm:git:git://github.com/stainless-sdks/limrun-v1-java.git")
-                    developerConnection.set("scm:git:git://github.com/stainless-sdks/limrun-v1-java.git")
-                    url.set("https://github.com/stainless-sdks/limrun-v1-java")
+                    connection.set("scm:git:git://github.com/limrun-inc/java-sdk.git")
+                    developerConnection.set("scm:git:git://github.com/limrun-inc/java-sdk.git")
+                    url.set("https://github.com/limrun-inc/java-sdk")
                 }
 
                 versionMapping {
