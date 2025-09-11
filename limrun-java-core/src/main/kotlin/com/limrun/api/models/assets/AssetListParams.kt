@@ -14,7 +14,6 @@ class AssetListParams
 private constructor(
     private val includeDownloadUrl: Boolean?,
     private val includeUploadUrl: Boolean?,
-    private val md5Filter: String?,
     private val nameFilter: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
@@ -25,9 +24,6 @@ private constructor(
 
     /** Toggles whether an upload URL should be included in the response */
     fun includeUploadUrl(): Optional<Boolean> = Optional.ofNullable(includeUploadUrl)
-
-    /** Query by file md5 */
-    fun md5Filter(): Optional<String> = Optional.ofNullable(md5Filter)
 
     /** Query by file name */
     fun nameFilter(): Optional<String> = Optional.ofNullable(nameFilter)
@@ -53,7 +49,6 @@ private constructor(
 
         private var includeDownloadUrl: Boolean? = null
         private var includeUploadUrl: Boolean? = null
-        private var md5Filter: String? = null
         private var nameFilter: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
@@ -62,7 +57,6 @@ private constructor(
         internal fun from(assetListParams: AssetListParams) = apply {
             includeDownloadUrl = assetListParams.includeDownloadUrl
             includeUploadUrl = assetListParams.includeUploadUrl
-            md5Filter = assetListParams.md5Filter
             nameFilter = assetListParams.nameFilter
             additionalHeaders = assetListParams.additionalHeaders.toBuilder()
             additionalQueryParams = assetListParams.additionalQueryParams.toBuilder()
@@ -103,12 +97,6 @@ private constructor(
         /** Alias for calling [Builder.includeUploadUrl] with `includeUploadUrl.orElse(null)`. */
         fun includeUploadUrl(includeUploadUrl: Optional<Boolean>) =
             includeUploadUrl(includeUploadUrl.getOrNull())
-
-        /** Query by file md5 */
-        fun md5Filter(md5Filter: String?) = apply { this.md5Filter = md5Filter }
-
-        /** Alias for calling [Builder.md5Filter] with `md5Filter.orElse(null)`. */
-        fun md5Filter(md5Filter: Optional<String>) = md5Filter(md5Filter.getOrNull())
 
         /** Query by file name */
         fun nameFilter(nameFilter: String?) = apply { this.nameFilter = nameFilter }
@@ -223,7 +211,6 @@ private constructor(
             AssetListParams(
                 includeDownloadUrl,
                 includeUploadUrl,
-                md5Filter,
                 nameFilter,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -237,7 +224,6 @@ private constructor(
             .apply {
                 includeDownloadUrl?.let { put("includeDownloadUrl", it.toString()) }
                 includeUploadUrl?.let { put("includeUploadUrl", it.toString()) }
-                md5Filter?.let { put("md5Filter", it) }
                 nameFilter?.let { put("nameFilter", it) }
                 putAll(additionalQueryParams)
             }
@@ -251,7 +237,6 @@ private constructor(
         return other is AssetListParams &&
             includeDownloadUrl == other.includeDownloadUrl &&
             includeUploadUrl == other.includeUploadUrl &&
-            md5Filter == other.md5Filter &&
             nameFilter == other.nameFilter &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
@@ -261,12 +246,11 @@ private constructor(
         Objects.hash(
             includeDownloadUrl,
             includeUploadUrl,
-            md5Filter,
             nameFilter,
             additionalHeaders,
             additionalQueryParams,
         )
 
     override fun toString() =
-        "AssetListParams{includeDownloadUrl=$includeDownloadUrl, includeUploadUrl=$includeUploadUrl, md5Filter=$md5Filter, nameFilter=$nameFilter, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "AssetListParams{includeDownloadUrl=$includeDownloadUrl, includeUploadUrl=$includeUploadUrl, nameFilter=$nameFilter, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }
