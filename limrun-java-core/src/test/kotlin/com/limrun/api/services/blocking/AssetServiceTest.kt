@@ -29,7 +29,6 @@ internal class AssetServiceTest {
                 AssetListParams.builder()
                     .includeDownloadUrl(true)
                     .includeUploadUrl(true)
-                    .md5Filter("md5Filter")
                     .nameFilter("nameFilter")
                     .build()
             )
