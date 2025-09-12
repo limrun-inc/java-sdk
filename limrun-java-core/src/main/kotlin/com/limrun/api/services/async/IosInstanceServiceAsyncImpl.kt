@@ -17,13 +17,11 @@ import com.limrun.api.core.http.HttpResponseFor
 import com.limrun.api.core.http.json
 import com.limrun.api.core.http.parseable
 import com.limrun.api.core.prepareAsync
+import com.limrun.api.models.iosinstances.IosInstance
 import com.limrun.api.models.iosinstances.IosInstanceCreateParams
-import com.limrun.api.models.iosinstances.IosInstanceCreateResponse
 import com.limrun.api.models.iosinstances.IosInstanceDeleteParams
 import com.limrun.api.models.iosinstances.IosInstanceGetParams
-import com.limrun.api.models.iosinstances.IosInstanceGetResponse
 import com.limrun.api.models.iosinstances.IosInstanceListParams
-import com.limrun.api.models.iosinstances.IosInstanceListResponse
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
@@ -43,14 +41,14 @@ class IosInstanceServiceAsyncImpl internal constructor(private val clientOptions
     override fun create(
         params: IosInstanceCreateParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<IosInstanceCreateResponse> =
+    ): CompletableFuture<IosInstance> =
         // post /v1/ios_instances
         withRawResponse().create(params, requestOptions).thenApply { it.parse() }
 
     override fun list(
         params: IosInstanceListParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<List<IosInstanceListResponse>> =
+    ): CompletableFuture<List<IosInstance>> =
         // get /v1/ios_instances
         withRawResponse().list(params, requestOptions).thenApply { it.parse() }
 
@@ -64,7 +62,7 @@ class IosInstanceServiceAsyncImpl internal constructor(private val clientOptions
     override fun get(
         params: IosInstanceGetParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<IosInstanceGetResponse> =
+    ): CompletableFuture<IosInstance> =
         // get /v1/ios_instances/{id}
         withRawResponse().get(params, requestOptions).thenApply { it.parse() }
 
@@ -81,13 +79,13 @@ class IosInstanceServiceAsyncImpl internal constructor(private val clientOptions
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
 
-        private val createHandler: Handler<IosInstanceCreateResponse> =
-            jsonHandler<IosInstanceCreateResponse>(clientOptions.jsonMapper)
+        private val createHandler: Handler<IosInstance> =
+            jsonHandler<IosInstance>(clientOptions.jsonMapper)
 
         override fun create(
             params: IosInstanceCreateParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<IosInstanceCreateResponse>> {
+        ): CompletableFuture<HttpResponseFor<IosInstance>> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
@@ -112,13 +110,13 @@ class IosInstanceServiceAsyncImpl internal constructor(private val clientOptions
                 }
         }
 
-        private val listHandler: Handler<List<IosInstanceListResponse>> =
-            jsonHandler<List<IosInstanceListResponse>>(clientOptions.jsonMapper)
+        private val listHandler: Handler<List<IosInstance>> =
+            jsonHandler<List<IosInstance>>(clientOptions.jsonMapper)
 
         override fun list(
             params: IosInstanceListParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<List<IosInstanceListResponse>>> {
+        ): CompletableFuture<HttpResponseFor<List<IosInstance>>> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
@@ -169,13 +167,13 @@ class IosInstanceServiceAsyncImpl internal constructor(private val clientOptions
                 }
         }
 
-        private val getHandler: Handler<IosInstanceGetResponse> =
-            jsonHandler<IosInstanceGetResponse>(clientOptions.jsonMapper)
+        private val getHandler: Handler<IosInstance> =
+            jsonHandler<IosInstance>(clientOptions.jsonMapper)
 
         override fun get(
             params: IosInstanceGetParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<IosInstanceGetResponse>> {
+        ): CompletableFuture<HttpResponseFor<IosInstance>> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())

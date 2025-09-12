@@ -7,13 +7,11 @@ import com.limrun.api.core.ClientOptions
 import com.limrun.api.core.RequestOptions
 import com.limrun.api.core.http.HttpResponse
 import com.limrun.api.core.http.HttpResponseFor
+import com.limrun.api.models.iosinstances.IosInstance
 import com.limrun.api.models.iosinstances.IosInstanceCreateParams
-import com.limrun.api.models.iosinstances.IosInstanceCreateResponse
 import com.limrun.api.models.iosinstances.IosInstanceDeleteParams
 import com.limrun.api.models.iosinstances.IosInstanceGetParams
-import com.limrun.api.models.iosinstances.IosInstanceGetResponse
 import com.limrun.api.models.iosinstances.IosInstanceListParams
-import com.limrun.api.models.iosinstances.IosInstanceListResponse
 import java.util.function.Consumer
 
 interface IosInstanceService {
@@ -31,39 +29,37 @@ interface IosInstanceService {
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): IosInstanceService
 
     /** Create an iOS instance */
-    fun create(): IosInstanceCreateResponse = create(IosInstanceCreateParams.none())
+    fun create(): IosInstance = create(IosInstanceCreateParams.none())
 
     /** @see create */
     fun create(
         params: IosInstanceCreateParams = IosInstanceCreateParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): IosInstanceCreateResponse
+    ): IosInstance
 
     /** @see create */
-    fun create(
-        params: IosInstanceCreateParams = IosInstanceCreateParams.none()
-    ): IosInstanceCreateResponse = create(params, RequestOptions.none())
+    fun create(params: IosInstanceCreateParams = IosInstanceCreateParams.none()): IosInstance =
+        create(params, RequestOptions.none())
 
     /** @see create */
-    fun create(requestOptions: RequestOptions): IosInstanceCreateResponse =
+    fun create(requestOptions: RequestOptions): IosInstance =
         create(IosInstanceCreateParams.none(), requestOptions)
 
     /** List iOS instances */
-    fun list(): List<IosInstanceListResponse> = list(IosInstanceListParams.none())
+    fun list(): List<IosInstance> = list(IosInstanceListParams.none())
 
     /** @see list */
     fun list(
         params: IosInstanceListParams = IosInstanceListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): List<IosInstanceListResponse>
+    ): List<IosInstance>
 
     /** @see list */
-    fun list(
-        params: IosInstanceListParams = IosInstanceListParams.none()
-    ): List<IosInstanceListResponse> = list(params, RequestOptions.none())
+    fun list(params: IosInstanceListParams = IosInstanceListParams.none()): List<IosInstance> =
+        list(params, RequestOptions.none())
 
     /** @see list */
-    fun list(requestOptions: RequestOptions): List<IosInstanceListResponse> =
+    fun list(requestOptions: RequestOptions): List<IosInstance> =
         list(IosInstanceListParams.none(), requestOptions)
 
     /** Delete iOS instance with given name */
@@ -94,33 +90,30 @@ interface IosInstanceService {
         delete(id, IosInstanceDeleteParams.none(), requestOptions)
 
     /** Get iOS instance with given ID */
-    fun get(id: String): IosInstanceGetResponse = get(id, IosInstanceGetParams.none())
+    fun get(id: String): IosInstance = get(id, IosInstanceGetParams.none())
 
     /** @see get */
     fun get(
         id: String,
         params: IosInstanceGetParams = IosInstanceGetParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): IosInstanceGetResponse = get(params.toBuilder().id(id).build(), requestOptions)
+    ): IosInstance = get(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see get */
-    fun get(
-        id: String,
-        params: IosInstanceGetParams = IosInstanceGetParams.none(),
-    ): IosInstanceGetResponse = get(id, params, RequestOptions.none())
+    fun get(id: String, params: IosInstanceGetParams = IosInstanceGetParams.none()): IosInstance =
+        get(id, params, RequestOptions.none())
 
     /** @see get */
     fun get(
         params: IosInstanceGetParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): IosInstanceGetResponse
+    ): IosInstance
 
     /** @see get */
-    fun get(params: IosInstanceGetParams): IosInstanceGetResponse =
-        get(params, RequestOptions.none())
+    fun get(params: IosInstanceGetParams): IosInstance = get(params, RequestOptions.none())
 
     /** @see get */
-    fun get(id: String, requestOptions: RequestOptions): IosInstanceGetResponse =
+    fun get(id: String, requestOptions: RequestOptions): IosInstance =
         get(id, IosInstanceGetParams.none(), requestOptions)
 
     /**
@@ -142,25 +135,24 @@ interface IosInstanceService {
          * [IosInstanceService.create].
          */
         @MustBeClosed
-        fun create(): HttpResponseFor<IosInstanceCreateResponse> =
-            create(IosInstanceCreateParams.none())
+        fun create(): HttpResponseFor<IosInstance> = create(IosInstanceCreateParams.none())
 
         /** @see create */
         @MustBeClosed
         fun create(
             params: IosInstanceCreateParams = IosInstanceCreateParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<IosInstanceCreateResponse>
+        ): HttpResponseFor<IosInstance>
 
         /** @see create */
         @MustBeClosed
         fun create(
             params: IosInstanceCreateParams = IosInstanceCreateParams.none()
-        ): HttpResponseFor<IosInstanceCreateResponse> = create(params, RequestOptions.none())
+        ): HttpResponseFor<IosInstance> = create(params, RequestOptions.none())
 
         /** @see create */
         @MustBeClosed
-        fun create(requestOptions: RequestOptions): HttpResponseFor<IosInstanceCreateResponse> =
+        fun create(requestOptions: RequestOptions): HttpResponseFor<IosInstance> =
             create(IosInstanceCreateParams.none(), requestOptions)
 
         /**
@@ -168,25 +160,24 @@ interface IosInstanceService {
          * [IosInstanceService.list].
          */
         @MustBeClosed
-        fun list(): HttpResponseFor<List<IosInstanceListResponse>> =
-            list(IosInstanceListParams.none())
+        fun list(): HttpResponseFor<List<IosInstance>> = list(IosInstanceListParams.none())
 
         /** @see list */
         @MustBeClosed
         fun list(
             params: IosInstanceListParams = IosInstanceListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<List<IosInstanceListResponse>>
+        ): HttpResponseFor<List<IosInstance>>
 
         /** @see list */
         @MustBeClosed
         fun list(
             params: IosInstanceListParams = IosInstanceListParams.none()
-        ): HttpResponseFor<List<IosInstanceListResponse>> = list(params, RequestOptions.none())
+        ): HttpResponseFor<List<IosInstance>> = list(params, RequestOptions.none())
 
         /** @see list */
         @MustBeClosed
-        fun list(requestOptions: RequestOptions): HttpResponseFor<List<IosInstanceListResponse>> =
+        fun list(requestOptions: RequestOptions): HttpResponseFor<List<IosInstance>> =
             list(IosInstanceListParams.none(), requestOptions)
 
         /**
@@ -233,8 +224,7 @@ interface IosInstanceService {
          * as [IosInstanceService.get].
          */
         @MustBeClosed
-        fun get(id: String): HttpResponseFor<IosInstanceGetResponse> =
-            get(id, IosInstanceGetParams.none())
+        fun get(id: String): HttpResponseFor<IosInstance> = get(id, IosInstanceGetParams.none())
 
         /** @see get */
         @MustBeClosed
@@ -242,34 +232,30 @@ interface IosInstanceService {
             id: String,
             params: IosInstanceGetParams = IosInstanceGetParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<IosInstanceGetResponse> =
-            get(params.toBuilder().id(id).build(), requestOptions)
+        ): HttpResponseFor<IosInstance> = get(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see get */
         @MustBeClosed
         fun get(
             id: String,
             params: IosInstanceGetParams = IosInstanceGetParams.none(),
-        ): HttpResponseFor<IosInstanceGetResponse> = get(id, params, RequestOptions.none())
+        ): HttpResponseFor<IosInstance> = get(id, params, RequestOptions.none())
 
         /** @see get */
         @MustBeClosed
         fun get(
             params: IosInstanceGetParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<IosInstanceGetResponse>
+        ): HttpResponseFor<IosInstance>
 
         /** @see get */
         @MustBeClosed
-        fun get(params: IosInstanceGetParams): HttpResponseFor<IosInstanceGetResponse> =
+        fun get(params: IosInstanceGetParams): HttpResponseFor<IosInstance> =
             get(params, RequestOptions.none())
 
         /** @see get */
         @MustBeClosed
-        fun get(
-            id: String,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<IosInstanceGetResponse> =
+        fun get(id: String, requestOptions: RequestOptions): HttpResponseFor<IosInstance> =
             get(id, IosInstanceGetParams.none(), requestOptions)
     }
 }

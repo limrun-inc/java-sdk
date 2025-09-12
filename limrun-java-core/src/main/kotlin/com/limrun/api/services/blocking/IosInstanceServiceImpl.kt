@@ -17,13 +17,11 @@ import com.limrun.api.core.http.HttpResponseFor
 import com.limrun.api.core.http.json
 import com.limrun.api.core.http.parseable
 import com.limrun.api.core.prepare
+import com.limrun.api.models.iosinstances.IosInstance
 import com.limrun.api.models.iosinstances.IosInstanceCreateParams
-import com.limrun.api.models.iosinstances.IosInstanceCreateResponse
 import com.limrun.api.models.iosinstances.IosInstanceDeleteParams
 import com.limrun.api.models.iosinstances.IosInstanceGetParams
-import com.limrun.api.models.iosinstances.IosInstanceGetResponse
 import com.limrun.api.models.iosinstances.IosInstanceListParams
-import com.limrun.api.models.iosinstances.IosInstanceListResponse
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
@@ -42,14 +40,14 @@ class IosInstanceServiceImpl internal constructor(private val clientOptions: Cli
     override fun create(
         params: IosInstanceCreateParams,
         requestOptions: RequestOptions,
-    ): IosInstanceCreateResponse =
+    ): IosInstance =
         // post /v1/ios_instances
         withRawResponse().create(params, requestOptions).parse()
 
     override fun list(
         params: IosInstanceListParams,
         requestOptions: RequestOptions,
-    ): List<IosInstanceListResponse> =
+    ): List<IosInstance> =
         // get /v1/ios_instances
         withRawResponse().list(params, requestOptions).parse()
 
@@ -58,10 +56,7 @@ class IosInstanceServiceImpl internal constructor(private val clientOptions: Cli
         withRawResponse().delete(params, requestOptions)
     }
 
-    override fun get(
-        params: IosInstanceGetParams,
-        requestOptions: RequestOptions,
-    ): IosInstanceGetResponse =
+    override fun get(params: IosInstanceGetParams, requestOptions: RequestOptions): IosInstance =
         // get /v1/ios_instances/{id}
         withRawResponse().get(params, requestOptions).parse()
 
@@ -78,13 +73,13 @@ class IosInstanceServiceImpl internal constructor(private val clientOptions: Cli
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
 
-        private val createHandler: Handler<IosInstanceCreateResponse> =
-            jsonHandler<IosInstanceCreateResponse>(clientOptions.jsonMapper)
+        private val createHandler: Handler<IosInstance> =
+            jsonHandler<IosInstance>(clientOptions.jsonMapper)
 
         override fun create(
             params: IosInstanceCreateParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<IosInstanceCreateResponse> {
+        ): HttpResponseFor<IosInstance> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
@@ -106,13 +101,13 @@ class IosInstanceServiceImpl internal constructor(private val clientOptions: Cli
             }
         }
 
-        private val listHandler: Handler<List<IosInstanceListResponse>> =
-            jsonHandler<List<IosInstanceListResponse>>(clientOptions.jsonMapper)
+        private val listHandler: Handler<List<IosInstance>> =
+            jsonHandler<List<IosInstance>>(clientOptions.jsonMapper)
 
         override fun list(
             params: IosInstanceListParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<List<IosInstanceListResponse>> {
+        ): HttpResponseFor<List<IosInstance>> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
@@ -157,13 +152,13 @@ class IosInstanceServiceImpl internal constructor(private val clientOptions: Cli
             }
         }
 
-        private val getHandler: Handler<IosInstanceGetResponse> =
-            jsonHandler<IosInstanceGetResponse>(clientOptions.jsonMapper)
+        private val getHandler: Handler<IosInstance> =
+            jsonHandler<IosInstance>(clientOptions.jsonMapper)
 
         override fun get(
             params: IosInstanceGetParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<IosInstanceGetResponse> {
+        ): HttpResponseFor<IosInstance> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())

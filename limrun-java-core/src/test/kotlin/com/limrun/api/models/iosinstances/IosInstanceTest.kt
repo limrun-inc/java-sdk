@@ -9,20 +9,20 @@ import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-internal class IosInstanceListResponseTest {
+internal class IosInstanceTest {
 
     @Test
     fun create() {
-        val iosInstanceListResponse =
-            IosInstanceListResponse.builder()
+        val iosInstance =
+            IosInstance.builder()
                 .metadata(
-                    IosInstanceListResponse.Metadata.builder()
+                    IosInstance.Metadata.builder()
                         .id("id")
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .organizationId("organizationId")
                         .displayName("displayName")
                         .labels(
-                            IosInstanceListResponse.Metadata.Labels.builder()
+                            IosInstance.Metadata.Labels.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("string"))
                                 .build()
                         )
@@ -30,49 +30,49 @@ internal class IosInstanceListResponseTest {
                         .build()
                 )
                 .spec(
-                    IosInstanceListResponse.Spec.builder()
+                    IosInstance.Spec.builder()
                         .inactivityTimeout("inactivityTimeout")
                         .region("region")
                         .hardTimeout("hardTimeout")
                         .build()
                 )
                 .status(
-                    IosInstanceListResponse.Status.builder()
+                    IosInstance.Status.builder()
                         .token("token")
-                        .state(IosInstanceListResponse.Status.State.UNKNOWN)
+                        .state(IosInstance.Status.State.UNKNOWN)
                         .endpointWebSocketUrl("endpointWebSocketUrl")
                         .build()
                 )
                 .build()
 
-        assertThat(iosInstanceListResponse.metadata())
+        assertThat(iosInstance.metadata())
             .isEqualTo(
-                IosInstanceListResponse.Metadata.builder()
+                IosInstance.Metadata.builder()
                     .id("id")
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .organizationId("organizationId")
                     .displayName("displayName")
                     .labels(
-                        IosInstanceListResponse.Metadata.Labels.builder()
+                        IosInstance.Metadata.Labels.builder()
                             .putAdditionalProperty("foo", JsonValue.from("string"))
                             .build()
                     )
                     .terminatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .build()
             )
-        assertThat(iosInstanceListResponse.spec())
+        assertThat(iosInstance.spec())
             .isEqualTo(
-                IosInstanceListResponse.Spec.builder()
+                IosInstance.Spec.builder()
                     .inactivityTimeout("inactivityTimeout")
                     .region("region")
                     .hardTimeout("hardTimeout")
                     .build()
             )
-        assertThat(iosInstanceListResponse.status())
+        assertThat(iosInstance.status())
             .isEqualTo(
-                IosInstanceListResponse.Status.builder()
+                IosInstance.Status.builder()
                     .token("token")
-                    .state(IosInstanceListResponse.Status.State.UNKNOWN)
+                    .state(IosInstance.Status.State.UNKNOWN)
                     .endpointWebSocketUrl("endpointWebSocketUrl")
                     .build()
             )
@@ -81,16 +81,16 @@ internal class IosInstanceListResponseTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val iosInstanceListResponse =
-            IosInstanceListResponse.builder()
+        val iosInstance =
+            IosInstance.builder()
                 .metadata(
-                    IosInstanceListResponse.Metadata.builder()
+                    IosInstance.Metadata.builder()
                         .id("id")
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .organizationId("organizationId")
                         .displayName("displayName")
                         .labels(
-                            IosInstanceListResponse.Metadata.Labels.builder()
+                            IosInstance.Metadata.Labels.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("string"))
                                 .build()
                         )
@@ -98,27 +98,27 @@ internal class IosInstanceListResponseTest {
                         .build()
                 )
                 .spec(
-                    IosInstanceListResponse.Spec.builder()
+                    IosInstance.Spec.builder()
                         .inactivityTimeout("inactivityTimeout")
                         .region("region")
                         .hardTimeout("hardTimeout")
                         .build()
                 )
                 .status(
-                    IosInstanceListResponse.Status.builder()
+                    IosInstance.Status.builder()
                         .token("token")
-                        .state(IosInstanceListResponse.Status.State.UNKNOWN)
+                        .state(IosInstance.Status.State.UNKNOWN)
                         .endpointWebSocketUrl("endpointWebSocketUrl")
                         .build()
                 )
                 .build()
 
-        val roundtrippedIosInstanceListResponse =
+        val roundtrippedIosInstance =
             jsonMapper.readValue(
-                jsonMapper.writeValueAsString(iosInstanceListResponse),
-                jacksonTypeRef<IosInstanceListResponse>(),
+                jsonMapper.writeValueAsString(iosInstance),
+                jacksonTypeRef<IosInstance>(),
             )
 
-        assertThat(roundtrippedIosInstanceListResponse).isEqualTo(iosInstanceListResponse)
+        assertThat(roundtrippedIosInstance).isEqualTo(iosInstance)
     }
 }
