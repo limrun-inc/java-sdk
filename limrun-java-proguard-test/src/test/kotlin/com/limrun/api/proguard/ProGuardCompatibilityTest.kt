@@ -51,6 +51,7 @@ internal class ProGuardCompatibilityTest {
         assertThat(client).isNotNull()
         assertThat(client.androidInstances()).isNotNull()
         assertThat(client.assets()).isNotNull()
+        assertThat(client.iosInstances()).isNotNull()
     }
 
     @Test
