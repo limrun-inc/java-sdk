@@ -20,7 +20,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class IosInstanceGetResponse
+class IosInstance
 private constructor(
     private val metadata: JsonField<Metadata>,
     private val spec: JsonField<Spec>,
@@ -89,7 +89,7 @@ private constructor(
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of [IosInstanceGetResponse].
+         * Returns a mutable builder for constructing an instance of [IosInstance].
          *
          * The following fields are required:
          * ```java
@@ -101,7 +101,7 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [IosInstanceGetResponse]. */
+    /** A builder for [IosInstance]. */
     class Builder internal constructor() {
 
         private var metadata: JsonField<Metadata>? = null
@@ -110,11 +110,11 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(iosInstanceGetResponse: IosInstanceGetResponse) = apply {
-            metadata = iosInstanceGetResponse.metadata
-            spec = iosInstanceGetResponse.spec
-            status = iosInstanceGetResponse.status
-            additionalProperties = iosInstanceGetResponse.additionalProperties.toMutableMap()
+        internal fun from(iosInstance: IosInstance) = apply {
+            metadata = iosInstance.metadata
+            spec = iosInstance.spec
+            status = iosInstance.status
+            additionalProperties = iosInstance.additionalProperties.toMutableMap()
         }
 
         fun metadata(metadata: Metadata) = metadata(JsonField.of(metadata))
@@ -168,7 +168,7 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [IosInstanceGetResponse].
+         * Returns an immutable instance of [IosInstance].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          *
@@ -181,8 +181,8 @@ private constructor(
          *
          * @throws IllegalStateException if any required field is unset.
          */
-        fun build(): IosInstanceGetResponse =
-            IosInstanceGetResponse(
+        fun build(): IosInstance =
+            IosInstance(
                 checkRequired("metadata", metadata),
                 checkRequired("spec", spec),
                 checkRequired("status", status),
@@ -192,7 +192,7 @@ private constructor(
 
     private var validated: Boolean = false
 
-    fun validate(): IosInstanceGetResponse = apply {
+    fun validate(): IosInstance = apply {
         if (validated) {
             return@apply
         }
@@ -1324,7 +1324,7 @@ private constructor(
             return true
         }
 
-        return other is IosInstanceGetResponse &&
+        return other is IosInstance &&
             metadata == other.metadata &&
             spec == other.spec &&
             status == other.status &&
@@ -1336,5 +1336,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "IosInstanceGetResponse{metadata=$metadata, spec=$spec, status=$status, additionalProperties=$additionalProperties}"
+        "IosInstance{metadata=$metadata, spec=$spec, status=$status, additionalProperties=$additionalProperties}"
 }
