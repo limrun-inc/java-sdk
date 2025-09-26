@@ -17,6 +17,7 @@ import java.util.Objects
 import java.util.Optional
 
 class AssetGetOrCreateResponse
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val id: JsonField<String>,
     private val name: JsonField<String>,

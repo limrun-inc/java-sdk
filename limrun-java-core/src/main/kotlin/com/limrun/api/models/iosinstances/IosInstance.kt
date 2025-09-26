@@ -21,6 +21,7 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class IosInstance
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val metadata: JsonField<Metadata>,
     private val spec: JsonField<Spec>,
@@ -223,6 +224,7 @@ private constructor(
             (status.asKnown().getOrNull()?.validity() ?: 0)
 
     class Metadata
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val id: JsonField<String>,
         private val createdAt: JsonField<OffsetDateTime>,
@@ -684,6 +686,7 @@ private constructor(
     }
 
     class Spec
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val inactivityTimeout: JsonField<String>,
         private val region: JsonField<String>,
@@ -945,6 +948,7 @@ private constructor(
     }
 
     class Status
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val token: JsonField<String>,
         private val state: JsonField<State>,
