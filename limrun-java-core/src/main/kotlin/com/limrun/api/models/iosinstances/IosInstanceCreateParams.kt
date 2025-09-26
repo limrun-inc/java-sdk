@@ -283,6 +283,7 @@ private constructor(
             .build()
 
     class Body
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val metadata: JsonField<Metadata>,
         private val spec: JsonField<Spec>,
@@ -455,6 +456,7 @@ private constructor(
     }
 
     class Metadata
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val displayName: JsonField<String>,
         private val labels: JsonField<Labels>,
@@ -736,6 +738,7 @@ private constructor(
     }
 
     class Spec
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val clues: JsonField<List<Clue>>,
         private val hardTimeout: JsonField<String>,
@@ -1057,6 +1060,7 @@ private constructor(
                 (if (region.asKnown().isPresent) 1 else 0)
 
         class Clue
+        @JsonCreator(mode = JsonCreator.Mode.DISABLED)
         private constructor(
             private val kind: JsonField<Kind>,
             private val clientIp: JsonField<String>,
@@ -1373,6 +1377,7 @@ private constructor(
         }
 
         class InitialAsset
+        @JsonCreator(mode = JsonCreator.Mode.DISABLED)
         private constructor(
             private val kind: JsonField<Kind>,
             private val source: JsonField<Source>,
