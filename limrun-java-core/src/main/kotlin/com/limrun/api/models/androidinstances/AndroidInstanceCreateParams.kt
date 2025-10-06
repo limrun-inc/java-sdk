@@ -1384,7 +1384,9 @@ private constructor(
             private val kind: JsonField<Kind>,
             private val source: JsonField<Source>,
             private val assetName: JsonField<String>,
+            private val assetNames: JsonField<List<String>>,
             private val url: JsonField<String>,
+            private val urls: JsonField<List<String>>,
             private val additionalProperties: MutableMap<String, JsonValue>,
         ) {
 
@@ -1397,8 +1399,14 @@ private constructor(
                 @JsonProperty("assetName")
                 @ExcludeMissing
                 assetName: JsonField<String> = JsonMissing.of(),
+                @JsonProperty("assetNames")
+                @ExcludeMissing
+                assetNames: JsonField<List<String>> = JsonMissing.of(),
                 @JsonProperty("url") @ExcludeMissing url: JsonField<String> = JsonMissing.of(),
-            ) : this(kind, source, assetName, url, mutableMapOf())
+                @JsonProperty("urls")
+                @ExcludeMissing
+                urls: JsonField<List<String>> = JsonMissing.of(),
+            ) : this(kind, source, assetName, assetNames, url, urls, mutableMapOf())
 
             /**
              * @throws LimrunInvalidDataException if the JSON field has an unexpected type or is
@@ -1424,7 +1432,19 @@ private constructor(
              * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if
              *   the server responded with an unexpected value).
              */
+            fun assetNames(): Optional<List<String>> = assetNames.getOptional("assetNames")
+
+            /**
+             * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if
+             *   the server responded with an unexpected value).
+             */
             fun url(): Optional<String> = url.getOptional("url")
+
+            /**
+             * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if
+             *   the server responded with an unexpected value).
+             */
+            fun urls(): Optional<List<String>> = urls.getOptional("urls")
 
             /**
              * Returns the raw JSON value of [kind].
@@ -1451,11 +1471,28 @@ private constructor(
             fun _assetName(): JsonField<String> = assetName
 
             /**
+             * Returns the raw JSON value of [assetNames].
+             *
+             * Unlike [assetNames], this method doesn't throw if the JSON field has an unexpected
+             * type.
+             */
+            @JsonProperty("assetNames")
+            @ExcludeMissing
+            fun _assetNames(): JsonField<List<String>> = assetNames
+
+            /**
              * Returns the raw JSON value of [url].
              *
              * Unlike [url], this method doesn't throw if the JSON field has an unexpected type.
              */
             @JsonProperty("url") @ExcludeMissing fun _url(): JsonField<String> = url
+
+            /**
+             * Returns the raw JSON value of [urls].
+             *
+             * Unlike [urls], this method doesn't throw if the JSON field has an unexpected type.
+             */
+            @JsonProperty("urls") @ExcludeMissing fun _urls(): JsonField<List<String>> = urls
 
             @JsonAnySetter
             private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -1489,7 +1526,9 @@ private constructor(
                 private var kind: JsonField<Kind>? = null
                 private var source: JsonField<Source>? = null
                 private var assetName: JsonField<String> = JsonMissing.of()
+                private var assetNames: JsonField<MutableList<String>>? = null
                 private var url: JsonField<String> = JsonMissing.of()
+                private var urls: JsonField<MutableList<String>>? = null
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                 @JvmSynthetic
@@ -1497,7 +1536,9 @@ private constructor(
                     kind = initialAsset.kind
                     source = initialAsset.source
                     assetName = initialAsset.assetName
+                    assetNames = initialAsset.assetNames.map { it.toMutableList() }
                     url = initialAsset.url
+                    urls = initialAsset.urls.map { it.toMutableList() }
                     additionalProperties = initialAsset.additionalProperties.toMutableMap()
                 }
 
@@ -1534,6 +1575,31 @@ private constructor(
                  */
                 fun assetName(assetName: JsonField<String>) = apply { this.assetName = assetName }
 
+                fun assetNames(assetNames: List<String>) = assetNames(JsonField.of(assetNames))
+
+                /**
+                 * Sets [Builder.assetNames] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.assetNames] with a well-typed `List<String>`
+                 * value instead. This method is primarily for setting the field to an undocumented
+                 * or not yet supported value.
+                 */
+                fun assetNames(assetNames: JsonField<List<String>>) = apply {
+                    this.assetNames = assetNames.map { it.toMutableList() }
+                }
+
+                /**
+                 * Adds a single [String] to [assetNames].
+                 *
+                 * @throws IllegalStateException if the field was previously set to a non-list.
+                 */
+                fun addAssetName(assetName: String) = apply {
+                    assetNames =
+                        (assetNames ?: JsonField.of(mutableListOf())).also {
+                            checkKnown("assetNames", it).add(assetName)
+                        }
+                }
+
                 fun url(url: String) = url(JsonField.of(url))
 
                 /**
@@ -1544,6 +1610,31 @@ private constructor(
                  * supported value.
                  */
                 fun url(url: JsonField<String>) = apply { this.url = url }
+
+                fun urls(urls: List<String>) = urls(JsonField.of(urls))
+
+                /**
+                 * Sets [Builder.urls] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.urls] with a well-typed `List<String>` value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun urls(urls: JsonField<List<String>>) = apply {
+                    this.urls = urls.map { it.toMutableList() }
+                }
+
+                /**
+                 * Adds a single [String] to [urls].
+                 *
+                 * @throws IllegalStateException if the field was previously set to a non-list.
+                 */
+                fun addUrl(url: String) = apply {
+                    urls =
+                        (urls ?: JsonField.of(mutableListOf())).also {
+                            checkKnown("urls", it).add(url)
+                        }
+                }
 
                 fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                     this.additionalProperties.clear()
@@ -1585,7 +1676,9 @@ private constructor(
                         checkRequired("kind", kind),
                         checkRequired("source", source),
                         assetName,
+                        (assetNames ?: JsonMissing.of()).map { it.toImmutable() },
                         url,
+                        (urls ?: JsonMissing.of()).map { it.toImmutable() },
                         additionalProperties.toMutableMap(),
                     )
             }
@@ -1600,7 +1693,9 @@ private constructor(
                 kind().validate()
                 source().validate()
                 assetName()
+                assetNames()
                 url()
+                urls()
                 validated = true
             }
 
@@ -1623,7 +1718,9 @@ private constructor(
                 (kind.asKnown().getOrNull()?.validity() ?: 0) +
                     (source.asKnown().getOrNull()?.validity() ?: 0) +
                     (if (assetName.asKnown().isPresent) 1 else 0) +
-                    (if (url.asKnown().isPresent) 1 else 0)
+                    (assetNames.asKnown().getOrNull()?.size ?: 0) +
+                    (if (url.asKnown().isPresent) 1 else 0) +
+                    (urls.asKnown().getOrNull()?.size ?: 0)
 
             class Kind @JsonCreator private constructor(private val value: JsonField<String>) :
                 Enum {
@@ -1766,7 +1863,11 @@ private constructor(
 
                     @JvmField val URL = of("URL")
 
+                    @JvmField val URLS = of("URLs")
+
                     @JvmField val ASSET_NAME = of("AssetName")
+
+                    @JvmField val ASSET_NAMES = of("AssetNames")
 
                     @JvmStatic fun of(value: String) = Source(JsonField.of(value))
                 }
@@ -1774,7 +1875,9 @@ private constructor(
                 /** An enum containing [Source]'s known values. */
                 enum class Known {
                     URL,
+                    URLS,
                     ASSET_NAME,
+                    ASSET_NAMES,
                 }
 
                 /**
@@ -1788,7 +1891,9 @@ private constructor(
                  */
                 enum class Value {
                     URL,
+                    URLS,
                     ASSET_NAME,
+                    ASSET_NAMES,
                     /**
                      * An enum member indicating that [Source] was instantiated with an unknown
                      * value.
@@ -1806,7 +1911,9 @@ private constructor(
                 fun value(): Value =
                     when (this) {
                         URL -> Value.URL
+                        URLS -> Value.URLS
                         ASSET_NAME -> Value.ASSET_NAME
+                        ASSET_NAMES -> Value.ASSET_NAMES
                         else -> Value._UNKNOWN
                     }
 
@@ -1822,7 +1929,9 @@ private constructor(
                 fun known(): Known =
                     when (this) {
                         URL -> Known.URL
+                        URLS -> Known.URLS
                         ASSET_NAME -> Known.ASSET_NAME
+                        ASSET_NAMES -> Known.ASSET_NAMES
                         else -> throw LimrunInvalidDataException("Unknown Source: $value")
                     }
 
@@ -1889,18 +1998,20 @@ private constructor(
                     kind == other.kind &&
                     source == other.source &&
                     assetName == other.assetName &&
+                    assetNames == other.assetNames &&
                     url == other.url &&
+                    urls == other.urls &&
                     additionalProperties == other.additionalProperties
             }
 
             private val hashCode: Int by lazy {
-                Objects.hash(kind, source, assetName, url, additionalProperties)
+                Objects.hash(kind, source, assetName, assetNames, url, urls, additionalProperties)
             }
 
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "InitialAsset{kind=$kind, source=$source, assetName=$assetName, url=$url, additionalProperties=$additionalProperties}"
+                "InitialAsset{kind=$kind, source=$source, assetName=$assetName, assetNames=$assetNames, url=$url, urls=$urls, additionalProperties=$additionalProperties}"
         }
 
         override fun equals(other: Any?): Boolean {

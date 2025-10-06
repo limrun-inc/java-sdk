@@ -55,7 +55,9 @@ internal class AndroidInstanceServiceAsyncTest {
                                         AndroidInstanceCreateParams.Spec.InitialAsset.Source.URL
                                     )
                                     .assetName("assetName")
+                                    .addAssetName("string")
                                     .url("url")
+                                    .addUrl("string")
                                     .build()
                             )
                             .region("region")
