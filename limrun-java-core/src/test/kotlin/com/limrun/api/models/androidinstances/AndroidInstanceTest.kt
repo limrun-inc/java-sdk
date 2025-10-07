@@ -39,9 +39,9 @@ internal class AndroidInstanceTest {
                 .status(
                     AndroidInstance.Status.builder()
                         .token("token")
+                        .state(AndroidInstance.Status.State.UNKNOWN)
                         .adbWebSocketUrl("adbWebSocketUrl")
                         .endpointWebSocketUrl("endpointWebSocketUrl")
-                        .state(AndroidInstance.Status.State.UNKNOWN)
                         .build()
                 )
                 .build()
@@ -73,9 +73,9 @@ internal class AndroidInstanceTest {
             .isEqualTo(
                 AndroidInstance.Status.builder()
                     .token("token")
+                    .state(AndroidInstance.Status.State.UNKNOWN)
                     .adbWebSocketUrl("adbWebSocketUrl")
                     .endpointWebSocketUrl("endpointWebSocketUrl")
-                    .state(AndroidInstance.Status.State.UNKNOWN)
                     .build()
             )
     }
@@ -109,9 +109,9 @@ internal class AndroidInstanceTest {
                 .status(
                     AndroidInstance.Status.builder()
                         .token("token")
+                        .state(AndroidInstance.Status.State.UNKNOWN)
                         .adbWebSocketUrl("adbWebSocketUrl")
                         .endpointWebSocketUrl("endpointWebSocketUrl")
-                        .state(AndroidInstance.Status.State.UNKNOWN)
                         .build()
                 )
                 .build()
