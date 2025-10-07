@@ -39,8 +39,8 @@ internal class IosInstanceTest {
                 .status(
                     IosInstance.Status.builder()
                         .token("token")
-                        .state(IosInstance.Status.State.UNKNOWN)
                         .endpointWebSocketUrl("endpointWebSocketUrl")
+                        .state(IosInstance.Status.State.UNKNOWN)
                         .build()
                 )
                 .build()
@@ -72,8 +72,8 @@ internal class IosInstanceTest {
             .isEqualTo(
                 IosInstance.Status.builder()
                     .token("token")
-                    .state(IosInstance.Status.State.UNKNOWN)
                     .endpointWebSocketUrl("endpointWebSocketUrl")
+                    .state(IosInstance.Status.State.UNKNOWN)
                     .build()
             )
     }
@@ -107,8 +107,8 @@ internal class IosInstanceTest {
                 .status(
                     IosInstance.Status.builder()
                         .token("token")
-                        .state(IosInstance.Status.State.UNKNOWN)
                         .endpointWebSocketUrl("endpointWebSocketUrl")
+                        .state(IosInstance.Status.State.UNKNOWN)
                         .build()
                 )
                 .build()
