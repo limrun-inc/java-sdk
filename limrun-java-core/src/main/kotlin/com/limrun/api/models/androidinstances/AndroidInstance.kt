@@ -951,23 +951,23 @@ private constructor(
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val token: JsonField<String>,
-        private val state: JsonField<State>,
         private val adbWebSocketUrl: JsonField<String>,
         private val endpointWebSocketUrl: JsonField<String>,
+        private val state: JsonField<State>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
         @JsonCreator
         private constructor(
             @JsonProperty("token") @ExcludeMissing token: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("state") @ExcludeMissing state: JsonField<State> = JsonMissing.of(),
             @JsonProperty("adbWebSocketUrl")
             @ExcludeMissing
             adbWebSocketUrl: JsonField<String> = JsonMissing.of(),
             @JsonProperty("endpointWebSocketUrl")
             @ExcludeMissing
             endpointWebSocketUrl: JsonField<String> = JsonMissing.of(),
-        ) : this(token, state, adbWebSocketUrl, endpointWebSocketUrl, mutableMapOf())
+            @JsonProperty("state") @ExcludeMissing state: JsonField<State> = JsonMissing.of(),
+        ) : this(token, adbWebSocketUrl, endpointWebSocketUrl, state, mutableMapOf())
 
         /**
          * @throws LimrunInvalidDataException if the JSON field has an unexpected type or is
@@ -979,20 +979,20 @@ private constructor(
          * @throws LimrunInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
+        fun adbWebSocketUrl(): String = adbWebSocketUrl.getRequired("adbWebSocketUrl")
+
+        /**
+         * @throws LimrunInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun endpointWebSocketUrl(): String =
+            endpointWebSocketUrl.getRequired("endpointWebSocketUrl")
+
+        /**
+         * @throws LimrunInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
         fun state(): State = state.getRequired("state")
-
-        /**
-         * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
-         *   server responded with an unexpected value).
-         */
-        fun adbWebSocketUrl(): Optional<String> = adbWebSocketUrl.getOptional("adbWebSocketUrl")
-
-        /**
-         * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
-         *   server responded with an unexpected value).
-         */
-        fun endpointWebSocketUrl(): Optional<String> =
-            endpointWebSocketUrl.getOptional("endpointWebSocketUrl")
 
         /**
          * Returns the raw JSON value of [token].
@@ -1000,13 +1000,6 @@ private constructor(
          * Unlike [token], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("token") @ExcludeMissing fun _token(): JsonField<String> = token
-
-        /**
-         * Returns the raw JSON value of [state].
-         *
-         * Unlike [state], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("state") @ExcludeMissing fun _state(): JsonField<State> = state
 
         /**
          * Returns the raw JSON value of [adbWebSocketUrl].
@@ -1028,6 +1021,13 @@ private constructor(
         @ExcludeMissing
         fun _endpointWebSocketUrl(): JsonField<String> = endpointWebSocketUrl
 
+        /**
+         * Returns the raw JSON value of [state].
+         *
+         * Unlike [state], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("state") @ExcludeMissing fun _state(): JsonField<State> = state
+
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
             additionalProperties.put(key, value)
@@ -1048,6 +1048,8 @@ private constructor(
              * The following fields are required:
              * ```java
              * .token()
+             * .adbWebSocketUrl()
+             * .endpointWebSocketUrl()
              * .state()
              * ```
              */
@@ -1058,17 +1060,17 @@ private constructor(
         class Builder internal constructor() {
 
             private var token: JsonField<String>? = null
+            private var adbWebSocketUrl: JsonField<String>? = null
+            private var endpointWebSocketUrl: JsonField<String>? = null
             private var state: JsonField<State>? = null
-            private var adbWebSocketUrl: JsonField<String> = JsonMissing.of()
-            private var endpointWebSocketUrl: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
             internal fun from(status: Status) = apply {
                 token = status.token
-                state = status.state
                 adbWebSocketUrl = status.adbWebSocketUrl
                 endpointWebSocketUrl = status.endpointWebSocketUrl
+                state = status.state
                 additionalProperties = status.additionalProperties.toMutableMap()
             }
 
@@ -1082,17 +1084,6 @@ private constructor(
              * supported value.
              */
             fun token(token: JsonField<String>) = apply { this.token = token }
-
-            fun state(state: State) = state(JsonField.of(state))
-
-            /**
-             * Sets [Builder.state] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.state] with a well-typed [State] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
-             */
-            fun state(state: JsonField<State>) = apply { this.state = state }
 
             fun adbWebSocketUrl(adbWebSocketUrl: String) =
                 adbWebSocketUrl(JsonField.of(adbWebSocketUrl))
@@ -1122,6 +1113,17 @@ private constructor(
                 this.endpointWebSocketUrl = endpointWebSocketUrl
             }
 
+            fun state(state: State) = state(JsonField.of(state))
+
+            /**
+             * Sets [Builder.state] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.state] with a well-typed [State] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
+             */
+            fun state(state: JsonField<State>) = apply { this.state = state }
+
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
                 putAllAdditionalProperties(additionalProperties)
@@ -1149,6 +1151,8 @@ private constructor(
              * The following fields are required:
              * ```java
              * .token()
+             * .adbWebSocketUrl()
+             * .endpointWebSocketUrl()
              * .state()
              * ```
              *
@@ -1157,9 +1161,9 @@ private constructor(
             fun build(): Status =
                 Status(
                     checkRequired("token", token),
+                    checkRequired("adbWebSocketUrl", adbWebSocketUrl),
+                    checkRequired("endpointWebSocketUrl", endpointWebSocketUrl),
                     checkRequired("state", state),
-                    adbWebSocketUrl,
-                    endpointWebSocketUrl,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -1172,9 +1176,9 @@ private constructor(
             }
 
             token()
-            state().validate()
             adbWebSocketUrl()
             endpointWebSocketUrl()
+            state().validate()
             validated = true
         }
 
@@ -1195,9 +1199,9 @@ private constructor(
         @JvmSynthetic
         internal fun validity(): Int =
             (if (token.asKnown().isPresent) 1 else 0) +
-                (state.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (adbWebSocketUrl.asKnown().isPresent) 1 else 0) +
-                (if (endpointWebSocketUrl.asKnown().isPresent) 1 else 0)
+                (if (endpointWebSocketUrl.asKnown().isPresent) 1 else 0) +
+                (state.asKnown().getOrNull()?.validity() ?: 0)
 
         class State @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
@@ -1347,20 +1351,20 @@ private constructor(
 
             return other is Status &&
                 token == other.token &&
-                state == other.state &&
                 adbWebSocketUrl == other.adbWebSocketUrl &&
                 endpointWebSocketUrl == other.endpointWebSocketUrl &&
+                state == other.state &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(token, state, adbWebSocketUrl, endpointWebSocketUrl, additionalProperties)
+            Objects.hash(token, adbWebSocketUrl, endpointWebSocketUrl, state, additionalProperties)
         }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Status{token=$token, state=$state, adbWebSocketUrl=$adbWebSocketUrl, endpointWebSocketUrl=$endpointWebSocketUrl, additionalProperties=$additionalProperties}"
+            "Status{token=$token, adbWebSocketUrl=$adbWebSocketUrl, endpointWebSocketUrl=$endpointWebSocketUrl, state=$state, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

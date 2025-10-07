@@ -951,19 +951,19 @@ private constructor(
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val token: JsonField<String>,
-        private val state: JsonField<State>,
         private val endpointWebSocketUrl: JsonField<String>,
+        private val state: JsonField<State>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
         @JsonCreator
         private constructor(
             @JsonProperty("token") @ExcludeMissing token: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("state") @ExcludeMissing state: JsonField<State> = JsonMissing.of(),
             @JsonProperty("endpointWebSocketUrl")
             @ExcludeMissing
             endpointWebSocketUrl: JsonField<String> = JsonMissing.of(),
-        ) : this(token, state, endpointWebSocketUrl, mutableMapOf())
+            @JsonProperty("state") @ExcludeMissing state: JsonField<State> = JsonMissing.of(),
+        ) : this(token, endpointWebSocketUrl, state, mutableMapOf())
 
         /**
          * @throws LimrunInvalidDataException if the JSON field has an unexpected type or is
@@ -975,14 +975,14 @@ private constructor(
          * @throws LimrunInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
-        fun state(): State = state.getRequired("state")
+        fun endpointWebSocketUrl(): String =
+            endpointWebSocketUrl.getRequired("endpointWebSocketUrl")
 
         /**
-         * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
-         *   server responded with an unexpected value).
+         * @throws LimrunInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
-        fun endpointWebSocketUrl(): Optional<String> =
-            endpointWebSocketUrl.getOptional("endpointWebSocketUrl")
+        fun state(): State = state.getRequired("state")
 
         /**
          * Returns the raw JSON value of [token].
@@ -990,13 +990,6 @@ private constructor(
          * Unlike [token], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("token") @ExcludeMissing fun _token(): JsonField<String> = token
-
-        /**
-         * Returns the raw JSON value of [state].
-         *
-         * Unlike [state], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("state") @ExcludeMissing fun _state(): JsonField<State> = state
 
         /**
          * Returns the raw JSON value of [endpointWebSocketUrl].
@@ -1007,6 +1000,13 @@ private constructor(
         @JsonProperty("endpointWebSocketUrl")
         @ExcludeMissing
         fun _endpointWebSocketUrl(): JsonField<String> = endpointWebSocketUrl
+
+        /**
+         * Returns the raw JSON value of [state].
+         *
+         * Unlike [state], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("state") @ExcludeMissing fun _state(): JsonField<State> = state
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -1028,6 +1028,7 @@ private constructor(
              * The following fields are required:
              * ```java
              * .token()
+             * .endpointWebSocketUrl()
              * .state()
              * ```
              */
@@ -1038,15 +1039,15 @@ private constructor(
         class Builder internal constructor() {
 
             private var token: JsonField<String>? = null
+            private var endpointWebSocketUrl: JsonField<String>? = null
             private var state: JsonField<State>? = null
-            private var endpointWebSocketUrl: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
             internal fun from(status: Status) = apply {
                 token = status.token
-                state = status.state
                 endpointWebSocketUrl = status.endpointWebSocketUrl
+                state = status.state
                 additionalProperties = status.additionalProperties.toMutableMap()
             }
 
@@ -1061,17 +1062,6 @@ private constructor(
              */
             fun token(token: JsonField<String>) = apply { this.token = token }
 
-            fun state(state: State) = state(JsonField.of(state))
-
-            /**
-             * Sets [Builder.state] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.state] with a well-typed [State] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
-             */
-            fun state(state: JsonField<State>) = apply { this.state = state }
-
             fun endpointWebSocketUrl(endpointWebSocketUrl: String) =
                 endpointWebSocketUrl(JsonField.of(endpointWebSocketUrl))
 
@@ -1085,6 +1075,17 @@ private constructor(
             fun endpointWebSocketUrl(endpointWebSocketUrl: JsonField<String>) = apply {
                 this.endpointWebSocketUrl = endpointWebSocketUrl
             }
+
+            fun state(state: State) = state(JsonField.of(state))
+
+            /**
+             * Sets [Builder.state] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.state] with a well-typed [State] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
+             */
+            fun state(state: JsonField<State>) = apply { this.state = state }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
@@ -1113,6 +1114,7 @@ private constructor(
              * The following fields are required:
              * ```java
              * .token()
+             * .endpointWebSocketUrl()
              * .state()
              * ```
              *
@@ -1121,8 +1123,8 @@ private constructor(
             fun build(): Status =
                 Status(
                     checkRequired("token", token),
+                    checkRequired("endpointWebSocketUrl", endpointWebSocketUrl),
                     checkRequired("state", state),
-                    endpointWebSocketUrl,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -1135,8 +1137,8 @@ private constructor(
             }
 
             token()
-            state().validate()
             endpointWebSocketUrl()
+            state().validate()
             validated = true
         }
 
@@ -1157,8 +1159,8 @@ private constructor(
         @JvmSynthetic
         internal fun validity(): Int =
             (if (token.asKnown().isPresent) 1 else 0) +
-                (state.asKnown().getOrNull()?.validity() ?: 0) +
-                (if (endpointWebSocketUrl.asKnown().isPresent) 1 else 0)
+                (if (endpointWebSocketUrl.asKnown().isPresent) 1 else 0) +
+                (state.asKnown().getOrNull()?.validity() ?: 0)
 
         class State @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
@@ -1308,19 +1310,19 @@ private constructor(
 
             return other is Status &&
                 token == other.token &&
-                state == other.state &&
                 endpointWebSocketUrl == other.endpointWebSocketUrl &&
+                state == other.state &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(token, state, endpointWebSocketUrl, additionalProperties)
+            Objects.hash(token, endpointWebSocketUrl, state, additionalProperties)
         }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Status{token=$token, state=$state, endpointWebSocketUrl=$endpointWebSocketUrl, additionalProperties=$additionalProperties}"
+            "Status{token=$token, endpointWebSocketUrl=$endpointWebSocketUrl, state=$state, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {
