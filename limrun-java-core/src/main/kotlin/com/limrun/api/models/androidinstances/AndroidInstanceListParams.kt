@@ -16,12 +16,21 @@ import kotlin.jvm.optionals.getOrNull
 /** List Android instances belonging to given organization */
 class AndroidInstanceListParams
 private constructor(
+    private val endingBefore: String?,
     private val labelSelector: String?,
+    private val limit: Long?,
     private val region: String?,
+    private val startingAfter: String?,
     private val state: State?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
+
+    /**
+     * Return records up until this instance ID. If not given, it will return up until the 50th
+     * instance.
+     */
+    fun endingBefore(): Optional<String> = Optional.ofNullable(endingBefore)
 
     /**
      * Labels filter to apply to Android instances to return. Expects a comma-separated list of
@@ -29,8 +38,17 @@ private constructor(
      */
     fun labelSelector(): Optional<String> = Optional.ofNullable(labelSelector)
 
+    /** Maximum number of instances to be returned. The default is 50. */
+    fun limit(): Optional<Long> = Optional.ofNullable(limit)
+
     /** Region where the instance is scheduled on. */
     fun region(): Optional<String> = Optional.ofNullable(region)
+
+    /**
+     * Return records starting after this instance ID. If not given, it will start from the most
+     * recent one.
+     */
+    fun startingAfter(): Optional<String> = Optional.ofNullable(startingAfter)
 
     /** State filter to apply to Android instances to return. */
     fun state(): Optional<State> = Optional.ofNullable(state)
@@ -56,20 +74,35 @@ private constructor(
     /** A builder for [AndroidInstanceListParams]. */
     class Builder internal constructor() {
 
+        private var endingBefore: String? = null
         private var labelSelector: String? = null
+        private var limit: Long? = null
         private var region: String? = null
+        private var startingAfter: String? = null
         private var state: State? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
         internal fun from(androidInstanceListParams: AndroidInstanceListParams) = apply {
+            endingBefore = androidInstanceListParams.endingBefore
             labelSelector = androidInstanceListParams.labelSelector
+            limit = androidInstanceListParams.limit
             region = androidInstanceListParams.region
+            startingAfter = androidInstanceListParams.startingAfter
             state = androidInstanceListParams.state
             additionalHeaders = androidInstanceListParams.additionalHeaders.toBuilder()
             additionalQueryParams = androidInstanceListParams.additionalQueryParams.toBuilder()
         }
+
+        /**
+         * Return records up until this instance ID. If not given, it will return up until the 50th
+         * instance.
+         */
+        fun endingBefore(endingBefore: String?) = apply { this.endingBefore = endingBefore }
+
+        /** Alias for calling [Builder.endingBefore] with `endingBefore.orElse(null)`. */
+        fun endingBefore(endingBefore: Optional<String>) = endingBefore(endingBefore.getOrNull())
 
         /**
          * Labels filter to apply to Android instances to return. Expects a comma-separated list of
@@ -81,11 +114,34 @@ private constructor(
         fun labelSelector(labelSelector: Optional<String>) =
             labelSelector(labelSelector.getOrNull())
 
+        /** Maximum number of instances to be returned. The default is 50. */
+        fun limit(limit: Long?) = apply { this.limit = limit }
+
+        /**
+         * Alias for [Builder.limit].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
+        fun limit(limit: Long) = limit(limit as Long?)
+
+        /** Alias for calling [Builder.limit] with `limit.orElse(null)`. */
+        fun limit(limit: Optional<Long>) = limit(limit.getOrNull())
+
         /** Region where the instance is scheduled on. */
         fun region(region: String?) = apply { this.region = region }
 
         /** Alias for calling [Builder.region] with `region.orElse(null)`. */
         fun region(region: Optional<String>) = region(region.getOrNull())
+
+        /**
+         * Return records starting after this instance ID. If not given, it will start from the most
+         * recent one.
+         */
+        fun startingAfter(startingAfter: String?) = apply { this.startingAfter = startingAfter }
+
+        /** Alias for calling [Builder.startingAfter] with `startingAfter.orElse(null)`. */
+        fun startingAfter(startingAfter: Optional<String>) =
+            startingAfter(startingAfter.getOrNull())
 
         /** State filter to apply to Android instances to return. */
         fun state(state: State?) = apply { this.state = state }
@@ -198,8 +254,11 @@ private constructor(
          */
         fun build(): AndroidInstanceListParams =
             AndroidInstanceListParams(
+                endingBefore,
                 labelSelector,
+                limit,
                 region,
+                startingAfter,
                 state,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -211,8 +270,11 @@ private constructor(
     override fun _queryParams(): QueryParams =
         QueryParams.builder()
             .apply {
+                endingBefore?.let { put("endingBefore", it) }
                 labelSelector?.let { put("labelSelector", it) }
+                limit?.let { put("limit", it.toString()) }
                 region?.let { put("region", it) }
+                startingAfter?.let { put("startingAfter", it) }
                 state?.let { put("state", it.toString()) }
                 putAll(additionalQueryParams)
             }
@@ -362,16 +424,28 @@ private constructor(
         }
 
         return other is AndroidInstanceListParams &&
+            endingBefore == other.endingBefore &&
             labelSelector == other.labelSelector &&
+            limit == other.limit &&
             region == other.region &&
+            startingAfter == other.startingAfter &&
             state == other.state &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
-        Objects.hash(labelSelector, region, state, additionalHeaders, additionalQueryParams)
+        Objects.hash(
+            endingBefore,
+            labelSelector,
+            limit,
+            region,
+            startingAfter,
+            state,
+            additionalHeaders,
+            additionalQueryParams,
+        )
 
     override fun toString() =
-        "AndroidInstanceListParams{labelSelector=$labelSelector, region=$region, state=$state, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "AndroidInstanceListParams{endingBefore=$endingBefore, labelSelector=$labelSelector, limit=$limit, region=$region, startingAfter=$startingAfter, state=$state, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

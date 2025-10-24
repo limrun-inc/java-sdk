@@ -83,8 +83,11 @@ internal class AndroidInstanceServiceAsyncTest {
         val androidInstancesFuture =
             androidInstanceServiceAsync.list(
                 AndroidInstanceListParams.builder()
+                    .endingBefore("android_someid")
                     .labelSelector("env=prod,version=1.2")
+                    .limit(50L)
                     .region("region")
+                    .startingAfter("android_someid")
                     .state(AndroidInstanceListParams.State.UNKNOWN)
                     .build()
             )
