@@ -10,6 +10,7 @@ import com.limrun.api.models.iosinstances.IosInstance
 import com.limrun.api.models.iosinstances.IosInstanceCreateParams
 import com.limrun.api.models.iosinstances.IosInstanceDeleteParams
 import com.limrun.api.models.iosinstances.IosInstanceGetParams
+import com.limrun.api.models.iosinstances.IosInstanceListPageAsync
 import com.limrun.api.models.iosinstances.IosInstanceListParams
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
@@ -47,21 +48,21 @@ interface IosInstanceServiceAsync {
         create(IosInstanceCreateParams.none(), requestOptions)
 
     /** List iOS instances */
-    fun list(): CompletableFuture<List<IosInstance>> = list(IosInstanceListParams.none())
+    fun list(): CompletableFuture<IosInstanceListPageAsync> = list(IosInstanceListParams.none())
 
     /** @see list */
     fun list(
         params: IosInstanceListParams = IosInstanceListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<List<IosInstance>>
+    ): CompletableFuture<IosInstanceListPageAsync>
 
     /** @see list */
     fun list(
         params: IosInstanceListParams = IosInstanceListParams.none()
-    ): CompletableFuture<List<IosInstance>> = list(params, RequestOptions.none())
+    ): CompletableFuture<IosInstanceListPageAsync> = list(params, RequestOptions.none())
 
     /** @see list */
-    fun list(requestOptions: RequestOptions): CompletableFuture<List<IosInstance>> =
+    fun list(requestOptions: RequestOptions): CompletableFuture<IosInstanceListPageAsync> =
         list(IosInstanceListParams.none(), requestOptions)
 
     /** Delete iOS instance with given name */
@@ -167,25 +168,25 @@ interface IosInstanceServiceAsync {
          * Returns a raw HTTP response for `get /v1/ios_instances`, but is otherwise the same as
          * [IosInstanceServiceAsync.list].
          */
-        fun list(): CompletableFuture<HttpResponseFor<List<IosInstance>>> =
+        fun list(): CompletableFuture<HttpResponseFor<IosInstanceListPageAsync>> =
             list(IosInstanceListParams.none())
 
         /** @see list */
         fun list(
             params: IosInstanceListParams = IosInstanceListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<List<IosInstance>>>
+        ): CompletableFuture<HttpResponseFor<IosInstanceListPageAsync>>
 
         /** @see list */
         fun list(
             params: IosInstanceListParams = IosInstanceListParams.none()
-        ): CompletableFuture<HttpResponseFor<List<IosInstance>>> =
+        ): CompletableFuture<HttpResponseFor<IosInstanceListPageAsync>> =
             list(params, RequestOptions.none())
 
         /** @see list */
         fun list(
             requestOptions: RequestOptions
-        ): CompletableFuture<HttpResponseFor<List<IosInstance>>> =
+        ): CompletableFuture<HttpResponseFor<IosInstanceListPageAsync>> =
             list(IosInstanceListParams.none(), requestOptions)
 
         /**

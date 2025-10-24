@@ -20,6 +20,8 @@ import com.limrun.api.models.assets.Asset
 import com.limrun.api.models.assets.AssetGetOrCreateParams
 import com.limrun.api.models.assets.AssetGetOrCreateResponse
 import com.limrun.api.models.assets.AssetGetParams
+import com.limrun.api.models.assets.AssetListPageAsync
+import com.limrun.api.models.assets.AssetListPageResponse
 import com.limrun.api.models.assets.AssetListParams
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
@@ -40,7 +42,7 @@ class AssetServiceAsyncImpl internal constructor(private val clientOptions: Clie
     override fun list(
         params: AssetListParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<List<Asset>> =
+    ): CompletableFuture<AssetListPageAsync> =
         // get /v1/assets
         withRawResponse().list(params, requestOptions).thenApply { it.parse() }
 
@@ -71,13 +73,13 @@ class AssetServiceAsyncImpl internal constructor(private val clientOptions: Clie
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
 
-        private val listHandler: Handler<List<Asset>> =
-            jsonHandler<List<Asset>>(clientOptions.jsonMapper)
+        private val listHandler: Handler<AssetListPageResponse> =
+            jsonHandler<AssetListPageResponse>(clientOptions.jsonMapper)
 
         override fun list(
             params: AssetListParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<List<Asset>>> {
+        ): CompletableFuture<HttpResponseFor<AssetListPageAsync>> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
@@ -94,8 +96,16 @@ class AssetServiceAsyncImpl internal constructor(private val clientOptions: Clie
                             .use { listHandler.handle(it) }
                             .also {
                                 if (requestOptions.responseValidation!!) {
-                                    it.forEach { it.validate() }
+                                    it.validate()
                                 }
+                            }
+                            .let {
+                                AssetListPageAsync.builder()
+                                    .service(AssetServiceAsyncImpl(clientOptions))
+                                    .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
+                                    .params(params)
+                                    .response(it)
+                                    .build()
                             }
                     }
                 }

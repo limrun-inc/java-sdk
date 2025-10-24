@@ -21,6 +21,8 @@ import com.limrun.api.models.androidinstances.AndroidInstance
 import com.limrun.api.models.androidinstances.AndroidInstanceCreateParams
 import com.limrun.api.models.androidinstances.AndroidInstanceDeleteParams
 import com.limrun.api.models.androidinstances.AndroidInstanceGetParams
+import com.limrun.api.models.androidinstances.AndroidInstanceListPage
+import com.limrun.api.models.androidinstances.AndroidInstanceListPageResponse
 import com.limrun.api.models.androidinstances.AndroidInstanceListParams
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
@@ -47,7 +49,7 @@ class AndroidInstanceServiceImpl internal constructor(private val clientOptions:
     override fun list(
         params: AndroidInstanceListParams,
         requestOptions: RequestOptions,
-    ): List<AndroidInstance> =
+    ): AndroidInstanceListPage =
         // get /v1/android_instances
         withRawResponse().list(params, requestOptions).parse()
 
@@ -104,13 +106,13 @@ class AndroidInstanceServiceImpl internal constructor(private val clientOptions:
             }
         }
 
-        private val listHandler: Handler<List<AndroidInstance>> =
-            jsonHandler<List<AndroidInstance>>(clientOptions.jsonMapper)
+        private val listHandler: Handler<AndroidInstanceListPageResponse> =
+            jsonHandler<AndroidInstanceListPageResponse>(clientOptions.jsonMapper)
 
         override fun list(
             params: AndroidInstanceListParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<List<AndroidInstance>> {
+        ): HttpResponseFor<AndroidInstanceListPage> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
@@ -125,8 +127,15 @@ class AndroidInstanceServiceImpl internal constructor(private val clientOptions:
                     .use { listHandler.handle(it) }
                     .also {
                         if (requestOptions.responseValidation!!) {
-                            it.forEach { it.validate() }
+                            it.validate()
                         }
+                    }
+                    .let {
+                        AndroidInstanceListPage.builder()
+                            .service(AndroidInstanceServiceImpl(clientOptions))
+                            .params(params)
+                            .response(it)
+                            .build()
                     }
             }
         }
