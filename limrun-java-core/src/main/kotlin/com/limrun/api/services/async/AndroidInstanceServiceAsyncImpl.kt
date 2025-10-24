@@ -21,6 +21,8 @@ import com.limrun.api.models.androidinstances.AndroidInstance
 import com.limrun.api.models.androidinstances.AndroidInstanceCreateParams
 import com.limrun.api.models.androidinstances.AndroidInstanceDeleteParams
 import com.limrun.api.models.androidinstances.AndroidInstanceGetParams
+import com.limrun.api.models.androidinstances.AndroidInstanceListPageAsync
+import com.limrun.api.models.androidinstances.AndroidInstanceListPageResponse
 import com.limrun.api.models.androidinstances.AndroidInstanceListParams
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
@@ -50,7 +52,7 @@ internal constructor(private val clientOptions: ClientOptions) : AndroidInstance
     override fun list(
         params: AndroidInstanceListParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<List<AndroidInstance>> =
+    ): CompletableFuture<AndroidInstanceListPageAsync> =
         // get /v1/android_instances
         withRawResponse().list(params, requestOptions).thenApply { it.parse() }
 
@@ -112,13 +114,13 @@ internal constructor(private val clientOptions: ClientOptions) : AndroidInstance
                 }
         }
 
-        private val listHandler: Handler<List<AndroidInstance>> =
-            jsonHandler<List<AndroidInstance>>(clientOptions.jsonMapper)
+        private val listHandler: Handler<AndroidInstanceListPageResponse> =
+            jsonHandler<AndroidInstanceListPageResponse>(clientOptions.jsonMapper)
 
         override fun list(
             params: AndroidInstanceListParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<List<AndroidInstance>>> {
+        ): CompletableFuture<HttpResponseFor<AndroidInstanceListPageAsync>> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
@@ -135,8 +137,16 @@ internal constructor(private val clientOptions: ClientOptions) : AndroidInstance
                             .use { listHandler.handle(it) }
                             .also {
                                 if (requestOptions.responseValidation!!) {
-                                    it.forEach { it.validate() }
+                                    it.validate()
                                 }
+                            }
+                            .let {
+                                AndroidInstanceListPageAsync.builder()
+                                    .service(AndroidInstanceServiceAsyncImpl(clientOptions))
+                                    .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
+                                    .params(params)
+                                    .response(it)
+                                    .build()
                             }
                     }
                 }
