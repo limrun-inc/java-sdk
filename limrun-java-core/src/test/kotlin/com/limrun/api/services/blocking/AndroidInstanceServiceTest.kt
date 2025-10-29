@@ -89,7 +89,7 @@ internal class AndroidInstanceServiceTest {
                     .build()
             )
 
-        androidInstances.validate()
+        androidInstances.forEach { it.validate() }
     }
 
     @Disabled("Prism tests are disabled")

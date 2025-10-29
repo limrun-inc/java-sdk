@@ -91,7 +91,7 @@ internal class AndroidInstanceServiceAsyncTest {
             )
 
         val androidInstances = androidInstancesFuture.get()
-        androidInstances.validate()
+        androidInstances.forEach { it.validate() }
     }
 
     @Disabled("Prism tests are disabled")

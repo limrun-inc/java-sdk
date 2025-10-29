@@ -5,45 +5,17 @@ package com.limrun.api.models.androidinstances
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
-import com.fasterxml.jackson.annotation.JsonProperty
 import com.limrun.api.core.ExcludeMissing
-import com.limrun.api.core.JsonField
-import com.limrun.api.core.JsonMissing
 import com.limrun.api.core.JsonValue
-import com.limrun.api.core.checkKnown
-import com.limrun.api.core.toImmutable
 import com.limrun.api.errors.LimrunInvalidDataException
 import java.util.Collections
 import java.util.Objects
-import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
 
 class AndroidInstanceListResponse
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
-private constructor(
-    private val items: JsonField<List<AndroidInstance>>,
-    private val additionalProperties: MutableMap<String, JsonValue>,
-) {
+private constructor(private val additionalProperties: MutableMap<String, JsonValue>) {
 
-    @JsonCreator
-    private constructor(
-        @JsonProperty("items")
-        @ExcludeMissing
-        items: JsonField<List<AndroidInstance>> = JsonMissing.of()
-    ) : this(items, mutableMapOf())
-
-    /**
-     * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
-     *   server responded with an unexpected value).
-     */
-    fun items(): Optional<List<AndroidInstance>> = items.getOptional("items")
-
-    /**
-     * Returns the raw JSON value of [items].
-     *
-     * Unlike [items], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("items") @ExcludeMissing fun _items(): JsonField<List<AndroidInstance>> = items
+    @JsonCreator private constructor() : this(mutableMapOf())
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -68,36 +40,11 @@ private constructor(
     /** A builder for [AndroidInstanceListResponse]. */
     class Builder internal constructor() {
 
-        private var items: JsonField<MutableList<AndroidInstance>>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(androidInstanceListResponse: AndroidInstanceListResponse) = apply {
-            items = androidInstanceListResponse.items.map { it.toMutableList() }
             additionalProperties = androidInstanceListResponse.additionalProperties.toMutableMap()
-        }
-
-        fun items(items: List<AndroidInstance>) = items(JsonField.of(items))
-
-        /**
-         * Sets [Builder.items] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.items] with a well-typed `List<AndroidInstance>` value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
-        fun items(items: JsonField<List<AndroidInstance>>) = apply {
-            this.items = items.map { it.toMutableList() }
-        }
-
-        /**
-         * Adds a single [AndroidInstance] to [items].
-         *
-         * @throws IllegalStateException if the field was previously set to a non-list.
-         */
-        fun addItem(item: AndroidInstance) = apply {
-            items =
-                (items ?: JsonField.of(mutableListOf())).also { checkKnown("items", it).add(item) }
         }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -125,10 +72,7 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          */
         fun build(): AndroidInstanceListResponse =
-            AndroidInstanceListResponse(
-                (items ?: JsonMissing.of()).map { it.toImmutable() },
-                additionalProperties.toMutableMap(),
-            )
+            AndroidInstanceListResponse(additionalProperties.toMutableMap())
     }
 
     private var validated: Boolean = false
@@ -138,7 +82,6 @@ private constructor(
             return@apply
         }
 
-        items().ifPresent { it.forEach { it.validate() } }
         validated = true
     }
 
@@ -155,9 +98,7 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
-    internal fun validity(): Int =
-        (items.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0)
+    @JvmSynthetic internal fun validity(): Int = 0
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -165,14 +106,13 @@ private constructor(
         }
 
         return other is AndroidInstanceListResponse &&
-            items == other.items &&
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(items, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "AndroidInstanceListResponse{items=$items, additionalProperties=$additionalProperties}"
+        "AndroidInstanceListResponse{additionalProperties=$additionalProperties}"
 }

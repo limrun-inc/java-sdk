@@ -48,7 +48,7 @@ class AndroidInstanceServiceImpl internal constructor(private val clientOptions:
     override fun list(
         params: AndroidInstanceListParams,
         requestOptions: RequestOptions,
-    ): AndroidInstanceListResponse =
+    ): List<AndroidInstanceListResponse> =
         // get /v1/android_instances
         withRawResponse().list(params, requestOptions).parse()
 
@@ -105,13 +105,13 @@ class AndroidInstanceServiceImpl internal constructor(private val clientOptions:
             }
         }
 
-        private val listHandler: Handler<AndroidInstanceListResponse> =
-            jsonHandler<AndroidInstanceListResponse>(clientOptions.jsonMapper)
+        private val listHandler: Handler<List<AndroidInstanceListResponse>> =
+            jsonHandler<List<AndroidInstanceListResponse>>(clientOptions.jsonMapper)
 
         override fun list(
             params: AndroidInstanceListParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<AndroidInstanceListResponse> {
+        ): HttpResponseFor<List<AndroidInstanceListResponse>> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
@@ -126,7 +126,7 @@ class AndroidInstanceServiceImpl internal constructor(private val clientOptions:
                     .use { listHandler.handle(it) }
                     .also {
                         if (requestOptions.responseValidation!!) {
-                            it.validate()
+                            it.forEach { it.validate() }
                         }
                     }
             }

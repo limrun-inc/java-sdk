@@ -86,7 +86,7 @@ internal class IosInstanceServiceTest {
                     .build()
             )
 
-        iosInstances.validate()
+        iosInstances.forEach { it.validate() }
     }
 
     @Disabled("Prism tests are disabled")

@@ -13,7 +13,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** List Android instances belonging to given organization */
+/** List Android instances */
 class AndroidInstanceListParams
 private constructor(
     private val labelSelector: String?,
