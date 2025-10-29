@@ -1064,7 +1064,6 @@ private constructor(
         private constructor(
             private val kind: JsonField<Kind>,
             private val clientIp: JsonField<String>,
-            private val sVersion: JsonField<String>,
             private val additionalProperties: MutableMap<String, JsonValue>,
         ) {
 
@@ -1074,10 +1073,7 @@ private constructor(
                 @JsonProperty("clientIp")
                 @ExcludeMissing
                 clientIp: JsonField<String> = JsonMissing.of(),
-                @JsonProperty("sVersion")
-                @ExcludeMissing
-                sVersion: JsonField<String> = JsonMissing.of(),
-            ) : this(kind, clientIp, sVersion, mutableMapOf())
+            ) : this(kind, clientIp, mutableMapOf())
 
             /**
              * @throws LimrunInvalidDataException if the JSON field has an unexpected type or is
@@ -1093,12 +1089,6 @@ private constructor(
             fun clientIp(): Optional<String> = clientIp.getOptional("clientIp")
 
             /**
-             * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if
-             *   the server responded with an unexpected value).
-             */
-            fun sVersion(): Optional<String> = sVersion.getOptional("sVersion")
-
-            /**
              * Returns the raw JSON value of [kind].
              *
              * Unlike [kind], this method doesn't throw if the JSON field has an unexpected type.
@@ -1112,14 +1102,6 @@ private constructor(
              * type.
              */
             @JsonProperty("clientIp") @ExcludeMissing fun _clientIp(): JsonField<String> = clientIp
-
-            /**
-             * Returns the raw JSON value of [sVersion].
-             *
-             * Unlike [sVersion], this method doesn't throw if the JSON field has an unexpected
-             * type.
-             */
-            @JsonProperty("sVersion") @ExcludeMissing fun _sVersion(): JsonField<String> = sVersion
 
             @JsonAnySetter
             private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -1151,14 +1133,12 @@ private constructor(
 
                 private var kind: JsonField<Kind>? = null
                 private var clientIp: JsonField<String> = JsonMissing.of()
-                private var sVersion: JsonField<String> = JsonMissing.of()
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                 @JvmSynthetic
                 internal fun from(clue: Clue) = apply {
                     kind = clue.kind
                     clientIp = clue.clientIp
-                    sVersion = clue.sVersion
                     additionalProperties = clue.additionalProperties.toMutableMap()
                 }
 
@@ -1183,17 +1163,6 @@ private constructor(
                  * yet supported value.
                  */
                 fun clientIp(clientIp: JsonField<String>) = apply { this.clientIp = clientIp }
-
-                fun sVersion(sVersion: String) = sVersion(JsonField.of(sVersion))
-
-                /**
-                 * Sets [Builder.sVersion] to an arbitrary JSON value.
-                 *
-                 * You should usually call [Builder.sVersion] with a well-typed [String] value
-                 * instead. This method is primarily for setting the field to an undocumented or not
-                 * yet supported value.
-                 */
-                fun sVersion(sVersion: JsonField<String>) = apply { this.sVersion = sVersion }
 
                 fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                     this.additionalProperties.clear()
@@ -1230,12 +1199,7 @@ private constructor(
                  * @throws IllegalStateException if any required field is unset.
                  */
                 fun build(): Clue =
-                    Clue(
-                        checkRequired("kind", kind),
-                        clientIp,
-                        sVersion,
-                        additionalProperties.toMutableMap(),
-                    )
+                    Clue(checkRequired("kind", kind), clientIp, additionalProperties.toMutableMap())
             }
 
             private var validated: Boolean = false
@@ -1247,7 +1211,6 @@ private constructor(
 
                 kind().validate()
                 clientIp()
-                sVersion()
                 validated = true
             }
 
@@ -1268,8 +1231,7 @@ private constructor(
             @JvmSynthetic
             internal fun validity(): Int =
                 (kind.asKnown().getOrNull()?.validity() ?: 0) +
-                    (if (clientIp.asKnown().isPresent) 1 else 0) +
-                    (if (sVersion.asKnown().isPresent) 1 else 0)
+                    (if (clientIp.asKnown().isPresent) 1 else 0)
 
             class Kind @JsonCreator private constructor(private val value: JsonField<String>) :
                 Enum {
@@ -1288,15 +1250,12 @@ private constructor(
 
                     @JvmField val CLIENT_IP = of("ClientIP")
 
-                    @JvmField val OS_VERSION = of("OSVersion")
-
                     @JvmStatic fun of(value: String) = Kind(JsonField.of(value))
                 }
 
                 /** An enum containing [Kind]'s known values. */
                 enum class Known {
-                    CLIENT_IP,
-                    OS_VERSION,
+                    CLIENT_IP
                 }
 
                 /**
@@ -1310,7 +1269,6 @@ private constructor(
                  */
                 enum class Value {
                     CLIENT_IP,
-                    OS_VERSION,
                     /**
                      * An enum member indicating that [Kind] was instantiated with an unknown value.
                      */
@@ -1327,7 +1285,6 @@ private constructor(
                 fun value(): Value =
                     when (this) {
                         CLIENT_IP -> Value.CLIENT_IP
-                        OS_VERSION -> Value.OS_VERSION
                         else -> Value._UNKNOWN
                     }
 
@@ -1343,7 +1300,6 @@ private constructor(
                 fun known(): Known =
                     when (this) {
                         CLIENT_IP -> Known.CLIENT_IP
-                        OS_VERSION -> Known.OS_VERSION
                         else -> throw LimrunInvalidDataException("Unknown Kind: $value")
                     }
 
@@ -1409,18 +1365,15 @@ private constructor(
                 return other is Clue &&
                     kind == other.kind &&
                     clientIp == other.clientIp &&
-                    sVersion == other.sVersion &&
                     additionalProperties == other.additionalProperties
             }
 
-            private val hashCode: Int by lazy {
-                Objects.hash(kind, clientIp, sVersion, additionalProperties)
-            }
+            private val hashCode: Int by lazy { Objects.hash(kind, clientIp, additionalProperties) }
 
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "Clue{kind=$kind, clientIp=$clientIp, sVersion=$sVersion, additionalProperties=$additionalProperties}"
+                "Clue{kind=$kind, clientIp=$clientIp, additionalProperties=$additionalProperties}"
         }
 
         class InitialAsset
