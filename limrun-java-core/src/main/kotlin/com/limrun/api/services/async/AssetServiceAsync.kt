@@ -9,8 +9,8 @@ import com.limrun.api.models.assets.Asset
 import com.limrun.api.models.assets.AssetGetOrCreateParams
 import com.limrun.api.models.assets.AssetGetOrCreateResponse
 import com.limrun.api.models.assets.AssetGetParams
-import com.limrun.api.models.assets.AssetListPageAsync
 import com.limrun.api.models.assets.AssetListParams
+import com.limrun.api.models.assets.AssetListResponse
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
@@ -29,21 +29,21 @@ interface AssetServiceAsync {
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): AssetServiceAsync
 
     /** List organization's all assets with given filters. If none given, return all assets. */
-    fun list(): CompletableFuture<AssetListPageAsync> = list(AssetListParams.none())
+    fun list(): CompletableFuture<AssetListResponse> = list(AssetListParams.none())
 
     /** @see list */
     fun list(
         params: AssetListParams = AssetListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<AssetListPageAsync>
+    ): CompletableFuture<AssetListResponse>
 
     /** @see list */
     fun list(
         params: AssetListParams = AssetListParams.none()
-    ): CompletableFuture<AssetListPageAsync> = list(params, RequestOptions.none())
+    ): CompletableFuture<AssetListResponse> = list(params, RequestOptions.none())
 
     /** @see list */
-    fun list(requestOptions: RequestOptions): CompletableFuture<AssetListPageAsync> =
+    fun list(requestOptions: RequestOptions): CompletableFuture<AssetListResponse> =
         list(AssetListParams.none(), requestOptions)
 
     /** Get the asset with given ID. */
@@ -107,25 +107,25 @@ interface AssetServiceAsync {
          * Returns a raw HTTP response for `get /v1/assets`, but is otherwise the same as
          * [AssetServiceAsync.list].
          */
-        fun list(): CompletableFuture<HttpResponseFor<AssetListPageAsync>> =
+        fun list(): CompletableFuture<HttpResponseFor<AssetListResponse>> =
             list(AssetListParams.none())
 
         /** @see list */
         fun list(
             params: AssetListParams = AssetListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<AssetListPageAsync>>
+        ): CompletableFuture<HttpResponseFor<AssetListResponse>>
 
         /** @see list */
         fun list(
             params: AssetListParams = AssetListParams.none()
-        ): CompletableFuture<HttpResponseFor<AssetListPageAsync>> =
+        ): CompletableFuture<HttpResponseFor<AssetListResponse>> =
             list(params, RequestOptions.none())
 
         /** @see list */
         fun list(
             requestOptions: RequestOptions
-        ): CompletableFuture<HttpResponseFor<AssetListPageAsync>> =
+        ): CompletableFuture<HttpResponseFor<AssetListResponse>> =
             list(AssetListParams.none(), requestOptions)
 
         /**

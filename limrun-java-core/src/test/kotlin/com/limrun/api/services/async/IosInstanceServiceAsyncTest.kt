@@ -6,6 +6,7 @@ import com.limrun.api.TestServerExtension
 import com.limrun.api.client.okhttp.LimrunOkHttpClientAsync
 import com.limrun.api.core.JsonValue
 import com.limrun.api.models.iosinstances.IosInstanceCreateParams
+import com.limrun.api.models.iosinstances.IosInstanceListParams
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -76,10 +77,18 @@ internal class IosInstanceServiceAsyncTest {
                 .build()
         val iosInstanceServiceAsync = client.iosInstances()
 
-        val pageFuture = iosInstanceServiceAsync.list()
+        val iosInstancesFuture =
+            iosInstanceServiceAsync.list(
+                IosInstanceListParams.builder()
+                    .labelSelector("env=prod,version=1.2")
+                    .limit(50L)
+                    .region("region")
+                    .state(IosInstanceListParams.State.UNKNOWN)
+                    .build()
+            )
 
-        val page = pageFuture.get()
-        page.response().validate()
+        val iosInstances = iosInstancesFuture.get()
+        iosInstances.validate()
     }
 
     @Disabled("Prism tests are disabled")

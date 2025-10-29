@@ -8,12 +8,12 @@ import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-internal class AssetListPageResponseTest {
+internal class AssetListResponseTest {
 
     @Test
     fun create() {
-        val assetListPageResponse =
-            AssetListPageResponse.builder()
+        val assetListResponse =
+            AssetListResponse.builder()
                 .addItem(
                     Asset.builder()
                         .id("id")
@@ -25,7 +25,7 @@ internal class AssetListPageResponseTest {
                 )
                 .build()
 
-        assertThat(assetListPageResponse.items().getOrNull())
+        assertThat(assetListResponse.items().getOrNull())
             .containsExactly(
                 Asset.builder()
                     .id("id")
@@ -40,8 +40,8 @@ internal class AssetListPageResponseTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val assetListPageResponse =
-            AssetListPageResponse.builder()
+        val assetListResponse =
+            AssetListResponse.builder()
                 .addItem(
                     Asset.builder()
                         .id("id")
@@ -53,12 +53,12 @@ internal class AssetListPageResponseTest {
                 )
                 .build()
 
-        val roundtrippedAssetListPageResponse =
+        val roundtrippedAssetListResponse =
             jsonMapper.readValue(
-                jsonMapper.writeValueAsString(assetListPageResponse),
-                jacksonTypeRef<AssetListPageResponse>(),
+                jsonMapper.writeValueAsString(assetListResponse),
+                jacksonTypeRef<AssetListResponse>(),
             )
 
-        assertThat(roundtrippedAssetListPageResponse).isEqualTo(assetListPageResponse)
+        assertThat(roundtrippedAssetListResponse).isEqualTo(assetListResponse)
     }
 }

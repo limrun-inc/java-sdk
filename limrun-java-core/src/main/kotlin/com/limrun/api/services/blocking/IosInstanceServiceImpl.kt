@@ -21,9 +21,8 @@ import com.limrun.api.models.iosinstances.IosInstance
 import com.limrun.api.models.iosinstances.IosInstanceCreateParams
 import com.limrun.api.models.iosinstances.IosInstanceDeleteParams
 import com.limrun.api.models.iosinstances.IosInstanceGetParams
-import com.limrun.api.models.iosinstances.IosInstanceListPage
-import com.limrun.api.models.iosinstances.IosInstanceListPageResponse
 import com.limrun.api.models.iosinstances.IosInstanceListParams
+import com.limrun.api.models.iosinstances.IosInstanceListResponse
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
@@ -49,7 +48,7 @@ class IosInstanceServiceImpl internal constructor(private val clientOptions: Cli
     override fun list(
         params: IosInstanceListParams,
         requestOptions: RequestOptions,
-    ): IosInstanceListPage =
+    ): IosInstanceListResponse =
         // get /v1/ios_instances
         withRawResponse().list(params, requestOptions).parse()
 
@@ -103,13 +102,13 @@ class IosInstanceServiceImpl internal constructor(private val clientOptions: Cli
             }
         }
 
-        private val listHandler: Handler<IosInstanceListPageResponse> =
-            jsonHandler<IosInstanceListPageResponse>(clientOptions.jsonMapper)
+        private val listHandler: Handler<IosInstanceListResponse> =
+            jsonHandler<IosInstanceListResponse>(clientOptions.jsonMapper)
 
         override fun list(
             params: IosInstanceListParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<IosInstanceListPage> {
+        ): HttpResponseFor<IosInstanceListResponse> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
@@ -126,13 +125,6 @@ class IosInstanceServiceImpl internal constructor(private val clientOptions: Cli
                         if (requestOptions.responseValidation!!) {
                             it.validate()
                         }
-                    }
-                    .let {
-                        IosInstanceListPage.builder()
-                            .service(IosInstanceServiceImpl(clientOptions))
-                            .params(params)
-                            .response(it)
-                            .build()
                     }
             }
         }

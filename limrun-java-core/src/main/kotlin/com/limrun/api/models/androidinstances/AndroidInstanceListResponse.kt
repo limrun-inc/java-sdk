@@ -18,7 +18,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class AndroidInstanceListPageResponse
+class AndroidInstanceListResponse
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val items: JsonField<List<AndroidInstance>>,
@@ -60,25 +60,22 @@ private constructor(
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of
-         * [AndroidInstanceListPageResponse].
+         * Returns a mutable builder for constructing an instance of [AndroidInstanceListResponse].
          */
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [AndroidInstanceListPageResponse]. */
+    /** A builder for [AndroidInstanceListResponse]. */
     class Builder internal constructor() {
 
         private var items: JsonField<MutableList<AndroidInstance>>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(androidInstanceListPageResponse: AndroidInstanceListPageResponse) =
-            apply {
-                items = androidInstanceListPageResponse.items.map { it.toMutableList() }
-                additionalProperties =
-                    androidInstanceListPageResponse.additionalProperties.toMutableMap()
-            }
+        internal fun from(androidInstanceListResponse: AndroidInstanceListResponse) = apply {
+            items = androidInstanceListResponse.items.map { it.toMutableList() }
+            additionalProperties = androidInstanceListResponse.additionalProperties.toMutableMap()
+        }
 
         fun items(items: List<AndroidInstance>) = items(JsonField.of(items))
 
@@ -123,12 +120,12 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [AndroidInstanceListPageResponse].
+         * Returns an immutable instance of [AndroidInstanceListResponse].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          */
-        fun build(): AndroidInstanceListPageResponse =
-            AndroidInstanceListPageResponse(
+        fun build(): AndroidInstanceListResponse =
+            AndroidInstanceListResponse(
                 (items ?: JsonMissing.of()).map { it.toImmutable() },
                 additionalProperties.toMutableMap(),
             )
@@ -136,7 +133,7 @@ private constructor(
 
     private var validated: Boolean = false
 
-    fun validate(): AndroidInstanceListPageResponse = apply {
+    fun validate(): AndroidInstanceListResponse = apply {
         if (validated) {
             return@apply
         }
@@ -167,7 +164,7 @@ private constructor(
             return true
         }
 
-        return other is AndroidInstanceListPageResponse &&
+        return other is AndroidInstanceListResponse &&
             items == other.items &&
             additionalProperties == other.additionalProperties
     }
@@ -177,5 +174,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "AndroidInstanceListPageResponse{items=$items, additionalProperties=$additionalProperties}"
+        "AndroidInstanceListResponse{items=$items, additionalProperties=$additionalProperties}"
 }
