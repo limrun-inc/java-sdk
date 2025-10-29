@@ -11,8 +11,8 @@ import com.limrun.api.models.iosinstances.IosInstance
 import com.limrun.api.models.iosinstances.IosInstanceCreateParams
 import com.limrun.api.models.iosinstances.IosInstanceDeleteParams
 import com.limrun.api.models.iosinstances.IosInstanceGetParams
-import com.limrun.api.models.iosinstances.IosInstanceListPage
 import com.limrun.api.models.iosinstances.IosInstanceListParams
+import com.limrun.api.models.iosinstances.IosInstanceListResponse
 import java.util.function.Consumer
 
 interface IosInstanceService {
@@ -47,20 +47,21 @@ interface IosInstanceService {
         create(IosInstanceCreateParams.none(), requestOptions)
 
     /** List iOS instances */
-    fun list(): IosInstanceListPage = list(IosInstanceListParams.none())
+    fun list(): IosInstanceListResponse = list(IosInstanceListParams.none())
 
     /** @see list */
     fun list(
         params: IosInstanceListParams = IosInstanceListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): IosInstanceListPage
+    ): IosInstanceListResponse
 
     /** @see list */
-    fun list(params: IosInstanceListParams = IosInstanceListParams.none()): IosInstanceListPage =
-        list(params, RequestOptions.none())
+    fun list(
+        params: IosInstanceListParams = IosInstanceListParams.none()
+    ): IosInstanceListResponse = list(params, RequestOptions.none())
 
     /** @see list */
-    fun list(requestOptions: RequestOptions): IosInstanceListPage =
+    fun list(requestOptions: RequestOptions): IosInstanceListResponse =
         list(IosInstanceListParams.none(), requestOptions)
 
     /** Delete iOS instance with given name */
@@ -161,24 +162,24 @@ interface IosInstanceService {
          * [IosInstanceService.list].
          */
         @MustBeClosed
-        fun list(): HttpResponseFor<IosInstanceListPage> = list(IosInstanceListParams.none())
+        fun list(): HttpResponseFor<IosInstanceListResponse> = list(IosInstanceListParams.none())
 
         /** @see list */
         @MustBeClosed
         fun list(
             params: IosInstanceListParams = IosInstanceListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<IosInstanceListPage>
+        ): HttpResponseFor<IosInstanceListResponse>
 
         /** @see list */
         @MustBeClosed
         fun list(
             params: IosInstanceListParams = IosInstanceListParams.none()
-        ): HttpResponseFor<IosInstanceListPage> = list(params, RequestOptions.none())
+        ): HttpResponseFor<IosInstanceListResponse> = list(params, RequestOptions.none())
 
         /** @see list */
         @MustBeClosed
-        fun list(requestOptions: RequestOptions): HttpResponseFor<IosInstanceListPage> =
+        fun list(requestOptions: RequestOptions): HttpResponseFor<IosInstanceListResponse> =
             list(IosInstanceListParams.none(), requestOptions)
 
         /**

@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless.
 
-package com.limrun.api.models.iosinstances
+package com.limrun.api.models.androidinstances
 
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.limrun.api.core.JsonValue
@@ -10,22 +10,22 @@ import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-internal class IosInstanceListPageResponseTest {
+internal class AndroidInstanceListResponseTest {
 
     @Test
     fun create() {
-        val iosInstanceListPageResponse =
-            IosInstanceListPageResponse.builder()
+        val androidInstanceListResponse =
+            AndroidInstanceListResponse.builder()
                 .addItem(
-                    IosInstance.builder()
+                    AndroidInstance.builder()
                         .metadata(
-                            IosInstance.Metadata.builder()
+                            AndroidInstance.Metadata.builder()
                                 .id("id")
                                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                 .organizationId("organizationId")
                                 .displayName("displayName")
                                 .labels(
-                                    IosInstance.Metadata.Labels.builder()
+                                    AndroidInstance.Metadata.Labels.builder()
                                         .putAdditionalProperty("foo", JsonValue.from("string"))
                                         .build()
                                 )
@@ -33,16 +33,17 @@ internal class IosInstanceListPageResponseTest {
                                 .build()
                         )
                         .spec(
-                            IosInstance.Spec.builder()
+                            AndroidInstance.Spec.builder()
                                 .inactivityTimeout("inactivityTimeout")
                                 .region("region")
                                 .hardTimeout("hardTimeout")
                                 .build()
                         )
                         .status(
-                            IosInstance.Status.builder()
+                            AndroidInstance.Status.builder()
                                 .token("token")
-                                .state(IosInstance.Status.State.UNKNOWN)
+                                .state(AndroidInstance.Status.State.UNKNOWN)
+                                .adbWebSocketUrl("adbWebSocketUrl")
                                 .endpointWebSocketUrl("endpointWebSocketUrl")
                                 .build()
                         )
@@ -50,17 +51,17 @@ internal class IosInstanceListPageResponseTest {
                 )
                 .build()
 
-        assertThat(iosInstanceListPageResponse.items().getOrNull())
+        assertThat(androidInstanceListResponse.items().getOrNull())
             .containsExactly(
-                IosInstance.builder()
+                AndroidInstance.builder()
                     .metadata(
-                        IosInstance.Metadata.builder()
+                        AndroidInstance.Metadata.builder()
                             .id("id")
                             .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .organizationId("organizationId")
                             .displayName("displayName")
                             .labels(
-                                IosInstance.Metadata.Labels.builder()
+                                AndroidInstance.Metadata.Labels.builder()
                                     .putAdditionalProperty("foo", JsonValue.from("string"))
                                     .build()
                             )
@@ -68,16 +69,17 @@ internal class IosInstanceListPageResponseTest {
                             .build()
                     )
                     .spec(
-                        IosInstance.Spec.builder()
+                        AndroidInstance.Spec.builder()
                             .inactivityTimeout("inactivityTimeout")
                             .region("region")
                             .hardTimeout("hardTimeout")
                             .build()
                     )
                     .status(
-                        IosInstance.Status.builder()
+                        AndroidInstance.Status.builder()
                             .token("token")
-                            .state(IosInstance.Status.State.UNKNOWN)
+                            .state(AndroidInstance.Status.State.UNKNOWN)
+                            .adbWebSocketUrl("adbWebSocketUrl")
                             .endpointWebSocketUrl("endpointWebSocketUrl")
                             .build()
                     )
@@ -88,18 +90,18 @@ internal class IosInstanceListPageResponseTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val iosInstanceListPageResponse =
-            IosInstanceListPageResponse.builder()
+        val androidInstanceListResponse =
+            AndroidInstanceListResponse.builder()
                 .addItem(
-                    IosInstance.builder()
+                    AndroidInstance.builder()
                         .metadata(
-                            IosInstance.Metadata.builder()
+                            AndroidInstance.Metadata.builder()
                                 .id("id")
                                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                 .organizationId("organizationId")
                                 .displayName("displayName")
                                 .labels(
-                                    IosInstance.Metadata.Labels.builder()
+                                    AndroidInstance.Metadata.Labels.builder()
                                         .putAdditionalProperty("foo", JsonValue.from("string"))
                                         .build()
                                 )
@@ -107,16 +109,17 @@ internal class IosInstanceListPageResponseTest {
                                 .build()
                         )
                         .spec(
-                            IosInstance.Spec.builder()
+                            AndroidInstance.Spec.builder()
                                 .inactivityTimeout("inactivityTimeout")
                                 .region("region")
                                 .hardTimeout("hardTimeout")
                                 .build()
                         )
                         .status(
-                            IosInstance.Status.builder()
+                            AndroidInstance.Status.builder()
                                 .token("token")
-                                .state(IosInstance.Status.State.UNKNOWN)
+                                .state(AndroidInstance.Status.State.UNKNOWN)
+                                .adbWebSocketUrl("adbWebSocketUrl")
                                 .endpointWebSocketUrl("endpointWebSocketUrl")
                                 .build()
                         )
@@ -124,12 +127,12 @@ internal class IosInstanceListPageResponseTest {
                 )
                 .build()
 
-        val roundtrippedIosInstanceListPageResponse =
+        val roundtrippedAndroidInstanceListResponse =
             jsonMapper.readValue(
-                jsonMapper.writeValueAsString(iosInstanceListPageResponse),
-                jacksonTypeRef<IosInstanceListPageResponse>(),
+                jsonMapper.writeValueAsString(androidInstanceListResponse),
+                jacksonTypeRef<AndroidInstanceListResponse>(),
             )
 
-        assertThat(roundtrippedIosInstanceListPageResponse).isEqualTo(iosInstanceListPageResponse)
+        assertThat(roundtrippedAndroidInstanceListResponse).isEqualTo(androidInstanceListResponse)
     }
 }

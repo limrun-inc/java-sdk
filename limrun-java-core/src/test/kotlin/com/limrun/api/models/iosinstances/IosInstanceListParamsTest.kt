@@ -11,11 +11,9 @@ internal class IosInstanceListParamsTest {
     @Test
     fun create() {
         IosInstanceListParams.builder()
-            .endingBefore("ios_someid")
             .labelSelector("env=prod,version=1.2")
             .limit(50L)
             .region("region")
-            .startingAfter("ios_someid")
             .state(IosInstanceListParams.State.UNKNOWN)
             .build()
     }
@@ -24,11 +22,9 @@ internal class IosInstanceListParamsTest {
     fun queryParams() {
         val params =
             IosInstanceListParams.builder()
-                .endingBefore("ios_someid")
                 .labelSelector("env=prod,version=1.2")
                 .limit(50L)
                 .region("region")
-                .startingAfter("ios_someid")
                 .state(IosInstanceListParams.State.UNKNOWN)
                 .build()
 
@@ -37,11 +33,9 @@ internal class IosInstanceListParamsTest {
         assertThat(queryParams)
             .isEqualTo(
                 QueryParams.builder()
-                    .put("endingBefore", "ios_someid")
                     .put("labelSelector", "env=prod,version=1.2")
                     .put("limit", "50")
                     .put("region", "region")
-                    .put("startingAfter", "ios_someid")
                     .put("state", "unknown")
                     .build()
             )

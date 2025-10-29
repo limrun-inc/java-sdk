@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless.
 
-package com.limrun.api.models.iosinstances
+package com.limrun.api.models.assets
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
@@ -18,32 +18,30 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class IosInstanceListPageResponse
+class AssetListResponse
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
-    private val items: JsonField<List<IosInstance>>,
+    private val items: JsonField<List<Asset>>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
     @JsonCreator
     private constructor(
-        @JsonProperty("items")
-        @ExcludeMissing
-        items: JsonField<List<IosInstance>> = JsonMissing.of()
+        @JsonProperty("items") @ExcludeMissing items: JsonField<List<Asset>> = JsonMissing.of()
     ) : this(items, mutableMapOf())
 
     /**
      * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun items(): Optional<List<IosInstance>> = items.getOptional("items")
+    fun items(): Optional<List<Asset>> = items.getOptional("items")
 
     /**
      * Returns the raw JSON value of [items].
      *
      * Unlike [items], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("items") @ExcludeMissing fun _items(): JsonField<List<IosInstance>> = items
+    @JsonProperty("items") @ExcludeMissing fun _items(): JsonField<List<Asset>> = items
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -59,43 +57,41 @@ private constructor(
 
     companion object {
 
-        /**
-         * Returns a mutable builder for constructing an instance of [IosInstanceListPageResponse].
-         */
+        /** Returns a mutable builder for constructing an instance of [AssetListResponse]. */
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [IosInstanceListPageResponse]. */
+    /** A builder for [AssetListResponse]. */
     class Builder internal constructor() {
 
-        private var items: JsonField<MutableList<IosInstance>>? = null
+        private var items: JsonField<MutableList<Asset>>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(iosInstanceListPageResponse: IosInstanceListPageResponse) = apply {
-            items = iosInstanceListPageResponse.items.map { it.toMutableList() }
-            additionalProperties = iosInstanceListPageResponse.additionalProperties.toMutableMap()
+        internal fun from(assetListResponse: AssetListResponse) = apply {
+            items = assetListResponse.items.map { it.toMutableList() }
+            additionalProperties = assetListResponse.additionalProperties.toMutableMap()
         }
 
-        fun items(items: List<IosInstance>) = items(JsonField.of(items))
+        fun items(items: List<Asset>) = items(JsonField.of(items))
 
         /**
          * Sets [Builder.items] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.items] with a well-typed `List<IosInstance>` value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
+         * You should usually call [Builder.items] with a well-typed `List<Asset>` value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
          */
-        fun items(items: JsonField<List<IosInstance>>) = apply {
+        fun items(items: JsonField<List<Asset>>) = apply {
             this.items = items.map { it.toMutableList() }
         }
 
         /**
-         * Adds a single [IosInstance] to [items].
+         * Adds a single [Asset] to [items].
          *
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
-        fun addItem(item: IosInstance) = apply {
+        fun addItem(item: Asset) = apply {
             items =
                 (items ?: JsonField.of(mutableListOf())).also { checkKnown("items", it).add(item) }
         }
@@ -120,12 +116,12 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [IosInstanceListPageResponse].
+         * Returns an immutable instance of [AssetListResponse].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          */
-        fun build(): IosInstanceListPageResponse =
-            IosInstanceListPageResponse(
+        fun build(): AssetListResponse =
+            AssetListResponse(
                 (items ?: JsonMissing.of()).map { it.toImmutable() },
                 additionalProperties.toMutableMap(),
             )
@@ -133,7 +129,7 @@ private constructor(
 
     private var validated: Boolean = false
 
-    fun validate(): IosInstanceListPageResponse = apply {
+    fun validate(): AssetListResponse = apply {
         if (validated) {
             return@apply
         }
@@ -164,7 +160,7 @@ private constructor(
             return true
         }
 
-        return other is IosInstanceListPageResponse &&
+        return other is AssetListResponse &&
             items == other.items &&
             additionalProperties == other.additionalProperties
     }
@@ -174,5 +170,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "IosInstanceListPageResponse{items=$items, additionalProperties=$additionalProperties}"
+        "AssetListResponse{items=$items, additionalProperties=$additionalProperties}"
 }

@@ -6,6 +6,7 @@ import com.limrun.api.TestServerExtension
 import com.limrun.api.client.okhttp.LimrunOkHttpClient
 import com.limrun.api.core.JsonValue
 import com.limrun.api.models.androidinstances.AndroidInstanceCreateParams
+import com.limrun.api.models.androidinstances.AndroidInstanceListParams
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -78,9 +79,17 @@ internal class AndroidInstanceServiceTest {
                 .build()
         val androidInstanceService = client.androidInstances()
 
-        val page = androidInstanceService.list()
+        val androidInstances =
+            androidInstanceService.list(
+                AndroidInstanceListParams.builder()
+                    .labelSelector("env=prod,version=1.2")
+                    .limit(50L)
+                    .region("region")
+                    .state(AndroidInstanceListParams.State.UNKNOWN)
+                    .build()
+            )
 
-        page.response().validate()
+        androidInstances.validate()
     }
 
     @Disabled("Prism tests are disabled")
