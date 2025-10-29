@@ -22,7 +22,6 @@ import com.limrun.api.models.androidinstances.AndroidInstanceCreateParams
 import com.limrun.api.models.androidinstances.AndroidInstanceDeleteParams
 import com.limrun.api.models.androidinstances.AndroidInstanceGetParams
 import com.limrun.api.models.androidinstances.AndroidInstanceListParams
-import com.limrun.api.models.androidinstances.AndroidInstanceListResponse
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
@@ -48,7 +47,7 @@ class AndroidInstanceServiceImpl internal constructor(private val clientOptions:
     override fun list(
         params: AndroidInstanceListParams,
         requestOptions: RequestOptions,
-    ): List<AndroidInstanceListResponse> =
+    ): List<AndroidInstance> =
         // get /v1/android_instances
         withRawResponse().list(params, requestOptions).parse()
 
@@ -105,13 +104,13 @@ class AndroidInstanceServiceImpl internal constructor(private val clientOptions:
             }
         }
 
-        private val listHandler: Handler<List<AndroidInstanceListResponse>> =
-            jsonHandler<List<AndroidInstanceListResponse>>(clientOptions.jsonMapper)
+        private val listHandler: Handler<List<AndroidInstance>> =
+            jsonHandler<List<AndroidInstance>>(clientOptions.jsonMapper)
 
         override fun list(
             params: AndroidInstanceListParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<List<AndroidInstanceListResponse>> {
+        ): HttpResponseFor<List<AndroidInstance>> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
