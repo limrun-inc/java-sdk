@@ -12,7 +12,6 @@ import com.limrun.api.models.androidinstances.AndroidInstanceCreateParams
 import com.limrun.api.models.androidinstances.AndroidInstanceDeleteParams
 import com.limrun.api.models.androidinstances.AndroidInstanceGetParams
 import com.limrun.api.models.androidinstances.AndroidInstanceListParams
-import com.limrun.api.models.androidinstances.AndroidInstanceListResponse
 import java.util.function.Consumer
 
 interface AndroidInstanceService {
@@ -48,21 +47,21 @@ interface AndroidInstanceService {
         create(AndroidInstanceCreateParams.none(), requestOptions)
 
     /** List Android instances */
-    fun list(): List<AndroidInstanceListResponse> = list(AndroidInstanceListParams.none())
+    fun list(): List<AndroidInstance> = list(AndroidInstanceListParams.none())
 
     /** @see list */
     fun list(
         params: AndroidInstanceListParams = AndroidInstanceListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): List<AndroidInstanceListResponse>
+    ): List<AndroidInstance>
 
     /** @see list */
     fun list(
         params: AndroidInstanceListParams = AndroidInstanceListParams.none()
-    ): List<AndroidInstanceListResponse> = list(params, RequestOptions.none())
+    ): List<AndroidInstance> = list(params, RequestOptions.none())
 
     /** @see list */
-    fun list(requestOptions: RequestOptions): List<AndroidInstanceListResponse> =
+    fun list(requestOptions: RequestOptions): List<AndroidInstance> =
         list(AndroidInstanceListParams.none(), requestOptions)
 
     /** Delete Android instance with given name */
@@ -168,27 +167,24 @@ interface AndroidInstanceService {
          * [AndroidInstanceService.list].
          */
         @MustBeClosed
-        fun list(): HttpResponseFor<List<AndroidInstanceListResponse>> =
-            list(AndroidInstanceListParams.none())
+        fun list(): HttpResponseFor<List<AndroidInstance>> = list(AndroidInstanceListParams.none())
 
         /** @see list */
         @MustBeClosed
         fun list(
             params: AndroidInstanceListParams = AndroidInstanceListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<List<AndroidInstanceListResponse>>
+        ): HttpResponseFor<List<AndroidInstance>>
 
         /** @see list */
         @MustBeClosed
         fun list(
             params: AndroidInstanceListParams = AndroidInstanceListParams.none()
-        ): HttpResponseFor<List<AndroidInstanceListResponse>> = list(params, RequestOptions.none())
+        ): HttpResponseFor<List<AndroidInstance>> = list(params, RequestOptions.none())
 
         /** @see list */
         @MustBeClosed
-        fun list(
-            requestOptions: RequestOptions
-        ): HttpResponseFor<List<AndroidInstanceListResponse>> =
+        fun list(requestOptions: RequestOptions): HttpResponseFor<List<AndroidInstance>> =
             list(AndroidInstanceListParams.none(), requestOptions)
 
         /**

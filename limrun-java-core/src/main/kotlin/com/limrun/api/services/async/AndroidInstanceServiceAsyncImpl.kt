@@ -22,7 +22,6 @@ import com.limrun.api.models.androidinstances.AndroidInstanceCreateParams
 import com.limrun.api.models.androidinstances.AndroidInstanceDeleteParams
 import com.limrun.api.models.androidinstances.AndroidInstanceGetParams
 import com.limrun.api.models.androidinstances.AndroidInstanceListParams
-import com.limrun.api.models.androidinstances.AndroidInstanceListResponse
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
@@ -51,7 +50,7 @@ internal constructor(private val clientOptions: ClientOptions) : AndroidInstance
     override fun list(
         params: AndroidInstanceListParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<List<AndroidInstanceListResponse>> =
+    ): CompletableFuture<List<AndroidInstance>> =
         // get /v1/android_instances
         withRawResponse().list(params, requestOptions).thenApply { it.parse() }
 
@@ -113,13 +112,13 @@ internal constructor(private val clientOptions: ClientOptions) : AndroidInstance
                 }
         }
 
-        private val listHandler: Handler<List<AndroidInstanceListResponse>> =
-            jsonHandler<List<AndroidInstanceListResponse>>(clientOptions.jsonMapper)
+        private val listHandler: Handler<List<AndroidInstance>> =
+            jsonHandler<List<AndroidInstance>>(clientOptions.jsonMapper)
 
         override fun list(
             params: AndroidInstanceListParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<List<AndroidInstanceListResponse>>> {
+        ): CompletableFuture<HttpResponseFor<List<AndroidInstance>>> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
