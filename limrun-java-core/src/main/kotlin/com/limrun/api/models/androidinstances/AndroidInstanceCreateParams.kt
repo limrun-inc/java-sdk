@@ -1095,6 +1095,8 @@ private constructor(
             fun clientIp(): Optional<String> = clientIp.getOptional("clientIp")
 
             /**
+             * The major version of Android, e.g. "13", "14" or "15".
+             *
              * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if
              *   the server responded with an unexpected value).
              */
@@ -1188,6 +1190,7 @@ private constructor(
                  */
                 fun clientIp(clientIp: JsonField<String>) = apply { this.clientIp = clientIp }
 
+                /** The major version of Android, e.g. "13", "14" or "15". */
                 fun osVersion(osVersion: String) = osVersion(JsonField.of(osVersion))
 
                 /**
