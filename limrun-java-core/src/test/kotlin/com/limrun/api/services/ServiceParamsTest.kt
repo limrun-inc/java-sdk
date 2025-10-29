@@ -61,6 +61,7 @@ internal class ServiceParamsTest {
                             AndroidInstanceCreateParams.Spec.Clue.builder()
                                 .kind(AndroidInstanceCreateParams.Spec.Clue.Kind.CLIENT_IP)
                                 .clientIp("clientIp")
+                                .osVersion("osVersion")
                                 .build()
                         )
                         .hardTimeout("hardTimeout")

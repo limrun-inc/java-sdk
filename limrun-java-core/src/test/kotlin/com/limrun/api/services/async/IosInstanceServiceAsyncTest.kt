@@ -44,7 +44,6 @@ internal class IosInstanceServiceAsyncTest {
                                 IosInstanceCreateParams.Spec.Clue.builder()
                                     .kind(IosInstanceCreateParams.Spec.Clue.Kind.CLIENT_IP)
                                     .clientIp("clientIp")
-                                    .sVersion("sVersion")
                                     .build()
                             )
                             .hardTimeout("hardTimeout")
