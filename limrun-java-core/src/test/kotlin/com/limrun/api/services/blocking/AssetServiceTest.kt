@@ -34,7 +34,7 @@ internal class AssetServiceTest {
                     .build()
             )
 
-        assets.validate()
+        assets.forEach { it.validate() }
     }
 
     @Disabled("Prism tests are disabled")

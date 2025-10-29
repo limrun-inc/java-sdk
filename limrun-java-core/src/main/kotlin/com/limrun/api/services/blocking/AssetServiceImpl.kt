@@ -21,7 +21,6 @@ import com.limrun.api.models.assets.AssetGetOrCreateParams
 import com.limrun.api.models.assets.AssetGetOrCreateResponse
 import com.limrun.api.models.assets.AssetGetParams
 import com.limrun.api.models.assets.AssetListParams
-import com.limrun.api.models.assets.AssetListResponse
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
@@ -37,7 +36,7 @@ class AssetServiceImpl internal constructor(private val clientOptions: ClientOpt
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): AssetService =
         AssetServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
-    override fun list(params: AssetListParams, requestOptions: RequestOptions): AssetListResponse =
+    override fun list(params: AssetListParams, requestOptions: RequestOptions): List<Asset> =
         // get /v1/assets
         withRawResponse().list(params, requestOptions).parse()
 
@@ -65,13 +64,13 @@ class AssetServiceImpl internal constructor(private val clientOptions: ClientOpt
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
 
-        private val listHandler: Handler<AssetListResponse> =
-            jsonHandler<AssetListResponse>(clientOptions.jsonMapper)
+        private val listHandler: Handler<List<Asset>> =
+            jsonHandler<List<Asset>>(clientOptions.jsonMapper)
 
         override fun list(
             params: AssetListParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<AssetListResponse> {
+        ): HttpResponseFor<List<Asset>> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
@@ -86,7 +85,7 @@ class AssetServiceImpl internal constructor(private val clientOptions: ClientOpt
                     .use { listHandler.handle(it) }
                     .also {
                         if (requestOptions.responseValidation!!) {
-                            it.validate()
+                            it.forEach { it.validate() }
                         }
                     }
             }

@@ -88,7 +88,7 @@ internal class IosInstanceServiceAsyncTest {
             )
 
         val iosInstances = iosInstancesFuture.get()
-        iosInstances.validate()
+        iosInstances.forEach { it.validate() }
     }
 
     @Disabled("Prism tests are disabled")

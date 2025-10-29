@@ -11,7 +11,6 @@ import com.limrun.api.models.assets.AssetGetOrCreateParams
 import com.limrun.api.models.assets.AssetGetOrCreateResponse
 import com.limrun.api.models.assets.AssetGetParams
 import com.limrun.api.models.assets.AssetListParams
-import com.limrun.api.models.assets.AssetListResponse
 import java.util.function.Consumer
 
 interface AssetService {
@@ -29,20 +28,20 @@ interface AssetService {
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): AssetService
 
     /** List organization's all assets with given filters. If none given, return all assets. */
-    fun list(): AssetListResponse = list(AssetListParams.none())
+    fun list(): List<Asset> = list(AssetListParams.none())
 
     /** @see list */
     fun list(
         params: AssetListParams = AssetListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): AssetListResponse
+    ): List<Asset>
 
     /** @see list */
-    fun list(params: AssetListParams = AssetListParams.none()): AssetListResponse =
+    fun list(params: AssetListParams = AssetListParams.none()): List<Asset> =
         list(params, RequestOptions.none())
 
     /** @see list */
-    fun list(requestOptions: RequestOptions): AssetListResponse =
+    fun list(requestOptions: RequestOptions): List<Asset> =
         list(AssetListParams.none(), requestOptions)
 
     /** Get the asset with given ID. */
@@ -99,24 +98,23 @@ interface AssetService {
          * Returns a raw HTTP response for `get /v1/assets`, but is otherwise the same as
          * [AssetService.list].
          */
-        @MustBeClosed fun list(): HttpResponseFor<AssetListResponse> = list(AssetListParams.none())
+        @MustBeClosed fun list(): HttpResponseFor<List<Asset>> = list(AssetListParams.none())
 
         /** @see list */
         @MustBeClosed
         fun list(
             params: AssetListParams = AssetListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<AssetListResponse>
+        ): HttpResponseFor<List<Asset>>
 
         /** @see list */
         @MustBeClosed
-        fun list(
-            params: AssetListParams = AssetListParams.none()
-        ): HttpResponseFor<AssetListResponse> = list(params, RequestOptions.none())
+        fun list(params: AssetListParams = AssetListParams.none()): HttpResponseFor<List<Asset>> =
+            list(params, RequestOptions.none())
 
         /** @see list */
         @MustBeClosed
-        fun list(requestOptions: RequestOptions): HttpResponseFor<AssetListResponse> =
+        fun list(requestOptions: RequestOptions): HttpResponseFor<List<Asset>> =
             list(AssetListParams.none(), requestOptions)
 
         /**

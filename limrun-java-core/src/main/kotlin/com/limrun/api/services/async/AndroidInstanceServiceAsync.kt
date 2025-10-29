@@ -47,23 +47,23 @@ interface AndroidInstanceServiceAsync {
     fun create(requestOptions: RequestOptions): CompletableFuture<AndroidInstance> =
         create(AndroidInstanceCreateParams.none(), requestOptions)
 
-    /** List Android instances belonging to given organization */
-    fun list(): CompletableFuture<AndroidInstanceListResponse> =
+    /** List Android instances */
+    fun list(): CompletableFuture<List<AndroidInstanceListResponse>> =
         list(AndroidInstanceListParams.none())
 
     /** @see list */
     fun list(
         params: AndroidInstanceListParams = AndroidInstanceListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<AndroidInstanceListResponse>
+    ): CompletableFuture<List<AndroidInstanceListResponse>>
 
     /** @see list */
     fun list(
         params: AndroidInstanceListParams = AndroidInstanceListParams.none()
-    ): CompletableFuture<AndroidInstanceListResponse> = list(params, RequestOptions.none())
+    ): CompletableFuture<List<AndroidInstanceListResponse>> = list(params, RequestOptions.none())
 
     /** @see list */
-    fun list(requestOptions: RequestOptions): CompletableFuture<AndroidInstanceListResponse> =
+    fun list(requestOptions: RequestOptions): CompletableFuture<List<AndroidInstanceListResponse>> =
         list(AndroidInstanceListParams.none(), requestOptions)
 
     /** Delete Android instance with given name */
@@ -172,25 +172,25 @@ interface AndroidInstanceServiceAsync {
          * Returns a raw HTTP response for `get /v1/android_instances`, but is otherwise the same as
          * [AndroidInstanceServiceAsync.list].
          */
-        fun list(): CompletableFuture<HttpResponseFor<AndroidInstanceListResponse>> =
+        fun list(): CompletableFuture<HttpResponseFor<List<AndroidInstanceListResponse>>> =
             list(AndroidInstanceListParams.none())
 
         /** @see list */
         fun list(
             params: AndroidInstanceListParams = AndroidInstanceListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<AndroidInstanceListResponse>>
+        ): CompletableFuture<HttpResponseFor<List<AndroidInstanceListResponse>>>
 
         /** @see list */
         fun list(
             params: AndroidInstanceListParams = AndroidInstanceListParams.none()
-        ): CompletableFuture<HttpResponseFor<AndroidInstanceListResponse>> =
+        ): CompletableFuture<HttpResponseFor<List<AndroidInstanceListResponse>>> =
             list(params, RequestOptions.none())
 
         /** @see list */
         fun list(
             requestOptions: RequestOptions
-        ): CompletableFuture<HttpResponseFor<AndroidInstanceListResponse>> =
+        ): CompletableFuture<HttpResponseFor<List<AndroidInstanceListResponse>>> =
             list(AndroidInstanceListParams.none(), requestOptions)
 
         /**

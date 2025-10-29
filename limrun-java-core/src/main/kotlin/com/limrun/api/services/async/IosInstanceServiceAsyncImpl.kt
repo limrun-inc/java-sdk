@@ -22,7 +22,6 @@ import com.limrun.api.models.iosinstances.IosInstanceCreateParams
 import com.limrun.api.models.iosinstances.IosInstanceDeleteParams
 import com.limrun.api.models.iosinstances.IosInstanceGetParams
 import com.limrun.api.models.iosinstances.IosInstanceListParams
-import com.limrun.api.models.iosinstances.IosInstanceListResponse
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
@@ -49,7 +48,7 @@ class IosInstanceServiceAsyncImpl internal constructor(private val clientOptions
     override fun list(
         params: IosInstanceListParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<IosInstanceListResponse> =
+    ): CompletableFuture<List<IosInstance>> =
         // get /v1/ios_instances
         withRawResponse().list(params, requestOptions).thenApply { it.parse() }
 
@@ -111,13 +110,13 @@ class IosInstanceServiceAsyncImpl internal constructor(private val clientOptions
                 }
         }
 
-        private val listHandler: Handler<IosInstanceListResponse> =
-            jsonHandler<IosInstanceListResponse>(clientOptions.jsonMapper)
+        private val listHandler: Handler<List<IosInstance>> =
+            jsonHandler<List<IosInstance>>(clientOptions.jsonMapper)
 
         override fun list(
             params: IosInstanceListParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<IosInstanceListResponse>> {
+        ): CompletableFuture<HttpResponseFor<List<IosInstance>>> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
@@ -134,7 +133,7 @@ class IosInstanceServiceAsyncImpl internal constructor(private val clientOptions
                             .use { listHandler.handle(it) }
                             .also {
                                 if (requestOptions.responseValidation!!) {
-                                    it.validate()
+                                    it.forEach { it.validate() }
                                 }
                             }
                     }

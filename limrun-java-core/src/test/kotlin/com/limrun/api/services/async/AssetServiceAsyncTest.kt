@@ -35,7 +35,7 @@ internal class AssetServiceAsyncTest {
             )
 
         val assets = assetsFuture.get()
-        assets.validate()
+        assets.forEach { it.validate() }
     }
 
     @Disabled("Prism tests are disabled")
