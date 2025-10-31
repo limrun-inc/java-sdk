@@ -41,6 +41,7 @@ internal class IosInstanceTest {
                         .token("token")
                         .state(IosInstance.Status.State.UNKNOWN)
                         .endpointWebSocketUrl("endpointWebSocketUrl")
+                        .portForwardWebSocketUrl("portForwardWebSocketUrl")
                         .build()
                 )
                 .build()
@@ -74,6 +75,7 @@ internal class IosInstanceTest {
                     .token("token")
                     .state(IosInstance.Status.State.UNKNOWN)
                     .endpointWebSocketUrl("endpointWebSocketUrl")
+                    .portForwardWebSocketUrl("portForwardWebSocketUrl")
                     .build()
             )
     }
@@ -109,6 +111,7 @@ internal class IosInstanceTest {
                         .token("token")
                         .state(IosInstance.Status.State.UNKNOWN)
                         .endpointWebSocketUrl("endpointWebSocketUrl")
+                        .portForwardWebSocketUrl("portForwardWebSocketUrl")
                         .build()
                 )
                 .build()
