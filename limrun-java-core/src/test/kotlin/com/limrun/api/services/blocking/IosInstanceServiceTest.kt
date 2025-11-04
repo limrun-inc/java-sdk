@@ -53,6 +53,10 @@ internal class IosInstanceServiceTest {
                                     .kind(IosInstanceCreateParams.Spec.InitialAsset.Kind.APP)
                                     .source(IosInstanceCreateParams.Spec.InitialAsset.Source.URL)
                                     .assetName("assetName")
+                                    .launchMode(
+                                        IosInstanceCreateParams.Spec.InitialAsset.LaunchMode
+                                            .FOREGROUND_IF_RUNNING
+                                    )
                                     .url("url")
                                     .build()
                             )
