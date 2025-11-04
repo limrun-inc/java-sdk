@@ -1382,6 +1382,7 @@ private constructor(
             private val kind: JsonField<Kind>,
             private val source: JsonField<Source>,
             private val assetName: JsonField<String>,
+            private val launchMode: JsonField<LaunchMode>,
             private val url: JsonField<String>,
             private val additionalProperties: MutableMap<String, JsonValue>,
         ) {
@@ -1395,8 +1396,11 @@ private constructor(
                 @JsonProperty("assetName")
                 @ExcludeMissing
                 assetName: JsonField<String> = JsonMissing.of(),
+                @JsonProperty("launchMode")
+                @ExcludeMissing
+                launchMode: JsonField<LaunchMode> = JsonMissing.of(),
                 @JsonProperty("url") @ExcludeMissing url: JsonField<String> = JsonMissing.of(),
-            ) : this(kind, source, assetName, url, mutableMapOf())
+            ) : this(kind, source, assetName, launchMode, url, mutableMapOf())
 
             /**
              * @throws LimrunInvalidDataException if the JSON field has an unexpected type or is
@@ -1417,6 +1421,15 @@ private constructor(
              *   the server responded with an unexpected value).
              */
             fun assetName(): Optional<String> = assetName.getOptional("assetName")
+
+            /**
+             * Launch mode specifies how to launch the app after installation. If not given, the app
+             * won't be launched.
+             *
+             * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if
+             *   the server responded with an unexpected value).
+             */
+            fun launchMode(): Optional<LaunchMode> = launchMode.getOptional("launchMode")
 
             /**
              * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -1447,6 +1460,16 @@ private constructor(
             @JsonProperty("assetName")
             @ExcludeMissing
             fun _assetName(): JsonField<String> = assetName
+
+            /**
+             * Returns the raw JSON value of [launchMode].
+             *
+             * Unlike [launchMode], this method doesn't throw if the JSON field has an unexpected
+             * type.
+             */
+            @JsonProperty("launchMode")
+            @ExcludeMissing
+            fun _launchMode(): JsonField<LaunchMode> = launchMode
 
             /**
              * Returns the raw JSON value of [url].
@@ -1487,6 +1510,7 @@ private constructor(
                 private var kind: JsonField<Kind>? = null
                 private var source: JsonField<Source>? = null
                 private var assetName: JsonField<String> = JsonMissing.of()
+                private var launchMode: JsonField<LaunchMode> = JsonMissing.of()
                 private var url: JsonField<String> = JsonMissing.of()
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -1495,6 +1519,7 @@ private constructor(
                     kind = initialAsset.kind
                     source = initialAsset.source
                     assetName = initialAsset.assetName
+                    launchMode = initialAsset.launchMode
                     url = initialAsset.url
                     additionalProperties = initialAsset.additionalProperties.toMutableMap()
                 }
@@ -1531,6 +1556,23 @@ private constructor(
                  * yet supported value.
                  */
                 fun assetName(assetName: JsonField<String>) = apply { this.assetName = assetName }
+
+                /**
+                 * Launch mode specifies how to launch the app after installation. If not given, the
+                 * app won't be launched.
+                 */
+                fun launchMode(launchMode: LaunchMode) = launchMode(JsonField.of(launchMode))
+
+                /**
+                 * Sets [Builder.launchMode] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.launchMode] with a well-typed [LaunchMode] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun launchMode(launchMode: JsonField<LaunchMode>) = apply {
+                    this.launchMode = launchMode
+                }
 
                 fun url(url: String) = url(JsonField.of(url))
 
@@ -1583,6 +1625,7 @@ private constructor(
                         checkRequired("kind", kind),
                         checkRequired("source", source),
                         assetName,
+                        launchMode,
                         url,
                         additionalProperties.toMutableMap(),
                     )
@@ -1598,6 +1641,7 @@ private constructor(
                 kind().validate()
                 source().validate()
                 assetName()
+                launchMode().ifPresent { it.validate() }
                 url()
                 validated = true
             }
@@ -1621,6 +1665,7 @@ private constructor(
                 (kind.asKnown().getOrNull()?.validity() ?: 0) +
                     (source.asKnown().getOrNull()?.validity() ?: 0) +
                     (if (assetName.asKnown().isPresent) 1 else 0) +
+                    (launchMode.asKnown().getOrNull()?.validity() ?: 0) +
                     (if (url.asKnown().isPresent) 1 else 0)
 
             class Kind @JsonCreator private constructor(private val value: JsonField<String>) :
@@ -1878,6 +1923,148 @@ private constructor(
                 override fun toString() = value.toString()
             }
 
+            /**
+             * Launch mode specifies how to launch the app after installation. If not given, the app
+             * won't be launched.
+             */
+            class LaunchMode
+            @JsonCreator
+            private constructor(private val value: JsonField<String>) : Enum {
+
+                /**
+                 * Returns this class instance's raw value.
+                 *
+                 * This is usually only useful if this instance was deserialized from data that
+                 * doesn't match any known member, and you want to know that value. For example, if
+                 * the SDK is on an older version than the API, then the API may respond with new
+                 * members that the SDK is unaware of.
+                 */
+                @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+                companion object {
+
+                    @JvmField val FOREGROUND_IF_RUNNING = of("ForegroundIfRunning")
+
+                    @JvmField val RELAUNCH_IF_RUNNING = of("RelaunchIfRunning")
+
+                    @JvmField val FAIL_IF_RUNNING = of("FailIfRunning")
+
+                    @JvmStatic fun of(value: String) = LaunchMode(JsonField.of(value))
+                }
+
+                /** An enum containing [LaunchMode]'s known values. */
+                enum class Known {
+                    FOREGROUND_IF_RUNNING,
+                    RELAUNCH_IF_RUNNING,
+                    FAIL_IF_RUNNING,
+                }
+
+                /**
+                 * An enum containing [LaunchMode]'s known values, as well as an [_UNKNOWN] member.
+                 *
+                 * An instance of [LaunchMode] can contain an unknown value in a couple of cases:
+                 * - It was deserialized from data that doesn't match any known member. For example,
+                 *   if the SDK is on an older version than the API, then the API may respond with
+                 *   new members that the SDK is unaware of.
+                 * - It was constructed with an arbitrary value using the [of] method.
+                 */
+                enum class Value {
+                    FOREGROUND_IF_RUNNING,
+                    RELAUNCH_IF_RUNNING,
+                    FAIL_IF_RUNNING,
+                    /**
+                     * An enum member indicating that [LaunchMode] was instantiated with an unknown
+                     * value.
+                     */
+                    _UNKNOWN,
+                }
+
+                /**
+                 * Returns an enum member corresponding to this class instance's value, or
+                 * [Value._UNKNOWN] if the class was instantiated with an unknown value.
+                 *
+                 * Use the [known] method instead if you're certain the value is always known or if
+                 * you want to throw for the unknown case.
+                 */
+                fun value(): Value =
+                    when (this) {
+                        FOREGROUND_IF_RUNNING -> Value.FOREGROUND_IF_RUNNING
+                        RELAUNCH_IF_RUNNING -> Value.RELAUNCH_IF_RUNNING
+                        FAIL_IF_RUNNING -> Value.FAIL_IF_RUNNING
+                        else -> Value._UNKNOWN
+                    }
+
+                /**
+                 * Returns an enum member corresponding to this class instance's value.
+                 *
+                 * Use the [value] method instead if you're uncertain the value is always known and
+                 * don't want to throw for the unknown case.
+                 *
+                 * @throws LimrunInvalidDataException if this class instance's value is a not a
+                 *   known member.
+                 */
+                fun known(): Known =
+                    when (this) {
+                        FOREGROUND_IF_RUNNING -> Known.FOREGROUND_IF_RUNNING
+                        RELAUNCH_IF_RUNNING -> Known.RELAUNCH_IF_RUNNING
+                        FAIL_IF_RUNNING -> Known.FAIL_IF_RUNNING
+                        else -> throw LimrunInvalidDataException("Unknown LaunchMode: $value")
+                    }
+
+                /**
+                 * Returns this class instance's primitive wire representation.
+                 *
+                 * This differs from the [toString] method because that method is primarily for
+                 * debugging and generally doesn't throw.
+                 *
+                 * @throws LimrunInvalidDataException if this class instance's value does not have
+                 *   the expected primitive type.
+                 */
+                fun asString(): String =
+                    _value().asString().orElseThrow {
+                        LimrunInvalidDataException("Value is not a String")
+                    }
+
+                private var validated: Boolean = false
+
+                fun validate(): LaunchMode = apply {
+                    if (validated) {
+                        return@apply
+                    }
+
+                    known()
+                    validated = true
+                }
+
+                fun isValid(): Boolean =
+                    try {
+                        validate()
+                        true
+                    } catch (e: LimrunInvalidDataException) {
+                        false
+                    }
+
+                /**
+                 * Returns a score indicating how many valid values are contained in this object
+                 * recursively.
+                 *
+                 * Used for best match union deserialization.
+                 */
+                @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+                override fun equals(other: Any?): Boolean {
+                    if (this === other) {
+                        return true
+                    }
+
+                    return other is LaunchMode && value == other.value
+                }
+
+                override fun hashCode() = value.hashCode()
+
+                override fun toString() = value.toString()
+            }
+
             override fun equals(other: Any?): Boolean {
                 if (this === other) {
                     return true
@@ -1887,18 +2074,19 @@ private constructor(
                     kind == other.kind &&
                     source == other.source &&
                     assetName == other.assetName &&
+                    launchMode == other.launchMode &&
                     url == other.url &&
                     additionalProperties == other.additionalProperties
             }
 
             private val hashCode: Int by lazy {
-                Objects.hash(kind, source, assetName, url, additionalProperties)
+                Objects.hash(kind, source, assetName, launchMode, url, additionalProperties)
             }
 
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "InitialAsset{kind=$kind, source=$source, assetName=$assetName, url=$url, additionalProperties=$additionalProperties}"
+                "InitialAsset{kind=$kind, source=$source, assetName=$assetName, launchMode=$launchMode, url=$url, additionalProperties=$additionalProperties}"
         }
 
         override fun equals(other: Any?): Boolean {
