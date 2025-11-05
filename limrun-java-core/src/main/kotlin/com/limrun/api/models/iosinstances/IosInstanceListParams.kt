@@ -256,6 +256,8 @@ private constructor(
 
             @JvmField val CREATING = of("creating")
 
+            @JvmField val ASSIGNED = of("assigned")
+
             @JvmField val READY = of("ready")
 
             @JvmField val TERMINATED = of("terminated")
@@ -267,6 +269,7 @@ private constructor(
         enum class Known {
             UNKNOWN,
             CREATING,
+            ASSIGNED,
             READY,
             TERMINATED,
         }
@@ -283,6 +286,7 @@ private constructor(
         enum class Value {
             UNKNOWN,
             CREATING,
+            ASSIGNED,
             READY,
             TERMINATED,
             /** An enum member indicating that [State] was instantiated with an unknown value. */
@@ -300,6 +304,7 @@ private constructor(
             when (this) {
                 UNKNOWN -> Value.UNKNOWN
                 CREATING -> Value.CREATING
+                ASSIGNED -> Value.ASSIGNED
                 READY -> Value.READY
                 TERMINATED -> Value.TERMINATED
                 else -> Value._UNKNOWN
@@ -318,6 +323,7 @@ private constructor(
             when (this) {
                 UNKNOWN -> Known.UNKNOWN
                 CREATING -> Known.CREATING
+                ASSIGNED -> Known.ASSIGNED
                 READY -> Known.READY
                 TERMINATED -> Known.TERMINATED
                 else -> throw LimrunInvalidDataException("Unknown State: $value")
