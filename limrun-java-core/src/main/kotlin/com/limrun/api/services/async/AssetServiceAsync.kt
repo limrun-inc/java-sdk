@@ -4,8 +4,10 @@ package com.limrun.api.services.async
 
 import com.limrun.api.core.ClientOptions
 import com.limrun.api.core.RequestOptions
+import com.limrun.api.core.http.HttpResponse
 import com.limrun.api.core.http.HttpResponseFor
 import com.limrun.api.models.assets.Asset
+import com.limrun.api.models.assets.AssetDeleteParams
 import com.limrun.api.models.assets.AssetGetOrCreateParams
 import com.limrun.api.models.assets.AssetGetOrCreateResponse
 import com.limrun.api.models.assets.AssetGetParams
@@ -43,6 +45,38 @@ interface AssetServiceAsync {
     /** @see list */
     fun list(requestOptions: RequestOptions): CompletableFuture<List<Asset>> =
         list(AssetListParams.none(), requestOptions)
+
+    /** Delete the asset with given ID. */
+    fun delete(assetId: String): CompletableFuture<Void?> =
+        delete(assetId, AssetDeleteParams.none())
+
+    /** @see delete */
+    fun delete(
+        assetId: String,
+        params: AssetDeleteParams = AssetDeleteParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<Void?> =
+        delete(params.toBuilder().assetId(assetId).build(), requestOptions)
+
+    /** @see delete */
+    fun delete(
+        assetId: String,
+        params: AssetDeleteParams = AssetDeleteParams.none(),
+    ): CompletableFuture<Void?> = delete(assetId, params, RequestOptions.none())
+
+    /** @see delete */
+    fun delete(
+        params: AssetDeleteParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<Void?>
+
+    /** @see delete */
+    fun delete(params: AssetDeleteParams): CompletableFuture<Void?> =
+        delete(params, RequestOptions.none())
+
+    /** @see delete */
+    fun delete(assetId: String, requestOptions: RequestOptions): CompletableFuture<Void?> =
+        delete(assetId, AssetDeleteParams.none(), requestOptions)
 
     /** Get the asset with given ID. */
     fun get(assetId: String): CompletableFuture<Asset> = get(assetId, AssetGetParams.none())
@@ -121,6 +155,44 @@ interface AssetServiceAsync {
         /** @see list */
         fun list(requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<List<Asset>>> =
             list(AssetListParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `delete /v1/assets/{assetId}`, but is otherwise the same
+         * as [AssetServiceAsync.delete].
+         */
+        fun delete(assetId: String): CompletableFuture<HttpResponse> =
+            delete(assetId, AssetDeleteParams.none())
+
+        /** @see delete */
+        fun delete(
+            assetId: String,
+            params: AssetDeleteParams = AssetDeleteParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponse> =
+            delete(params.toBuilder().assetId(assetId).build(), requestOptions)
+
+        /** @see delete */
+        fun delete(
+            assetId: String,
+            params: AssetDeleteParams = AssetDeleteParams.none(),
+        ): CompletableFuture<HttpResponse> = delete(assetId, params, RequestOptions.none())
+
+        /** @see delete */
+        fun delete(
+            params: AssetDeleteParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponse>
+
+        /** @see delete */
+        fun delete(params: AssetDeleteParams): CompletableFuture<HttpResponse> =
+            delete(params, RequestOptions.none())
+
+        /** @see delete */
+        fun delete(
+            assetId: String,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponse> =
+            delete(assetId, AssetDeleteParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `get /v1/assets/{assetId}`, but is otherwise the same as

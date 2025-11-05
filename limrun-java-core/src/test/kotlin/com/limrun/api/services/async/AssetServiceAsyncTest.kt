@@ -40,6 +40,21 @@ internal class AssetServiceAsyncTest {
 
     @Disabled("Prism tests are disabled")
     @Test
+    fun delete() {
+        val client =
+            LimrunOkHttpClientAsync.builder()
+                .baseUrl(TestServerExtension.BASE_URL)
+                .apiKey("My API Key")
+                .build()
+        val assetServiceAsync = client.assets()
+
+        val future = assetServiceAsync.delete("assetId")
+
+        val response = future.get()
+    }
+
+    @Disabled("Prism tests are disabled")
+    @Test
     fun get() {
         val client =
             LimrunOkHttpClientAsync.builder()
