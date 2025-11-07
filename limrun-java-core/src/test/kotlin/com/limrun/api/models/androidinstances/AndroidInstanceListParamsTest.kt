@@ -16,7 +16,7 @@ internal class AndroidInstanceListParamsTest {
             .limit(50L)
             .region("region")
             .startingAfter("startingAfter")
-            .state(AndroidInstanceListParams.State.UNKNOWN)
+            .state("assigned,ready")
             .build()
     }
 
@@ -29,7 +29,7 @@ internal class AndroidInstanceListParamsTest {
                 .limit(50L)
                 .region("region")
                 .startingAfter("startingAfter")
-                .state(AndroidInstanceListParams.State.UNKNOWN)
+                .state("assigned,ready")
                 .build()
 
         val queryParams = params._queryParams()
@@ -42,7 +42,7 @@ internal class AndroidInstanceListParamsTest {
                     .put("limit", "50")
                     .put("region", "region")
                     .put("startingAfter", "startingAfter")
-                    .put("state", "unknown")
+                    .put("state", "assigned,ready")
                     .build()
             )
     }
