@@ -12,17 +12,13 @@ import kotlin.jvm.optionals.getOrNull
 /** List organization's all assets with given filters. If none given, return all assets. */
 class AssetListParams
 private constructor(
-    private val endingBefore: String?,
     private val includeDownloadUrl: Boolean?,
     private val includeUploadUrl: Boolean?,
     private val limit: Long?,
     private val nameFilter: String?,
-    private val startingAfter: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
-
-    fun endingBefore(): Optional<String> = Optional.ofNullable(endingBefore)
 
     /** Toggles whether a download URL should be included in the response */
     fun includeDownloadUrl(): Optional<Boolean> = Optional.ofNullable(includeDownloadUrl)
@@ -35,8 +31,6 @@ private constructor(
 
     /** Query by file name */
     fun nameFilter(): Optional<String> = Optional.ofNullable(nameFilter)
-
-    fun startingAfter(): Optional<String> = Optional.ofNullable(startingAfter)
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -57,31 +51,22 @@ private constructor(
     /** A builder for [AssetListParams]. */
     class Builder internal constructor() {
 
-        private var endingBefore: String? = null
         private var includeDownloadUrl: Boolean? = null
         private var includeUploadUrl: Boolean? = null
         private var limit: Long? = null
         private var nameFilter: String? = null
-        private var startingAfter: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
         internal fun from(assetListParams: AssetListParams) = apply {
-            endingBefore = assetListParams.endingBefore
             includeDownloadUrl = assetListParams.includeDownloadUrl
             includeUploadUrl = assetListParams.includeUploadUrl
             limit = assetListParams.limit
             nameFilter = assetListParams.nameFilter
-            startingAfter = assetListParams.startingAfter
             additionalHeaders = assetListParams.additionalHeaders.toBuilder()
             additionalQueryParams = assetListParams.additionalQueryParams.toBuilder()
         }
-
-        fun endingBefore(endingBefore: String?) = apply { this.endingBefore = endingBefore }
-
-        /** Alias for calling [Builder.endingBefore] with `endingBefore.orElse(null)`. */
-        fun endingBefore(endingBefore: Optional<String>) = endingBefore(endingBefore.getOrNull())
 
         /** Toggles whether a download URL should be included in the response */
         fun includeDownloadUrl(includeDownloadUrl: Boolean?) = apply {
@@ -137,12 +122,6 @@ private constructor(
 
         /** Alias for calling [Builder.nameFilter] with `nameFilter.orElse(null)`. */
         fun nameFilter(nameFilter: Optional<String>) = nameFilter(nameFilter.getOrNull())
-
-        fun startingAfter(startingAfter: String?) = apply { this.startingAfter = startingAfter }
-
-        /** Alias for calling [Builder.startingAfter] with `startingAfter.orElse(null)`. */
-        fun startingAfter(startingAfter: Optional<String>) =
-            startingAfter(startingAfter.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -249,12 +228,10 @@ private constructor(
          */
         fun build(): AssetListParams =
             AssetListParams(
-                endingBefore,
                 includeDownloadUrl,
                 includeUploadUrl,
                 limit,
                 nameFilter,
-                startingAfter,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
@@ -265,12 +242,10 @@ private constructor(
     override fun _queryParams(): QueryParams =
         QueryParams.builder()
             .apply {
-                endingBefore?.let { put("endingBefore", it) }
                 includeDownloadUrl?.let { put("includeDownloadUrl", it.toString()) }
                 includeUploadUrl?.let { put("includeUploadUrl", it.toString()) }
                 limit?.let { put("limit", it.toString()) }
                 nameFilter?.let { put("nameFilter", it) }
-                startingAfter?.let { put("startingAfter", it) }
                 putAll(additionalQueryParams)
             }
             .build()
@@ -281,28 +256,24 @@ private constructor(
         }
 
         return other is AssetListParams &&
-            endingBefore == other.endingBefore &&
             includeDownloadUrl == other.includeDownloadUrl &&
             includeUploadUrl == other.includeUploadUrl &&
             limit == other.limit &&
             nameFilter == other.nameFilter &&
-            startingAfter == other.startingAfter &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
         Objects.hash(
-            endingBefore,
             includeDownloadUrl,
             includeUploadUrl,
             limit,
             nameFilter,
-            startingAfter,
             additionalHeaders,
             additionalQueryParams,
         )
 
     override fun toString() =
-        "AssetListParams{endingBefore=$endingBefore, includeDownloadUrl=$includeDownloadUrl, includeUploadUrl=$includeUploadUrl, limit=$limit, nameFilter=$nameFilter, startingAfter=$startingAfter, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "AssetListParams{includeDownloadUrl=$includeDownloadUrl, includeUploadUrl=$includeUploadUrl, limit=$limit, nameFilter=$nameFilter, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }
