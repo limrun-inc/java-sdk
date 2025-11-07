@@ -102,6 +102,7 @@ internal class ErrorHandlingTest {
                                         .source(
                                             AndroidInstanceCreateParams.Spec.InitialAsset.Source.URL
                                         )
+                                        .addAssetId("string")
                                         .assetName("assetName")
                                         .addAssetName("string")
                                         .url("url")
@@ -164,6 +165,7 @@ internal class ErrorHandlingTest {
                                         .source(
                                             AndroidInstanceCreateParams.Spec.InitialAsset.Source.URL
                                         )
+                                        .addAssetId("string")
                                         .assetName("assetName")
                                         .addAssetName("string")
                                         .url("url")
@@ -226,6 +228,7 @@ internal class ErrorHandlingTest {
                                         .source(
                                             AndroidInstanceCreateParams.Spec.InitialAsset.Source.URL
                                         )
+                                        .addAssetId("string")
                                         .assetName("assetName")
                                         .addAssetName("string")
                                         .url("url")
@@ -288,6 +291,7 @@ internal class ErrorHandlingTest {
                                         .source(
                                             AndroidInstanceCreateParams.Spec.InitialAsset.Source.URL
                                         )
+                                        .addAssetId("string")
                                         .assetName("assetName")
                                         .addAssetName("string")
                                         .url("url")
@@ -350,6 +354,7 @@ internal class ErrorHandlingTest {
                                         .source(
                                             AndroidInstanceCreateParams.Spec.InitialAsset.Source.URL
                                         )
+                                        .addAssetId("string")
                                         .assetName("assetName")
                                         .addAssetName("string")
                                         .url("url")
@@ -412,6 +417,7 @@ internal class ErrorHandlingTest {
                                         .source(
                                             AndroidInstanceCreateParams.Spec.InitialAsset.Source.URL
                                         )
+                                        .addAssetId("string")
                                         .assetName("assetName")
                                         .addAssetName("string")
                                         .url("url")
@@ -474,6 +480,7 @@ internal class ErrorHandlingTest {
                                         .source(
                                             AndroidInstanceCreateParams.Spec.InitialAsset.Source.URL
                                         )
+                                        .addAssetId("string")
                                         .assetName("assetName")
                                         .addAssetName("string")
                                         .url("url")
@@ -536,6 +543,7 @@ internal class ErrorHandlingTest {
                                         .source(
                                             AndroidInstanceCreateParams.Spec.InitialAsset.Source.URL
                                         )
+                                        .addAssetId("string")
                                         .assetName("assetName")
                                         .addAssetName("string")
                                         .url("url")
@@ -598,6 +606,7 @@ internal class ErrorHandlingTest {
                                         .source(
                                             AndroidInstanceCreateParams.Spec.InitialAsset.Source.URL
                                         )
+                                        .addAssetId("string")
                                         .assetName("assetName")
                                         .addAssetName("string")
                                         .url("url")
@@ -660,6 +669,7 @@ internal class ErrorHandlingTest {
                                         .source(
                                             AndroidInstanceCreateParams.Spec.InitialAsset.Source.URL
                                         )
+                                        .addAssetId("string")
                                         .assetName("assetName")
                                         .addAssetName("string")
                                         .url("url")
@@ -722,6 +732,7 @@ internal class ErrorHandlingTest {
                                         .source(
                                             AndroidInstanceCreateParams.Spec.InitialAsset.Source.URL
                                         )
+                                        .addAssetId("string")
                                         .assetName("assetName")
                                         .addAssetName("string")
                                         .url("url")
@@ -784,6 +795,7 @@ internal class ErrorHandlingTest {
                                         .source(
                                             AndroidInstanceCreateParams.Spec.InitialAsset.Source.URL
                                         )
+                                        .addAssetId("string")
                                         .assetName("assetName")
                                         .addAssetName("string")
                                         .url("url")
@@ -846,6 +858,7 @@ internal class ErrorHandlingTest {
                                         .source(
                                             AndroidInstanceCreateParams.Spec.InitialAsset.Source.URL
                                         )
+                                        .addAssetId("string")
                                         .assetName("assetName")
                                         .addAssetName("string")
                                         .url("url")
@@ -908,6 +921,7 @@ internal class ErrorHandlingTest {
                                         .source(
                                             AndroidInstanceCreateParams.Spec.InitialAsset.Source.URL
                                         )
+                                        .addAssetId("string")
                                         .assetName("assetName")
                                         .addAssetName("string")
                                         .url("url")
@@ -970,6 +984,7 @@ internal class ErrorHandlingTest {
                                         .source(
                                             AndroidInstanceCreateParams.Spec.InitialAsset.Source.URL
                                         )
+                                        .addAssetId("string")
                                         .assetName("assetName")
                                         .addAssetName("string")
                                         .url("url")
@@ -1032,6 +1047,7 @@ internal class ErrorHandlingTest {
                                         .source(
                                             AndroidInstanceCreateParams.Spec.InitialAsset.Source.URL
                                         )
+                                        .addAssetId("string")
                                         .assetName("assetName")
                                         .addAssetName("string")
                                         .url("url")
@@ -1092,6 +1108,7 @@ internal class ErrorHandlingTest {
                                         .source(
                                             AndroidInstanceCreateParams.Spec.InitialAsset.Source.URL
                                         )
+                                        .addAssetId("string")
                                         .assetName("assetName")
                                         .addAssetName("string")
                                         .url("url")

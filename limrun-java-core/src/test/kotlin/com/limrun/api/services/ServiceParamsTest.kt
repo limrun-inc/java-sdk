@@ -70,6 +70,7 @@ internal class ServiceParamsTest {
                             AndroidInstanceCreateParams.Spec.InitialAsset.builder()
                                 .kind(AndroidInstanceCreateParams.Spec.InitialAsset.Kind.APP)
                                 .source(AndroidInstanceCreateParams.Spec.InitialAsset.Source.URL)
+                                .addAssetId("string")
                                 .assetName("assetName")
                                 .addAssetName("string")
                                 .url("url")

@@ -1381,6 +1381,7 @@ private constructor(
         private constructor(
             private val kind: JsonField<Kind>,
             private val source: JsonField<Source>,
+            private val assetId: JsonField<String>,
             private val assetName: JsonField<String>,
             private val launchMode: JsonField<LaunchMode>,
             private val url: JsonField<String>,
@@ -1393,6 +1394,9 @@ private constructor(
                 @JsonProperty("source")
                 @ExcludeMissing
                 source: JsonField<Source> = JsonMissing.of(),
+                @JsonProperty("assetId")
+                @ExcludeMissing
+                assetId: JsonField<String> = JsonMissing.of(),
                 @JsonProperty("assetName")
                 @ExcludeMissing
                 assetName: JsonField<String> = JsonMissing.of(),
@@ -1400,7 +1404,7 @@ private constructor(
                 @ExcludeMissing
                 launchMode: JsonField<LaunchMode> = JsonMissing.of(),
                 @JsonProperty("url") @ExcludeMissing url: JsonField<String> = JsonMissing.of(),
-            ) : this(kind, source, assetName, launchMode, url, mutableMapOf())
+            ) : this(kind, source, assetId, assetName, launchMode, url, mutableMapOf())
 
             /**
              * @throws LimrunInvalidDataException if the JSON field has an unexpected type or is
@@ -1415,6 +1419,12 @@ private constructor(
              *   value).
              */
             fun source(): Source = source.getRequired("source")
+
+            /**
+             * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if
+             *   the server responded with an unexpected value).
+             */
+            fun assetId(): Optional<String> = assetId.getOptional("assetId")
 
             /**
              * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -1450,6 +1460,13 @@ private constructor(
              * Unlike [source], this method doesn't throw if the JSON field has an unexpected type.
              */
             @JsonProperty("source") @ExcludeMissing fun _source(): JsonField<Source> = source
+
+            /**
+             * Returns the raw JSON value of [assetId].
+             *
+             * Unlike [assetId], this method doesn't throw if the JSON field has an unexpected type.
+             */
+            @JsonProperty("assetId") @ExcludeMissing fun _assetId(): JsonField<String> = assetId
 
             /**
              * Returns the raw JSON value of [assetName].
@@ -1509,6 +1526,7 @@ private constructor(
 
                 private var kind: JsonField<Kind>? = null
                 private var source: JsonField<Source>? = null
+                private var assetId: JsonField<String> = JsonMissing.of()
                 private var assetName: JsonField<String> = JsonMissing.of()
                 private var launchMode: JsonField<LaunchMode> = JsonMissing.of()
                 private var url: JsonField<String> = JsonMissing.of()
@@ -1518,6 +1536,7 @@ private constructor(
                 internal fun from(initialAsset: InitialAsset) = apply {
                     kind = initialAsset.kind
                     source = initialAsset.source
+                    assetId = initialAsset.assetId
                     assetName = initialAsset.assetName
                     launchMode = initialAsset.launchMode
                     url = initialAsset.url
@@ -1545,6 +1564,17 @@ private constructor(
                  * yet supported value.
                  */
                 fun source(source: JsonField<Source>) = apply { this.source = source }
+
+                fun assetId(assetId: String) = assetId(JsonField.of(assetId))
+
+                /**
+                 * Sets [Builder.assetId] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.assetId] with a well-typed [String] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun assetId(assetId: JsonField<String>) = apply { this.assetId = assetId }
 
                 fun assetName(assetName: String) = assetName(JsonField.of(assetName))
 
@@ -1624,6 +1654,7 @@ private constructor(
                     InitialAsset(
                         checkRequired("kind", kind),
                         checkRequired("source", source),
+                        assetId,
                         assetName,
                         launchMode,
                         url,
@@ -1640,6 +1671,7 @@ private constructor(
 
                 kind().validate()
                 source().validate()
+                assetId()
                 assetName()
                 launchMode().ifPresent { it.validate() }
                 url()
@@ -1664,6 +1696,7 @@ private constructor(
             internal fun validity(): Int =
                 (kind.asKnown().getOrNull()?.validity() ?: 0) +
                     (source.asKnown().getOrNull()?.validity() ?: 0) +
+                    (if (assetId.asKnown().isPresent) 1 else 0) +
                     (if (assetName.asKnown().isPresent) 1 else 0) +
                     (launchMode.asKnown().getOrNull()?.validity() ?: 0) +
                     (if (url.asKnown().isPresent) 1 else 0)
@@ -1811,6 +1844,8 @@ private constructor(
 
                     @JvmField val ASSET_NAME = of("AssetName")
 
+                    @JvmField val ASSET_ID = of("AssetID")
+
                     @JvmStatic fun of(value: String) = Source(JsonField.of(value))
                 }
 
@@ -1818,6 +1853,7 @@ private constructor(
                 enum class Known {
                     URL,
                     ASSET_NAME,
+                    ASSET_ID,
                 }
 
                 /**
@@ -1832,6 +1868,7 @@ private constructor(
                 enum class Value {
                     URL,
                     ASSET_NAME,
+                    ASSET_ID,
                     /**
                      * An enum member indicating that [Source] was instantiated with an unknown
                      * value.
@@ -1850,6 +1887,7 @@ private constructor(
                     when (this) {
                         URL -> Value.URL
                         ASSET_NAME -> Value.ASSET_NAME
+                        ASSET_ID -> Value.ASSET_ID
                         else -> Value._UNKNOWN
                     }
 
@@ -1866,6 +1904,7 @@ private constructor(
                     when (this) {
                         URL -> Known.URL
                         ASSET_NAME -> Known.ASSET_NAME
+                        ASSET_ID -> Known.ASSET_ID
                         else -> throw LimrunInvalidDataException("Unknown Source: $value")
                     }
 
@@ -2073,6 +2112,7 @@ private constructor(
                 return other is InitialAsset &&
                     kind == other.kind &&
                     source == other.source &&
+                    assetId == other.assetId &&
                     assetName == other.assetName &&
                     launchMode == other.launchMode &&
                     url == other.url &&
@@ -2080,13 +2120,21 @@ private constructor(
             }
 
             private val hashCode: Int by lazy {
-                Objects.hash(kind, source, assetName, launchMode, url, additionalProperties)
+                Objects.hash(
+                    kind,
+                    source,
+                    assetId,
+                    assetName,
+                    launchMode,
+                    url,
+                    additionalProperties,
+                )
             }
 
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "InitialAsset{kind=$kind, source=$source, assetName=$assetName, launchMode=$launchMode, url=$url, additionalProperties=$additionalProperties}"
+                "InitialAsset{kind=$kind, source=$source, assetId=$assetId, assetName=$assetName, launchMode=$launchMode, url=$url, additionalProperties=$additionalProperties}"
         }
 
         override fun equals(other: Any?): Boolean {

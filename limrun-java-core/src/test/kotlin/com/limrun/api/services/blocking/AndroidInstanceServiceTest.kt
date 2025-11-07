@@ -54,6 +54,7 @@ internal class AndroidInstanceServiceTest {
                                     .source(
                                         AndroidInstanceCreateParams.Spec.InitialAsset.Source.URL
                                     )
+                                    .addAssetId("string")
                                     .assetName("assetName")
                                     .addAssetName("string")
                                     .url("url")
