@@ -22,6 +22,7 @@ import com.limrun.api.models.assets.AssetDeleteParams
 import com.limrun.api.models.assets.AssetGetOrCreateParams
 import com.limrun.api.models.assets.AssetGetOrCreateResponse
 import com.limrun.api.models.assets.AssetGetParams
+import com.limrun.api.models.assets.AssetListPage
 import com.limrun.api.models.assets.AssetListParams
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
@@ -38,7 +39,7 @@ class AssetServiceImpl internal constructor(private val clientOptions: ClientOpt
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): AssetService =
         AssetServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
-    override fun list(params: AssetListParams, requestOptions: RequestOptions): List<Asset> =
+    override fun list(params: AssetListParams, requestOptions: RequestOptions): AssetListPage =
         // get /v1/assets
         withRawResponse().list(params, requestOptions).parse()
 
@@ -77,7 +78,7 @@ class AssetServiceImpl internal constructor(private val clientOptions: ClientOpt
         override fun list(
             params: AssetListParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<List<Asset>> {
+        ): HttpResponseFor<AssetListPage> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
@@ -94,6 +95,13 @@ class AssetServiceImpl internal constructor(private val clientOptions: ClientOpt
                         if (requestOptions.responseValidation!!) {
                             it.forEach { it.validate() }
                         }
+                    }
+                    .let {
+                        AssetListPage.builder()
+                            .service(AssetServiceImpl(clientOptions))
+                            .params(params)
+                            .items(it)
+                            .build()
                     }
             }
         }
