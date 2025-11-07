@@ -133,7 +133,7 @@ class AndroidInstanceServiceImpl internal constructor(private val clientOptions:
                         AndroidInstanceListPage.builder()
                             .service(AndroidInstanceServiceImpl(clientOptions))
                             .params(params)
-                            .items(it)
+                            .data(it)
                             .build()
                     }
             }

@@ -144,7 +144,7 @@ internal constructor(private val clientOptions: ClientOptions) : AndroidInstance
                                     .service(AndroidInstanceServiceAsyncImpl(clientOptions))
                                     .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
                                     .params(params)
-                                    .items(it)
+                                    .data(it)
                                     .build()
                             }
                     }
