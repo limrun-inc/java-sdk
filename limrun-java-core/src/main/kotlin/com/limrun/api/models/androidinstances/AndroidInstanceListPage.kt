@@ -13,7 +13,7 @@ class AndroidInstanceListPage
 private constructor(
     private val service: AndroidInstanceService,
     private val params: AndroidInstanceListParams,
-    private val items: List<AndroidInstance>,
+    private val data: List<AndroidInstance>,
 ) : Page<AndroidInstance> {
 
     override fun hasNextPage(): Boolean = items().isNotEmpty()
@@ -29,7 +29,7 @@ private constructor(
     fun params(): AndroidInstanceListParams = params
 
     /** The response that this page was parsed from. */
-    override fun items(): List<AndroidInstance> = items
+    override fun data(): List<AndroidInstance> = data
 
     fun toBuilder() = Builder().from(this)
 
@@ -42,7 +42,7 @@ private constructor(
          * ```java
          * .service()
          * .params()
-         * .items()
+         * .data()
          * ```
          */
         @JvmStatic fun builder() = Builder()
@@ -53,13 +53,13 @@ private constructor(
 
         private var service: AndroidInstanceService? = null
         private var params: AndroidInstanceListParams? = null
-        private var items: List<AndroidInstance>? = null
+        private var data: List<AndroidInstance>? = null
 
         @JvmSynthetic
         internal fun from(androidInstanceListPage: AndroidInstanceListPage) = apply {
             service = androidInstanceListPage.service
             params = androidInstanceListPage.params
-            items = androidInstanceListPage.items
+            data = androidInstanceListPage.data
         }
 
         fun service(service: AndroidInstanceService) = apply { this.service = service }
@@ -68,7 +68,7 @@ private constructor(
         fun params(params: AndroidInstanceListParams) = apply { this.params = params }
 
         /** The response that this page was parsed from. */
-        fun items(items: List<AndroidInstance>) = apply { this.items = items }
+        fun data(data: List<AndroidInstance>) = apply { this.data = data }
 
         /**
          * Returns an immutable instance of [AndroidInstanceListPage].
@@ -79,7 +79,7 @@ private constructor(
          * ```java
          * .service()
          * .params()
-         * .items()
+         * .data()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
@@ -88,7 +88,7 @@ private constructor(
             AndroidInstanceListPage(
                 checkRequired("service", service),
                 checkRequired("params", params),
-                checkRequired("items", items),
+                checkRequired("data", data),
             )
     }
 
@@ -100,11 +100,11 @@ private constructor(
         return other is AndroidInstanceListPage &&
             service == other.service &&
             params == other.params &&
-            items == other.items
+            data == other.data
     }
 
-    override fun hashCode(): Int = Objects.hash(service, params, items)
+    override fun hashCode(): Int = Objects.hash(service, params, data)
 
     override fun toString() =
-        "AndroidInstanceListPage{service=$service, params=$params, items=$items}"
+        "AndroidInstanceListPage{service=$service, params=$params, data=$data}"
 }

@@ -81,7 +81,7 @@ internal class AndroidInstanceServiceTest {
 
         val page = androidInstanceService.list()
 
-        page.items().forEach { it.validate() }
+        page.data().forEach { it.validate() }
     }
 
     @Disabled("Prism tests are disabled")
