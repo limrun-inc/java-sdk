@@ -2,13 +2,9 @@
 
 package com.limrun.api.models.iosinstances
 
-import com.fasterxml.jackson.annotation.JsonCreator
-import com.limrun.api.core.Enum
-import com.limrun.api.core.JsonField
 import com.limrun.api.core.Params
 import com.limrun.api.core.http.Headers
 import com.limrun.api.core.http.QueryParams
-import com.limrun.api.errors.LimrunInvalidDataException
 import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
@@ -21,7 +17,7 @@ private constructor(
     private val limit: Long?,
     private val region: String?,
     private val startingAfter: String?,
-    private val state: State?,
+    private val state: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
@@ -42,8 +38,12 @@ private constructor(
 
     fun startingAfter(): Optional<String> = Optional.ofNullable(startingAfter)
 
-    /** State filter to apply to instances to return. */
-    fun state(): Optional<State> = Optional.ofNullable(state)
+    /**
+     * State filter to apply to Android instances to return. Each comma-separated state will be used
+     * as part of an OR clause, e.g. "assigned,ready" will return all instances that are either
+     * assigned or ready.
+     */
+    fun state(): Optional<String> = Optional.ofNullable(state)
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -69,7 +69,7 @@ private constructor(
         private var limit: Long? = null
         private var region: String? = null
         private var startingAfter: String? = null
-        private var state: State? = null
+        private var state: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
@@ -125,11 +125,15 @@ private constructor(
         fun startingAfter(startingAfter: Optional<String>) =
             startingAfter(startingAfter.getOrNull())
 
-        /** State filter to apply to instances to return. */
-        fun state(state: State?) = apply { this.state = state }
+        /**
+         * State filter to apply to Android instances to return. Each comma-separated state will be
+         * used as part of an OR clause, e.g. "assigned,ready" will return all instances that are
+         * either assigned or ready.
+         */
+        fun state(state: String?) = apply { this.state = state }
 
         /** Alias for calling [Builder.state] with `state.orElse(null)`. */
-        fun state(state: Optional<State>) = state(state.getOrNull())
+        fun state(state: Optional<String>) = state(state.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -257,154 +261,10 @@ private constructor(
                 limit?.let { put("limit", it.toString()) }
                 region?.let { put("region", it) }
                 startingAfter?.let { put("startingAfter", it) }
-                state?.let { put("state", it.toString()) }
+                state?.let { put("state", it) }
                 putAll(additionalQueryParams)
             }
             .build()
-
-    /** State filter to apply to instances to return. */
-    class State @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
-
-        /**
-         * Returns this class instance's raw value.
-         *
-         * This is usually only useful if this instance was deserialized from data that doesn't
-         * match any known member, and you want to know that value. For example, if the SDK is on an
-         * older version than the API, then the API may respond with new members that the SDK is
-         * unaware of.
-         */
-        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-        companion object {
-
-            @JvmField val UNKNOWN = of("unknown")
-
-            @JvmField val CREATING = of("creating")
-
-            @JvmField val ASSIGNED = of("assigned")
-
-            @JvmField val READY = of("ready")
-
-            @JvmField val TERMINATED = of("terminated")
-
-            @JvmStatic fun of(value: String) = State(JsonField.of(value))
-        }
-
-        /** An enum containing [State]'s known values. */
-        enum class Known {
-            UNKNOWN,
-            CREATING,
-            ASSIGNED,
-            READY,
-            TERMINATED,
-        }
-
-        /**
-         * An enum containing [State]'s known values, as well as an [_UNKNOWN] member.
-         *
-         * An instance of [State] can contain an unknown value in a couple of cases:
-         * - It was deserialized from data that doesn't match any known member. For example, if the
-         *   SDK is on an older version than the API, then the API may respond with new members that
-         *   the SDK is unaware of.
-         * - It was constructed with an arbitrary value using the [of] method.
-         */
-        enum class Value {
-            UNKNOWN,
-            CREATING,
-            ASSIGNED,
-            READY,
-            TERMINATED,
-            /** An enum member indicating that [State] was instantiated with an unknown value. */
-            _UNKNOWN,
-        }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
-         * if the class was instantiated with an unknown value.
-         *
-         * Use the [known] method instead if you're certain the value is always known or if you want
-         * to throw for the unknown case.
-         */
-        fun value(): Value =
-            when (this) {
-                UNKNOWN -> Value.UNKNOWN
-                CREATING -> Value.CREATING
-                ASSIGNED -> Value.ASSIGNED
-                READY -> Value.READY
-                TERMINATED -> Value.TERMINATED
-                else -> Value._UNKNOWN
-            }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value.
-         *
-         * Use the [value] method instead if you're uncertain the value is always known and don't
-         * want to throw for the unknown case.
-         *
-         * @throws LimrunInvalidDataException if this class instance's value is a not a known
-         *   member.
-         */
-        fun known(): Known =
-            when (this) {
-                UNKNOWN -> Known.UNKNOWN
-                CREATING -> Known.CREATING
-                ASSIGNED -> Known.ASSIGNED
-                READY -> Known.READY
-                TERMINATED -> Known.TERMINATED
-                else -> throw LimrunInvalidDataException("Unknown State: $value")
-            }
-
-        /**
-         * Returns this class instance's primitive wire representation.
-         *
-         * This differs from the [toString] method because that method is primarily for debugging
-         * and generally doesn't throw.
-         *
-         * @throws LimrunInvalidDataException if this class instance's value does not have the
-         *   expected primitive type.
-         */
-        fun asString(): String =
-            _value().asString().orElseThrow { LimrunInvalidDataException("Value is not a String") }
-
-        private var validated: Boolean = false
-
-        fun validate(): State = apply {
-            if (validated) {
-                return@apply
-            }
-
-            known()
-            validated = true
-        }
-
-        fun isValid(): Boolean =
-            try {
-                validate()
-                true
-            } catch (e: LimrunInvalidDataException) {
-                false
-            }
-
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
-        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return other is State && value == other.value
-        }
-
-        override fun hashCode() = value.hashCode()
-
-        override fun toString() = value.toString()
-    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
