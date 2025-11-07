@@ -37,6 +37,7 @@ internal class IosInstanceCreateParamsTest {
                         IosInstanceCreateParams.Spec.InitialAsset.builder()
                             .kind(IosInstanceCreateParams.Spec.InitialAsset.Kind.APP)
                             .source(IosInstanceCreateParams.Spec.InitialAsset.Source.URL)
+                            .assetId("assetId")
                             .assetName("assetName")
                             .launchMode(
                                 IosInstanceCreateParams.Spec.InitialAsset.LaunchMode
@@ -80,6 +81,7 @@ internal class IosInstanceCreateParamsTest {
                             IosInstanceCreateParams.Spec.InitialAsset.builder()
                                 .kind(IosInstanceCreateParams.Spec.InitialAsset.Kind.APP)
                                 .source(IosInstanceCreateParams.Spec.InitialAsset.Source.URL)
+                                .assetId("assetId")
                                 .assetName("assetName")
                                 .launchMode(
                                     IosInstanceCreateParams.Spec.InitialAsset.LaunchMode
@@ -136,6 +138,7 @@ internal class IosInstanceCreateParamsTest {
                             IosInstanceCreateParams.Spec.InitialAsset.builder()
                                 .kind(IosInstanceCreateParams.Spec.InitialAsset.Kind.APP)
                                 .source(IosInstanceCreateParams.Spec.InitialAsset.Source.URL)
+                                .assetId("assetId")
                                 .assetName("assetName")
                                 .launchMode(
                                     IosInstanceCreateParams.Spec.InitialAsset.LaunchMode
@@ -177,6 +180,7 @@ internal class IosInstanceCreateParamsTest {
                         IosInstanceCreateParams.Spec.InitialAsset.builder()
                             .kind(IosInstanceCreateParams.Spec.InitialAsset.Kind.APP)
                             .source(IosInstanceCreateParams.Spec.InitialAsset.Source.URL)
+                            .assetId("assetId")
                             .assetName("assetName")
                             .launchMode(
                                 IosInstanceCreateParams.Spec.InitialAsset.LaunchMode

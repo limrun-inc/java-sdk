@@ -1435,6 +1435,7 @@ private constructor(
         private constructor(
             private val kind: JsonField<Kind>,
             private val source: JsonField<Source>,
+            private val assetIds: JsonField<List<String>>,
             private val assetName: JsonField<String>,
             private val assetNames: JsonField<List<String>>,
             private val url: JsonField<String>,
@@ -1448,6 +1449,9 @@ private constructor(
                 @JsonProperty("source")
                 @ExcludeMissing
                 source: JsonField<Source> = JsonMissing.of(),
+                @JsonProperty("assetIds")
+                @ExcludeMissing
+                assetIds: JsonField<List<String>> = JsonMissing.of(),
                 @JsonProperty("assetName")
                 @ExcludeMissing
                 assetName: JsonField<String> = JsonMissing.of(),
@@ -1458,7 +1462,7 @@ private constructor(
                 @JsonProperty("urls")
                 @ExcludeMissing
                 urls: JsonField<List<String>> = JsonMissing.of(),
-            ) : this(kind, source, assetName, assetNames, url, urls, mutableMapOf())
+            ) : this(kind, source, assetIds, assetName, assetNames, url, urls, mutableMapOf())
 
             /**
              * @throws LimrunInvalidDataException if the JSON field has an unexpected type or is
@@ -1473,6 +1477,12 @@ private constructor(
              *   value).
              */
             fun source(): Source = source.getRequired("source")
+
+            /**
+             * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if
+             *   the server responded with an unexpected value).
+             */
+            fun assetIds(): Optional<List<String>> = assetIds.getOptional("assetIds")
 
             /**
              * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -1511,6 +1521,16 @@ private constructor(
              * Unlike [source], this method doesn't throw if the JSON field has an unexpected type.
              */
             @JsonProperty("source") @ExcludeMissing fun _source(): JsonField<Source> = source
+
+            /**
+             * Returns the raw JSON value of [assetIds].
+             *
+             * Unlike [assetIds], this method doesn't throw if the JSON field has an unexpected
+             * type.
+             */
+            @JsonProperty("assetIds")
+            @ExcludeMissing
+            fun _assetIds(): JsonField<List<String>> = assetIds
 
             /**
              * Returns the raw JSON value of [assetName].
@@ -1577,6 +1597,7 @@ private constructor(
 
                 private var kind: JsonField<Kind>? = null
                 private var source: JsonField<Source>? = null
+                private var assetIds: JsonField<MutableList<String>>? = null
                 private var assetName: JsonField<String> = JsonMissing.of()
                 private var assetNames: JsonField<MutableList<String>>? = null
                 private var url: JsonField<String> = JsonMissing.of()
@@ -1587,6 +1608,7 @@ private constructor(
                 internal fun from(initialAsset: InitialAsset) = apply {
                     kind = initialAsset.kind
                     source = initialAsset.source
+                    assetIds = initialAsset.assetIds.map { it.toMutableList() }
                     assetName = initialAsset.assetName
                     assetNames = initialAsset.assetNames.map { it.toMutableList() }
                     url = initialAsset.url
@@ -1615,6 +1637,31 @@ private constructor(
                  * yet supported value.
                  */
                 fun source(source: JsonField<Source>) = apply { this.source = source }
+
+                fun assetIds(assetIds: List<String>) = assetIds(JsonField.of(assetIds))
+
+                /**
+                 * Sets [Builder.assetIds] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.assetIds] with a well-typed `List<String>` value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun assetIds(assetIds: JsonField<List<String>>) = apply {
+                    this.assetIds = assetIds.map { it.toMutableList() }
+                }
+
+                /**
+                 * Adds a single [String] to [assetIds].
+                 *
+                 * @throws IllegalStateException if the field was previously set to a non-list.
+                 */
+                fun addAssetId(assetId: String) = apply {
+                    assetIds =
+                        (assetIds ?: JsonField.of(mutableListOf())).also {
+                            checkKnown("assetIds", it).add(assetId)
+                        }
+                }
 
                 fun assetName(assetName: String) = assetName(JsonField.of(assetName))
 
@@ -1727,6 +1774,7 @@ private constructor(
                     InitialAsset(
                         checkRequired("kind", kind),
                         checkRequired("source", source),
+                        (assetIds ?: JsonMissing.of()).map { it.toImmutable() },
                         assetName,
                         (assetNames ?: JsonMissing.of()).map { it.toImmutable() },
                         url,
@@ -1744,6 +1792,7 @@ private constructor(
 
                 kind().validate()
                 source().validate()
+                assetIds()
                 assetName()
                 assetNames()
                 url()
@@ -1769,6 +1818,7 @@ private constructor(
             internal fun validity(): Int =
                 (kind.asKnown().getOrNull()?.validity() ?: 0) +
                     (source.asKnown().getOrNull()?.validity() ?: 0) +
+                    (assetIds.asKnown().getOrNull()?.size ?: 0) +
                     (if (assetName.asKnown().isPresent) 1 else 0) +
                     (assetNames.asKnown().getOrNull()?.size ?: 0) +
                     (if (url.asKnown().isPresent) 1 else 0) +
@@ -1921,6 +1971,8 @@ private constructor(
 
                     @JvmField val ASSET_NAMES = of("AssetNames")
 
+                    @JvmField val ASSET_IDS = of("AssetIDs")
+
                     @JvmStatic fun of(value: String) = Source(JsonField.of(value))
                 }
 
@@ -1930,6 +1982,7 @@ private constructor(
                     URLS,
                     ASSET_NAME,
                     ASSET_NAMES,
+                    ASSET_IDS,
                 }
 
                 /**
@@ -1946,6 +1999,7 @@ private constructor(
                     URLS,
                     ASSET_NAME,
                     ASSET_NAMES,
+                    ASSET_IDS,
                     /**
                      * An enum member indicating that [Source] was instantiated with an unknown
                      * value.
@@ -1966,6 +2020,7 @@ private constructor(
                         URLS -> Value.URLS
                         ASSET_NAME -> Value.ASSET_NAME
                         ASSET_NAMES -> Value.ASSET_NAMES
+                        ASSET_IDS -> Value.ASSET_IDS
                         else -> Value._UNKNOWN
                     }
 
@@ -1984,6 +2039,7 @@ private constructor(
                         URLS -> Known.URLS
                         ASSET_NAME -> Known.ASSET_NAME
                         ASSET_NAMES -> Known.ASSET_NAMES
+                        ASSET_IDS -> Known.ASSET_IDS
                         else -> throw LimrunInvalidDataException("Unknown Source: $value")
                     }
 
@@ -2049,6 +2105,7 @@ private constructor(
                 return other is InitialAsset &&
                     kind == other.kind &&
                     source == other.source &&
+                    assetIds == other.assetIds &&
                     assetName == other.assetName &&
                     assetNames == other.assetNames &&
                     url == other.url &&
@@ -2057,13 +2114,22 @@ private constructor(
             }
 
             private val hashCode: Int by lazy {
-                Objects.hash(kind, source, assetName, assetNames, url, urls, additionalProperties)
+                Objects.hash(
+                    kind,
+                    source,
+                    assetIds,
+                    assetName,
+                    assetNames,
+                    url,
+                    urls,
+                    additionalProperties,
+                )
             }
 
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "InitialAsset{kind=$kind, source=$source, assetName=$assetName, assetNames=$assetNames, url=$url, urls=$urls, additionalProperties=$additionalProperties}"
+                "InitialAsset{kind=$kind, source=$source, assetIds=$assetIds, assetName=$assetName, assetNames=$assetNames, url=$url, urls=$urls, additionalProperties=$additionalProperties}"
         }
 
         override fun equals(other: Any?): Boolean {
