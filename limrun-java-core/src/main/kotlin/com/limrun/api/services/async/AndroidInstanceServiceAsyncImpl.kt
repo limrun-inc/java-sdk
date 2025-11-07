@@ -21,7 +21,6 @@ import com.limrun.api.models.androidinstances.AndroidInstance
 import com.limrun.api.models.androidinstances.AndroidInstanceCreateParams
 import com.limrun.api.models.androidinstances.AndroidInstanceDeleteParams
 import com.limrun.api.models.androidinstances.AndroidInstanceGetParams
-import com.limrun.api.models.androidinstances.AndroidInstanceListPageAsync
 import com.limrun.api.models.androidinstances.AndroidInstanceListParams
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
@@ -51,7 +50,7 @@ internal constructor(private val clientOptions: ClientOptions) : AndroidInstance
     override fun list(
         params: AndroidInstanceListParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<AndroidInstanceListPageAsync> =
+    ): CompletableFuture<List<AndroidInstance>> =
         // get /v1/android_instances
         withRawResponse().list(params, requestOptions).thenApply { it.parse() }
 
@@ -119,7 +118,7 @@ internal constructor(private val clientOptions: ClientOptions) : AndroidInstance
         override fun list(
             params: AndroidInstanceListParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<AndroidInstanceListPageAsync>> {
+        ): CompletableFuture<HttpResponseFor<List<AndroidInstance>>> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
@@ -138,14 +137,6 @@ internal constructor(private val clientOptions: ClientOptions) : AndroidInstance
                                 if (requestOptions.responseValidation!!) {
                                     it.forEach { it.validate() }
                                 }
-                            }
-                            .let {
-                                AndroidInstanceListPageAsync.builder()
-                                    .service(AndroidInstanceServiceAsyncImpl(clientOptions))
-                                    .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
-                                    .params(params)
-                                    .data(it)
-                                    .build()
                             }
                     }
                 }
