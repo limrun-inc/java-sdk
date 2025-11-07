@@ -11,9 +11,11 @@ internal class AndroidInstanceListParamsTest {
     @Test
     fun create() {
         AndroidInstanceListParams.builder()
+            .endingBefore("endingBefore")
             .labelSelector("env=prod,version=1.2")
             .limit(50L)
             .region("region")
+            .startingAfter("startingAfter")
             .state(AndroidInstanceListParams.State.UNKNOWN)
             .build()
     }
@@ -22,9 +24,11 @@ internal class AndroidInstanceListParamsTest {
     fun queryParams() {
         val params =
             AndroidInstanceListParams.builder()
+                .endingBefore("endingBefore")
                 .labelSelector("env=prod,version=1.2")
                 .limit(50L)
                 .region("region")
+                .startingAfter("startingAfter")
                 .state(AndroidInstanceListParams.State.UNKNOWN)
                 .build()
 
@@ -33,9 +37,11 @@ internal class AndroidInstanceListParamsTest {
         assertThat(queryParams)
             .isEqualTo(
                 QueryParams.builder()
+                    .put("endingBefore", "endingBefore")
                     .put("labelSelector", "env=prod,version=1.2")
                     .put("limit", "50")
                     .put("region", "region")
+                    .put("startingAfter", "startingAfter")
                     .put("state", "unknown")
                     .build()
             )
