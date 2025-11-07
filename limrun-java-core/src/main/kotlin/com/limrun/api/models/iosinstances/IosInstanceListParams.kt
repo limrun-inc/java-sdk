@@ -16,13 +16,17 @@ import kotlin.jvm.optionals.getOrNull
 /** List iOS instances */
 class IosInstanceListParams
 private constructor(
+    private val endingBefore: String?,
     private val labelSelector: String?,
     private val limit: Long?,
     private val region: String?,
+    private val startingAfter: String?,
     private val state: State?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
+
+    fun endingBefore(): Optional<String> = Optional.ofNullable(endingBefore)
 
     /**
      * Labels filter to apply to instances to return. Expects a comma-separated list of key=value
@@ -35,6 +39,8 @@ private constructor(
 
     /** Region where the instance is scheduled on. */
     fun region(): Optional<String> = Optional.ofNullable(region)
+
+    fun startingAfter(): Optional<String> = Optional.ofNullable(startingAfter)
 
     /** State filter to apply to instances to return. */
     fun state(): Optional<State> = Optional.ofNullable(state)
@@ -58,22 +64,31 @@ private constructor(
     /** A builder for [IosInstanceListParams]. */
     class Builder internal constructor() {
 
+        private var endingBefore: String? = null
         private var labelSelector: String? = null
         private var limit: Long? = null
         private var region: String? = null
+        private var startingAfter: String? = null
         private var state: State? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
         internal fun from(iosInstanceListParams: IosInstanceListParams) = apply {
+            endingBefore = iosInstanceListParams.endingBefore
             labelSelector = iosInstanceListParams.labelSelector
             limit = iosInstanceListParams.limit
             region = iosInstanceListParams.region
+            startingAfter = iosInstanceListParams.startingAfter
             state = iosInstanceListParams.state
             additionalHeaders = iosInstanceListParams.additionalHeaders.toBuilder()
             additionalQueryParams = iosInstanceListParams.additionalQueryParams.toBuilder()
         }
+
+        fun endingBefore(endingBefore: String?) = apply { this.endingBefore = endingBefore }
+
+        /** Alias for calling [Builder.endingBefore] with `endingBefore.orElse(null)`. */
+        fun endingBefore(endingBefore: Optional<String>) = endingBefore(endingBefore.getOrNull())
 
         /**
          * Labels filter to apply to instances to return. Expects a comma-separated list of
@@ -103,6 +118,12 @@ private constructor(
 
         /** Alias for calling [Builder.region] with `region.orElse(null)`. */
         fun region(region: Optional<String>) = region(region.getOrNull())
+
+        fun startingAfter(startingAfter: String?) = apply { this.startingAfter = startingAfter }
+
+        /** Alias for calling [Builder.startingAfter] with `startingAfter.orElse(null)`. */
+        fun startingAfter(startingAfter: Optional<String>) =
+            startingAfter(startingAfter.getOrNull())
 
         /** State filter to apply to instances to return. */
         fun state(state: State?) = apply { this.state = state }
@@ -215,9 +236,11 @@ private constructor(
          */
         fun build(): IosInstanceListParams =
             IosInstanceListParams(
+                endingBefore,
                 labelSelector,
                 limit,
                 region,
+                startingAfter,
                 state,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -229,9 +252,11 @@ private constructor(
     override fun _queryParams(): QueryParams =
         QueryParams.builder()
             .apply {
+                endingBefore?.let { put("endingBefore", it) }
                 labelSelector?.let { put("labelSelector", it) }
                 limit?.let { put("limit", it.toString()) }
                 region?.let { put("region", it) }
+                startingAfter?.let { put("startingAfter", it) }
                 state?.let { put("state", it.toString()) }
                 putAll(additionalQueryParams)
             }
@@ -387,17 +412,28 @@ private constructor(
         }
 
         return other is IosInstanceListParams &&
+            endingBefore == other.endingBefore &&
             labelSelector == other.labelSelector &&
             limit == other.limit &&
             region == other.region &&
+            startingAfter == other.startingAfter &&
             state == other.state &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
-        Objects.hash(labelSelector, limit, region, state, additionalHeaders, additionalQueryParams)
+        Objects.hash(
+            endingBefore,
+            labelSelector,
+            limit,
+            region,
+            startingAfter,
+            state,
+            additionalHeaders,
+            additionalQueryParams,
+        )
 
     override fun toString() =
-        "IosInstanceListParams{labelSelector=$labelSelector, limit=$limit, region=$region, state=$state, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "IosInstanceListParams{endingBefore=$endingBefore, labelSelector=$labelSelector, limit=$limit, region=$region, startingAfter=$startingAfter, state=$state, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

@@ -21,6 +21,7 @@ import com.limrun.api.models.iosinstances.IosInstance
 import com.limrun.api.models.iosinstances.IosInstanceCreateParams
 import com.limrun.api.models.iosinstances.IosInstanceDeleteParams
 import com.limrun.api.models.iosinstances.IosInstanceGetParams
+import com.limrun.api.models.iosinstances.IosInstanceListPageAsync
 import com.limrun.api.models.iosinstances.IosInstanceListParams
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
@@ -48,7 +49,7 @@ class IosInstanceServiceAsyncImpl internal constructor(private val clientOptions
     override fun list(
         params: IosInstanceListParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<List<IosInstance>> =
+    ): CompletableFuture<IosInstanceListPageAsync> =
         // get /v1/ios_instances
         withRawResponse().list(params, requestOptions).thenApply { it.parse() }
 
@@ -116,7 +117,7 @@ class IosInstanceServiceAsyncImpl internal constructor(private val clientOptions
         override fun list(
             params: IosInstanceListParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<List<IosInstance>>> {
+        ): CompletableFuture<HttpResponseFor<IosInstanceListPageAsync>> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
@@ -135,6 +136,14 @@ class IosInstanceServiceAsyncImpl internal constructor(private val clientOptions
                                 if (requestOptions.responseValidation!!) {
                                     it.forEach { it.validate() }
                                 }
+                            }
+                            .let {
+                                IosInstanceListPageAsync.builder()
+                                    .service(IosInstanceServiceAsyncImpl(clientOptions))
+                                    .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
+                                    .params(params)
+                                    .items(it)
+                                    .build()
                             }
                     }
                 }

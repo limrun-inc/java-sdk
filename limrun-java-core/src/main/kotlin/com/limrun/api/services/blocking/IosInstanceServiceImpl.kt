@@ -21,6 +21,7 @@ import com.limrun.api.models.iosinstances.IosInstance
 import com.limrun.api.models.iosinstances.IosInstanceCreateParams
 import com.limrun.api.models.iosinstances.IosInstanceDeleteParams
 import com.limrun.api.models.iosinstances.IosInstanceGetParams
+import com.limrun.api.models.iosinstances.IosInstanceListPage
 import com.limrun.api.models.iosinstances.IosInstanceListParams
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
@@ -47,7 +48,7 @@ class IosInstanceServiceImpl internal constructor(private val clientOptions: Cli
     override fun list(
         params: IosInstanceListParams,
         requestOptions: RequestOptions,
-    ): List<IosInstance> =
+    ): IosInstanceListPage =
         // get /v1/ios_instances
         withRawResponse().list(params, requestOptions).parse()
 
@@ -107,7 +108,7 @@ class IosInstanceServiceImpl internal constructor(private val clientOptions: Cli
         override fun list(
             params: IosInstanceListParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<List<IosInstance>> {
+        ): HttpResponseFor<IosInstanceListPage> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
@@ -124,6 +125,13 @@ class IosInstanceServiceImpl internal constructor(private val clientOptions: Cli
                         if (requestOptions.responseValidation!!) {
                             it.forEach { it.validate() }
                         }
+                    }
+                    .let {
+                        IosInstanceListPage.builder()
+                            .service(IosInstanceServiceImpl(clientOptions))
+                            .params(params)
+                            .items(it)
+                            .build()
                     }
             }
         }
