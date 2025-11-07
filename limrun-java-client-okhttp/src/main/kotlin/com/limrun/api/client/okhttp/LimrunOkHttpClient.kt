@@ -8,6 +8,7 @@ import com.limrun.api.client.LimrunClientImpl
 import com.limrun.api.core.ClientOptions
 import com.limrun.api.core.Sleeper
 import com.limrun.api.core.Timeout
+import com.limrun.api.core.http.AsyncStreamResponse
 import com.limrun.api.core.http.Headers
 import com.limrun.api.core.http.HttpClient
 import com.limrun.api.core.http.QueryParams
@@ -16,6 +17,7 @@ import java.net.Proxy
 import java.time.Clock
 import java.time.Duration
 import java.util.Optional
+import java.util.concurrent.Executor
 import javax.net.ssl.HostnameVerifier
 import javax.net.ssl.SSLSocketFactory
 import javax.net.ssl.X509TrustManager
@@ -120,6 +122,17 @@ class LimrunOkHttpClient private constructor() {
          * rarely needs to be overridden.
          */
         fun jsonMapper(jsonMapper: JsonMapper) = apply { clientOptions.jsonMapper(jsonMapper) }
+
+        /**
+         * The executor to use for running [AsyncStreamResponse.Handler] callbacks.
+         *
+         * Defaults to a dedicated cached thread pool.
+         *
+         * This class takes ownership of the executor and shuts it down, if possible, when closed.
+         */
+        fun streamHandlerExecutor(streamHandlerExecutor: Executor) = apply {
+            clientOptions.streamHandlerExecutor(streamHandlerExecutor)
+        }
 
         /**
          * The interface to use for delaying execution, like during retries.

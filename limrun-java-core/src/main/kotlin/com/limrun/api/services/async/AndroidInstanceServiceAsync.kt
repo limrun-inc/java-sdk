@@ -10,6 +10,7 @@ import com.limrun.api.models.androidinstances.AndroidInstance
 import com.limrun.api.models.androidinstances.AndroidInstanceCreateParams
 import com.limrun.api.models.androidinstances.AndroidInstanceDeleteParams
 import com.limrun.api.models.androidinstances.AndroidInstanceGetParams
+import com.limrun.api.models.androidinstances.AndroidInstanceListPageAsync
 import com.limrun.api.models.androidinstances.AndroidInstanceListParams
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
@@ -47,21 +48,22 @@ interface AndroidInstanceServiceAsync {
         create(AndroidInstanceCreateParams.none(), requestOptions)
 
     /** List Android instances */
-    fun list(): CompletableFuture<List<AndroidInstance>> = list(AndroidInstanceListParams.none())
+    fun list(): CompletableFuture<AndroidInstanceListPageAsync> =
+        list(AndroidInstanceListParams.none())
 
     /** @see list */
     fun list(
         params: AndroidInstanceListParams = AndroidInstanceListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<List<AndroidInstance>>
+    ): CompletableFuture<AndroidInstanceListPageAsync>
 
     /** @see list */
     fun list(
         params: AndroidInstanceListParams = AndroidInstanceListParams.none()
-    ): CompletableFuture<List<AndroidInstance>> = list(params, RequestOptions.none())
+    ): CompletableFuture<AndroidInstanceListPageAsync> = list(params, RequestOptions.none())
 
     /** @see list */
-    fun list(requestOptions: RequestOptions): CompletableFuture<List<AndroidInstance>> =
+    fun list(requestOptions: RequestOptions): CompletableFuture<AndroidInstanceListPageAsync> =
         list(AndroidInstanceListParams.none(), requestOptions)
 
     /** Delete Android instance with given name */
@@ -170,25 +172,25 @@ interface AndroidInstanceServiceAsync {
          * Returns a raw HTTP response for `get /v1/android_instances`, but is otherwise the same as
          * [AndroidInstanceServiceAsync.list].
          */
-        fun list(): CompletableFuture<HttpResponseFor<List<AndroidInstance>>> =
+        fun list(): CompletableFuture<HttpResponseFor<AndroidInstanceListPageAsync>> =
             list(AndroidInstanceListParams.none())
 
         /** @see list */
         fun list(
             params: AndroidInstanceListParams = AndroidInstanceListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<List<AndroidInstance>>>
+        ): CompletableFuture<HttpResponseFor<AndroidInstanceListPageAsync>>
 
         /** @see list */
         fun list(
             params: AndroidInstanceListParams = AndroidInstanceListParams.none()
-        ): CompletableFuture<HttpResponseFor<List<AndroidInstance>>> =
+        ): CompletableFuture<HttpResponseFor<AndroidInstanceListPageAsync>> =
             list(params, RequestOptions.none())
 
         /** @see list */
         fun list(
             requestOptions: RequestOptions
-        ): CompletableFuture<HttpResponseFor<List<AndroidInstance>>> =
+        ): CompletableFuture<HttpResponseFor<AndroidInstanceListPageAsync>> =
             list(AndroidInstanceListParams.none(), requestOptions)
 
         /**
