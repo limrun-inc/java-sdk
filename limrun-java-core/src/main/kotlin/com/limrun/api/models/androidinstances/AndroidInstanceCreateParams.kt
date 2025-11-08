@@ -26,11 +26,18 @@ import kotlin.jvm.optionals.getOrNull
 /** Create an Android instance */
 class AndroidInstanceCreateParams
 private constructor(
+    private val reuseIfExists: Boolean?,
     private val wait: Boolean?,
     private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
+
+    /**
+     * If there is another instance with given labels and region, return that one instead of
+     * creating a new instance.
+     */
+    fun reuseIfExists(): Optional<Boolean> = Optional.ofNullable(reuseIfExists)
 
     /** Return after the instance is ready to connect. */
     fun wait(): Optional<Boolean> = Optional.ofNullable(wait)
@@ -84,6 +91,7 @@ private constructor(
     /** A builder for [AndroidInstanceCreateParams]. */
     class Builder internal constructor() {
 
+        private var reuseIfExists: Boolean? = null
         private var wait: Boolean? = null
         private var body: Body.Builder = Body.builder()
         private var additionalHeaders: Headers.Builder = Headers.builder()
@@ -91,11 +99,29 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(androidInstanceCreateParams: AndroidInstanceCreateParams) = apply {
+            reuseIfExists = androidInstanceCreateParams.reuseIfExists
             wait = androidInstanceCreateParams.wait
             body = androidInstanceCreateParams.body.toBuilder()
             additionalHeaders = androidInstanceCreateParams.additionalHeaders.toBuilder()
             additionalQueryParams = androidInstanceCreateParams.additionalQueryParams.toBuilder()
         }
+
+        /**
+         * If there is another instance with given labels and region, return that one instead of
+         * creating a new instance.
+         */
+        fun reuseIfExists(reuseIfExists: Boolean?) = apply { this.reuseIfExists = reuseIfExists }
+
+        /**
+         * Alias for [Builder.reuseIfExists].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
+        fun reuseIfExists(reuseIfExists: Boolean) = reuseIfExists(reuseIfExists as Boolean?)
+
+        /** Alias for calling [Builder.reuseIfExists] with `reuseIfExists.orElse(null)`. */
+        fun reuseIfExists(reuseIfExists: Optional<Boolean>) =
+            reuseIfExists(reuseIfExists.getOrNull())
 
         /** Return after the instance is ready to connect. */
         fun wait(wait: Boolean?) = apply { this.wait = wait }
@@ -265,6 +291,7 @@ private constructor(
          */
         fun build(): AndroidInstanceCreateParams =
             AndroidInstanceCreateParams(
+                reuseIfExists,
                 wait,
                 body.build(),
                 additionalHeaders.build(),
@@ -279,6 +306,7 @@ private constructor(
     override fun _queryParams(): QueryParams =
         QueryParams.builder()
             .apply {
+                reuseIfExists?.let { put("reuseIfExists", it.toString()) }
                 wait?.let { put("wait", it.toString()) }
                 putAll(additionalQueryParams)
             }
@@ -2169,6 +2197,7 @@ private constructor(
         }
 
         return other is AndroidInstanceCreateParams &&
+            reuseIfExists == other.reuseIfExists &&
             wait == other.wait &&
             body == other.body &&
             additionalHeaders == other.additionalHeaders &&
@@ -2176,8 +2205,8 @@ private constructor(
     }
 
     override fun hashCode(): Int =
-        Objects.hash(wait, body, additionalHeaders, additionalQueryParams)
+        Objects.hash(reuseIfExists, wait, body, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "AndroidInstanceCreateParams{wait=$wait, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "AndroidInstanceCreateParams{reuseIfExists=$reuseIfExists, wait=$wait, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

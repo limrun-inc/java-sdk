@@ -26,6 +26,7 @@ internal class AndroidInstanceServiceTest {
         val androidInstance =
             androidInstanceService.create(
                 AndroidInstanceCreateParams.builder()
+                    .reuseIfExists(true)
                     .wait(true)
                     .metadata(
                         AndroidInstanceCreateParams.Metadata.builder()

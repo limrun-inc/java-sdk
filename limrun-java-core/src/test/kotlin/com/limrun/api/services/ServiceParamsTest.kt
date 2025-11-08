@@ -44,6 +44,7 @@ internal class ServiceParamsTest {
 
         androidInstanceService.create(
             AndroidInstanceCreateParams.builder()
+                .reuseIfExists(true)
                 .wait(true)
                 .metadata(
                     AndroidInstanceCreateParams.Metadata.builder()

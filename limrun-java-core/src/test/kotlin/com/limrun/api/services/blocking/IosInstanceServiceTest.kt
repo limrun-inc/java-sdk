@@ -26,6 +26,7 @@ internal class IosInstanceServiceTest {
         val iosInstance =
             iosInstanceService.create(
                 IosInstanceCreateParams.builder()
+                    .reuseIfExists(true)
                     .wait(true)
                     .metadata(
                         IosInstanceCreateParams.Metadata.builder()

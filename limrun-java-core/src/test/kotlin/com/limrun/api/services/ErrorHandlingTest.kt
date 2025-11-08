@@ -72,6 +72,7 @@ internal class ErrorHandlingTest {
             assertThrows<BadRequestException> {
                 androidInstanceService.create(
                     AndroidInstanceCreateParams.builder()
+                        .reuseIfExists(true)
                         .wait(true)
                         .metadata(
                             AndroidInstanceCreateParams.Metadata.builder()
@@ -135,6 +136,7 @@ internal class ErrorHandlingTest {
             assertThrows<BadRequestException> {
                 androidInstanceService.create(
                     AndroidInstanceCreateParams.builder()
+                        .reuseIfExists(true)
                         .wait(true)
                         .metadata(
                             AndroidInstanceCreateParams.Metadata.builder()
@@ -198,6 +200,7 @@ internal class ErrorHandlingTest {
             assertThrows<UnauthorizedException> {
                 androidInstanceService.create(
                     AndroidInstanceCreateParams.builder()
+                        .reuseIfExists(true)
                         .wait(true)
                         .metadata(
                             AndroidInstanceCreateParams.Metadata.builder()
@@ -261,6 +264,7 @@ internal class ErrorHandlingTest {
             assertThrows<UnauthorizedException> {
                 androidInstanceService.create(
                     AndroidInstanceCreateParams.builder()
+                        .reuseIfExists(true)
                         .wait(true)
                         .metadata(
                             AndroidInstanceCreateParams.Metadata.builder()
@@ -324,6 +328,7 @@ internal class ErrorHandlingTest {
             assertThrows<PermissionDeniedException> {
                 androidInstanceService.create(
                     AndroidInstanceCreateParams.builder()
+                        .reuseIfExists(true)
                         .wait(true)
                         .metadata(
                             AndroidInstanceCreateParams.Metadata.builder()
@@ -387,6 +392,7 @@ internal class ErrorHandlingTest {
             assertThrows<PermissionDeniedException> {
                 androidInstanceService.create(
                     AndroidInstanceCreateParams.builder()
+                        .reuseIfExists(true)
                         .wait(true)
                         .metadata(
                             AndroidInstanceCreateParams.Metadata.builder()
@@ -450,6 +456,7 @@ internal class ErrorHandlingTest {
             assertThrows<NotFoundException> {
                 androidInstanceService.create(
                     AndroidInstanceCreateParams.builder()
+                        .reuseIfExists(true)
                         .wait(true)
                         .metadata(
                             AndroidInstanceCreateParams.Metadata.builder()
@@ -513,6 +520,7 @@ internal class ErrorHandlingTest {
             assertThrows<NotFoundException> {
                 androidInstanceService.create(
                     AndroidInstanceCreateParams.builder()
+                        .reuseIfExists(true)
                         .wait(true)
                         .metadata(
                             AndroidInstanceCreateParams.Metadata.builder()
@@ -576,6 +584,7 @@ internal class ErrorHandlingTest {
             assertThrows<UnprocessableEntityException> {
                 androidInstanceService.create(
                     AndroidInstanceCreateParams.builder()
+                        .reuseIfExists(true)
                         .wait(true)
                         .metadata(
                             AndroidInstanceCreateParams.Metadata.builder()
@@ -639,6 +648,7 @@ internal class ErrorHandlingTest {
             assertThrows<UnprocessableEntityException> {
                 androidInstanceService.create(
                     AndroidInstanceCreateParams.builder()
+                        .reuseIfExists(true)
                         .wait(true)
                         .metadata(
                             AndroidInstanceCreateParams.Metadata.builder()
@@ -702,6 +712,7 @@ internal class ErrorHandlingTest {
             assertThrows<RateLimitException> {
                 androidInstanceService.create(
                     AndroidInstanceCreateParams.builder()
+                        .reuseIfExists(true)
                         .wait(true)
                         .metadata(
                             AndroidInstanceCreateParams.Metadata.builder()
@@ -765,6 +776,7 @@ internal class ErrorHandlingTest {
             assertThrows<RateLimitException> {
                 androidInstanceService.create(
                     AndroidInstanceCreateParams.builder()
+                        .reuseIfExists(true)
                         .wait(true)
                         .metadata(
                             AndroidInstanceCreateParams.Metadata.builder()
@@ -828,6 +840,7 @@ internal class ErrorHandlingTest {
             assertThrows<InternalServerException> {
                 androidInstanceService.create(
                     AndroidInstanceCreateParams.builder()
+                        .reuseIfExists(true)
                         .wait(true)
                         .metadata(
                             AndroidInstanceCreateParams.Metadata.builder()
@@ -891,6 +904,7 @@ internal class ErrorHandlingTest {
             assertThrows<InternalServerException> {
                 androidInstanceService.create(
                     AndroidInstanceCreateParams.builder()
+                        .reuseIfExists(true)
                         .wait(true)
                         .metadata(
                             AndroidInstanceCreateParams.Metadata.builder()
@@ -954,6 +968,7 @@ internal class ErrorHandlingTest {
             assertThrows<UnexpectedStatusCodeException> {
                 androidInstanceService.create(
                     AndroidInstanceCreateParams.builder()
+                        .reuseIfExists(true)
                         .wait(true)
                         .metadata(
                             AndroidInstanceCreateParams.Metadata.builder()
@@ -1017,6 +1032,7 @@ internal class ErrorHandlingTest {
             assertThrows<UnexpectedStatusCodeException> {
                 androidInstanceService.create(
                     AndroidInstanceCreateParams.builder()
+                        .reuseIfExists(true)
                         .wait(true)
                         .metadata(
                             AndroidInstanceCreateParams.Metadata.builder()
@@ -1078,6 +1094,7 @@ internal class ErrorHandlingTest {
             assertThrows<LimrunException> {
                 androidInstanceService.create(
                     AndroidInstanceCreateParams.builder()
+                        .reuseIfExists(true)
                         .wait(true)
                         .metadata(
                             AndroidInstanceCreateParams.Metadata.builder()
