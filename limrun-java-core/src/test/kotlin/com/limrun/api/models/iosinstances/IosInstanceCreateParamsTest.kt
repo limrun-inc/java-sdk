@@ -12,6 +12,7 @@ internal class IosInstanceCreateParamsTest {
     @Test
     fun create() {
         IosInstanceCreateParams.builder()
+            .reuseIfExists(true)
             .wait(true)
             .metadata(
                 IosInstanceCreateParams.Metadata.builder()
@@ -56,6 +57,7 @@ internal class IosInstanceCreateParamsTest {
     fun queryParams() {
         val params =
             IosInstanceCreateParams.builder()
+                .reuseIfExists(true)
                 .wait(true)
                 .metadata(
                     IosInstanceCreateParams.Metadata.builder()
@@ -97,7 +99,10 @@ internal class IosInstanceCreateParamsTest {
 
         val queryParams = params._queryParams()
 
-        assertThat(queryParams).isEqualTo(QueryParams.builder().put("wait", "true").build())
+        assertThat(queryParams)
+            .isEqualTo(
+                QueryParams.builder().put("reuseIfExists", "true").put("wait", "true").build()
+            )
     }
 
     @Test
@@ -113,6 +118,7 @@ internal class IosInstanceCreateParamsTest {
     fun body() {
         val params =
             IosInstanceCreateParams.builder()
+                .reuseIfExists(true)
                 .wait(true)
                 .metadata(
                     IosInstanceCreateParams.Metadata.builder()

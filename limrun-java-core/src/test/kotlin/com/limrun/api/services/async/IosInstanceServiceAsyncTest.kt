@@ -26,6 +26,7 @@ internal class IosInstanceServiceAsyncTest {
         val iosInstanceFuture =
             iosInstanceServiceAsync.create(
                 IosInstanceCreateParams.builder()
+                    .reuseIfExists(true)
                     .wait(true)
                     .metadata(
                         IosInstanceCreateParams.Metadata.builder()

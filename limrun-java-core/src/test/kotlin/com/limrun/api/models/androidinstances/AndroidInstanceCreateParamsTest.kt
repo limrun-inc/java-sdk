@@ -12,6 +12,7 @@ internal class AndroidInstanceCreateParamsTest {
     @Test
     fun create() {
         AndroidInstanceCreateParams.builder()
+            .reuseIfExists(true)
             .wait(true)
             .metadata(
                 AndroidInstanceCreateParams.Metadata.builder()
@@ -55,6 +56,7 @@ internal class AndroidInstanceCreateParamsTest {
     fun queryParams() {
         val params =
             AndroidInstanceCreateParams.builder()
+                .reuseIfExists(true)
                 .wait(true)
                 .metadata(
                     AndroidInstanceCreateParams.Metadata.builder()
@@ -95,7 +97,10 @@ internal class AndroidInstanceCreateParamsTest {
 
         val queryParams = params._queryParams()
 
-        assertThat(queryParams).isEqualTo(QueryParams.builder().put("wait", "true").build())
+        assertThat(queryParams)
+            .isEqualTo(
+                QueryParams.builder().put("reuseIfExists", "true").put("wait", "true").build()
+            )
     }
 
     @Test
@@ -111,6 +116,7 @@ internal class AndroidInstanceCreateParamsTest {
     fun body() {
         val params =
             AndroidInstanceCreateParams.builder()
+                .reuseIfExists(true)
                 .wait(true)
                 .metadata(
                     AndroidInstanceCreateParams.Metadata.builder()

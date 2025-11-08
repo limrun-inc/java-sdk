@@ -26,11 +26,18 @@ import kotlin.jvm.optionals.getOrNull
 /** Create an iOS instance */
 class IosInstanceCreateParams
 private constructor(
+    private val reuseIfExists: Boolean?,
     private val wait: Boolean?,
     private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
+
+    /**
+     * If there is another instance with given labels and region, return that one instead of
+     * creating a new instance.
+     */
+    fun reuseIfExists(): Optional<Boolean> = Optional.ofNullable(reuseIfExists)
 
     /** Return after the instance is ready to connect. */
     fun wait(): Optional<Boolean> = Optional.ofNullable(wait)
@@ -82,6 +89,7 @@ private constructor(
     /** A builder for [IosInstanceCreateParams]. */
     class Builder internal constructor() {
 
+        private var reuseIfExists: Boolean? = null
         private var wait: Boolean? = null
         private var body: Body.Builder = Body.builder()
         private var additionalHeaders: Headers.Builder = Headers.builder()
@@ -89,11 +97,29 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(iosInstanceCreateParams: IosInstanceCreateParams) = apply {
+            reuseIfExists = iosInstanceCreateParams.reuseIfExists
             wait = iosInstanceCreateParams.wait
             body = iosInstanceCreateParams.body.toBuilder()
             additionalHeaders = iosInstanceCreateParams.additionalHeaders.toBuilder()
             additionalQueryParams = iosInstanceCreateParams.additionalQueryParams.toBuilder()
         }
+
+        /**
+         * If there is another instance with given labels and region, return that one instead of
+         * creating a new instance.
+         */
+        fun reuseIfExists(reuseIfExists: Boolean?) = apply { this.reuseIfExists = reuseIfExists }
+
+        /**
+         * Alias for [Builder.reuseIfExists].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
+        fun reuseIfExists(reuseIfExists: Boolean) = reuseIfExists(reuseIfExists as Boolean?)
+
+        /** Alias for calling [Builder.reuseIfExists] with `reuseIfExists.orElse(null)`. */
+        fun reuseIfExists(reuseIfExists: Optional<Boolean>) =
+            reuseIfExists(reuseIfExists.getOrNull())
 
         /** Return after the instance is ready to connect. */
         fun wait(wait: Boolean?) = apply { this.wait = wait }
@@ -263,6 +289,7 @@ private constructor(
          */
         fun build(): IosInstanceCreateParams =
             IosInstanceCreateParams(
+                reuseIfExists,
                 wait,
                 body.build(),
                 additionalHeaders.build(),
@@ -277,6 +304,7 @@ private constructor(
     override fun _queryParams(): QueryParams =
         QueryParams.builder()
             .apply {
+                reuseIfExists?.let { put("reuseIfExists", it.toString()) }
                 wait?.let { put("wait", it.toString()) }
                 putAll(additionalQueryParams)
             }
@@ -2174,6 +2202,7 @@ private constructor(
         }
 
         return other is IosInstanceCreateParams &&
+            reuseIfExists == other.reuseIfExists &&
             wait == other.wait &&
             body == other.body &&
             additionalHeaders == other.additionalHeaders &&
@@ -2181,8 +2210,8 @@ private constructor(
     }
 
     override fun hashCode(): Int =
-        Objects.hash(wait, body, additionalHeaders, additionalQueryParams)
+        Objects.hash(reuseIfExists, wait, body, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "IosInstanceCreateParams{wait=$wait, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "IosInstanceCreateParams{reuseIfExists=$reuseIfExists, wait=$wait, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }
