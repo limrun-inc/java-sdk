@@ -51,8 +51,8 @@ import com.limrun.api.client.okhttp.LimrunOkHttpClient;
 import com.limrun.api.models.androidinstances.AndroidInstance;
 import com.limrun.api.models.androidinstances.AndroidInstanceCreateParams;
 
-// Configures using the `limrun.limToken` and `limrun.baseUrl` system properties
-// Or configures using the `LIM_TOKEN` and `LIMRUN_BASE_URL` environment variables
+// Configures using the `limrun.limApiKey` and `limrun.baseUrl` system properties
+// Or configures using the `LIM_API_KEY` and `LIMRUN_BASE_URL` environment variables
 LimrunClient client = LimrunOkHttpClient.fromEnv();
 
 AndroidInstance androidInstance = client.androidInstances().create();
@@ -66,8 +66,8 @@ Configure the client using system properties or environment variables:
 import com.limrun.api.client.LimrunClient;
 import com.limrun.api.client.okhttp.LimrunOkHttpClient;
 
-// Configures using the `limrun.limToken` and `limrun.baseUrl` system properties
-// Or configures using the `LIM_TOKEN` and `LIMRUN_BASE_URL` environment variables
+// Configures using the `limrun.limApiKey` and `limrun.baseUrl` system properties
+// Or configures using the `LIM_API_KEY` and `LIMRUN_BASE_URL` environment variables
 LimrunClient client = LimrunOkHttpClient.fromEnv();
 ```
 
@@ -89,8 +89,8 @@ import com.limrun.api.client.LimrunClient;
 import com.limrun.api.client.okhttp.LimrunOkHttpClient;
 
 LimrunClient client = LimrunOkHttpClient.builder()
-    // Configures using the `limrun.limToken` and `limrun.baseUrl` system properties
-    // Or configures using the `LIM_TOKEN` and `LIMRUN_BASE_URL` environment variables
+    // Configures using the `limrun.limApiKey` and `limrun.baseUrl` system properties
+    // Or configures using the `LIM_API_KEY` and `LIMRUN_BASE_URL` environment variables
     .fromEnv()
     .apiKey("My API Key")
     .build();
@@ -98,10 +98,10 @@ LimrunClient client = LimrunOkHttpClient.builder()
 
 See this table for the available options:
 
-| Setter    | System property   | Environment variable | Required | Default value              |
-| --------- | ----------------- | -------------------- | -------- | -------------------------- |
-| `apiKey`  | `limrun.limToken` | `LIM_TOKEN`          | false    | -                          |
-| `baseUrl` | `limrun.baseUrl`  | `LIMRUN_BASE_URL`    | true     | `"https://api.limrun.com"` |
+| Setter    | System property    | Environment variable | Required | Default value              |
+| --------- | ------------------ | -------------------- | -------- | -------------------------- |
+| `apiKey`  | `limrun.limApiKey` | `LIM_API_KEY`        | false    | -                          |
+| `baseUrl` | `limrun.baseUrl`   | `LIMRUN_BASE_URL`    | true     | `"https://api.limrun.com"` |
 
 System properties take precedence over environment variables.
 
@@ -149,8 +149,8 @@ import com.limrun.api.models.androidinstances.AndroidInstance;
 import com.limrun.api.models.androidinstances.AndroidInstanceCreateParams;
 import java.util.concurrent.CompletableFuture;
 
-// Configures using the `limrun.limToken` and `limrun.baseUrl` system properties
-// Or configures using the `LIM_TOKEN` and `LIMRUN_BASE_URL` environment variables
+// Configures using the `limrun.limApiKey` and `limrun.baseUrl` system properties
+// Or configures using the `LIM_API_KEY` and `LIMRUN_BASE_URL` environment variables
 LimrunClient client = LimrunOkHttpClient.fromEnv();
 
 CompletableFuture<AndroidInstance> androidInstance = client.async().androidInstances().create();
@@ -165,8 +165,8 @@ import com.limrun.api.models.androidinstances.AndroidInstance;
 import com.limrun.api.models.androidinstances.AndroidInstanceCreateParams;
 import java.util.concurrent.CompletableFuture;
 
-// Configures using the `limrun.limToken` and `limrun.baseUrl` system properties
-// Or configures using the `LIM_TOKEN` and `LIMRUN_BASE_URL` environment variables
+// Configures using the `limrun.limApiKey` and `limrun.baseUrl` system properties
+// Or configures using the `LIM_API_KEY` and `LIMRUN_BASE_URL` environment variables
 LimrunClientAsync client = LimrunOkHttpClientAsync.fromEnv();
 
 CompletableFuture<AndroidInstance> androidInstance = client.androidInstances().create();
