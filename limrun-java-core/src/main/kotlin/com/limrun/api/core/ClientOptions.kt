@@ -393,10 +393,10 @@ private constructor(
          *
          * See this table for the available options:
          *
-         * |Setter   |System property  |Environment variable|Required|Default value             |
-         * |---------|-----------------|--------------------|--------|--------------------------|
-         * |`apiKey` |`limrun.limToken`|`LIM_TOKEN`         |false   |-                         |
-         * |`baseUrl`|`limrun.baseUrl` |`LIMRUN_BASE_URL`   |true    |`"https://api.limrun.com"`|
+         * |Setter   |System property   |Environment variable|Required|Default value             |
+         * |---------|------------------|--------------------|--------|--------------------------|
+         * |`apiKey` |`limrun.limApiKey`|`LIM_API_KEY`       |false   |-                         |
+         * |`baseUrl`|`limrun.baseUrl`  |`LIMRUN_BASE_URL`   |true    |`"https://api.limrun.com"`|
          *
          * System properties take precedence over environment variables.
          */
@@ -404,7 +404,7 @@ private constructor(
             (System.getProperty("limrun.baseUrl") ?: System.getenv("LIMRUN_BASE_URL"))?.let {
                 baseUrl(it)
             }
-            (System.getProperty("limrun.limToken") ?: System.getenv("LIM_TOKEN"))?.let {
+            (System.getProperty("limrun.limApiKey") ?: System.getenv("LIM_API_KEY"))?.let {
                 apiKey(it)
             }
         }
