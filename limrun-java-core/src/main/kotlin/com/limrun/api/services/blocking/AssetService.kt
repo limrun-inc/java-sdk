@@ -12,7 +12,6 @@ import com.limrun.api.models.assets.AssetDeleteParams
 import com.limrun.api.models.assets.AssetGetOrCreateParams
 import com.limrun.api.models.assets.AssetGetOrCreateResponse
 import com.limrun.api.models.assets.AssetGetParams
-import com.limrun.api.models.assets.AssetListPage
 import com.limrun.api.models.assets.AssetListParams
 import java.util.function.Consumer
 
@@ -31,20 +30,20 @@ interface AssetService {
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): AssetService
 
     /** List organization's all assets with given filters. If none given, return all assets. */
-    fun list(): AssetListPage = list(AssetListParams.none())
+    fun list(): List<Asset> = list(AssetListParams.none())
 
     /** @see list */
     fun list(
         params: AssetListParams = AssetListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): AssetListPage
+    ): List<Asset>
 
     /** @see list */
-    fun list(params: AssetListParams = AssetListParams.none()): AssetListPage =
+    fun list(params: AssetListParams = AssetListParams.none()): List<Asset> =
         list(params, RequestOptions.none())
 
     /** @see list */
-    fun list(requestOptions: RequestOptions): AssetListPage =
+    fun list(requestOptions: RequestOptions): List<Asset> =
         list(AssetListParams.none(), requestOptions)
 
     /** Delete the asset with given ID. */
@@ -125,23 +124,23 @@ interface AssetService {
          * Returns a raw HTTP response for `get /v1/assets`, but is otherwise the same as
          * [AssetService.list].
          */
-        @MustBeClosed fun list(): HttpResponseFor<AssetListPage> = list(AssetListParams.none())
+        @MustBeClosed fun list(): HttpResponseFor<List<Asset>> = list(AssetListParams.none())
 
         /** @see list */
         @MustBeClosed
         fun list(
             params: AssetListParams = AssetListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<AssetListPage>
+        ): HttpResponseFor<List<Asset>>
 
         /** @see list */
         @MustBeClosed
-        fun list(params: AssetListParams = AssetListParams.none()): HttpResponseFor<AssetListPage> =
+        fun list(params: AssetListParams = AssetListParams.none()): HttpResponseFor<List<Asset>> =
             list(params, RequestOptions.none())
 
         /** @see list */
         @MustBeClosed
-        fun list(requestOptions: RequestOptions): HttpResponseFor<AssetListPage> =
+        fun list(requestOptions: RequestOptions): HttpResponseFor<List<Asset>> =
             list(AssetListParams.none(), requestOptions)
 
         /**

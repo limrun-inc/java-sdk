@@ -11,12 +11,10 @@ internal class AssetListParamsTest {
     @Test
     fun create() {
         AssetListParams.builder()
-            .endingBefore("endingBefore")
             .includeDownloadUrl(true)
             .includeUploadUrl(true)
             .limit(50L)
             .nameFilter("nameFilter")
-            .startingAfter("startingAfter")
             .build()
     }
 
@@ -24,12 +22,10 @@ internal class AssetListParamsTest {
     fun queryParams() {
         val params =
             AssetListParams.builder()
-                .endingBefore("endingBefore")
                 .includeDownloadUrl(true)
                 .includeUploadUrl(true)
                 .limit(50L)
                 .nameFilter("nameFilter")
-                .startingAfter("startingAfter")
                 .build()
 
         val queryParams = params._queryParams()
@@ -37,12 +33,10 @@ internal class AssetListParamsTest {
         assertThat(queryParams)
             .isEqualTo(
                 QueryParams.builder()
-                    .put("endingBefore", "endingBefore")
                     .put("includeDownloadUrl", "true")
                     .put("includeUploadUrl", "true")
                     .put("limit", "50")
                     .put("nameFilter", "nameFilter")
-                    .put("startingAfter", "startingAfter")
                     .build()
             )
     }
