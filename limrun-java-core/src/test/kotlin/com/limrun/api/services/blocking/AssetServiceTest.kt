@@ -6,7 +6,6 @@ import com.limrun.api.TestServerExtension
 import com.limrun.api.client.okhttp.LimrunOkHttpClient
 import com.limrun.api.models.assets.AssetGetOrCreateParams
 import com.limrun.api.models.assets.AssetGetParams
-import com.limrun.api.models.assets.AssetListParams
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -24,17 +23,9 @@ internal class AssetServiceTest {
                 .build()
         val assetService = client.assets()
 
-        val assets =
-            assetService.list(
-                AssetListParams.builder()
-                    .includeDownloadUrl(true)
-                    .includeUploadUrl(true)
-                    .limit(50L)
-                    .nameFilter("nameFilter")
-                    .build()
-            )
+        val page = assetService.list()
 
-        assets.forEach { it.validate() }
+        page.items().forEach { it.validate() }
     }
 
     @Disabled("Prism tests are disabled")
