@@ -111,6 +111,17 @@ internal class ErrorHandlingTest {
                                         .build()
                                 )
                                 .region("region")
+                                .sandbox(
+                                    AndroidInstanceCreateParams.Spec.Sandbox.builder()
+                                        .playwrightAndroid(
+                                            AndroidInstanceCreateParams.Spec.Sandbox
+                                                .PlaywrightAndroid
+                                                .builder()
+                                                .enabled(true)
+                                                .build()
+                                        )
+                                        .build()
+                                )
                                 .build()
                         )
                         .build()
@@ -175,6 +186,17 @@ internal class ErrorHandlingTest {
                                         .build()
                                 )
                                 .region("region")
+                                .sandbox(
+                                    AndroidInstanceCreateParams.Spec.Sandbox.builder()
+                                        .playwrightAndroid(
+                                            AndroidInstanceCreateParams.Spec.Sandbox
+                                                .PlaywrightAndroid
+                                                .builder()
+                                                .enabled(true)
+                                                .build()
+                                        )
+                                        .build()
+                                )
                                 .build()
                         )
                         .build()
@@ -239,6 +261,17 @@ internal class ErrorHandlingTest {
                                         .build()
                                 )
                                 .region("region")
+                                .sandbox(
+                                    AndroidInstanceCreateParams.Spec.Sandbox.builder()
+                                        .playwrightAndroid(
+                                            AndroidInstanceCreateParams.Spec.Sandbox
+                                                .PlaywrightAndroid
+                                                .builder()
+                                                .enabled(true)
+                                                .build()
+                                        )
+                                        .build()
+                                )
                                 .build()
                         )
                         .build()
@@ -303,6 +336,17 @@ internal class ErrorHandlingTest {
                                         .build()
                                 )
                                 .region("region")
+                                .sandbox(
+                                    AndroidInstanceCreateParams.Spec.Sandbox.builder()
+                                        .playwrightAndroid(
+                                            AndroidInstanceCreateParams.Spec.Sandbox
+                                                .PlaywrightAndroid
+                                                .builder()
+                                                .enabled(true)
+                                                .build()
+                                        )
+                                        .build()
+                                )
                                 .build()
                         )
                         .build()
@@ -367,6 +411,17 @@ internal class ErrorHandlingTest {
                                         .build()
                                 )
                                 .region("region")
+                                .sandbox(
+                                    AndroidInstanceCreateParams.Spec.Sandbox.builder()
+                                        .playwrightAndroid(
+                                            AndroidInstanceCreateParams.Spec.Sandbox
+                                                .PlaywrightAndroid
+                                                .builder()
+                                                .enabled(true)
+                                                .build()
+                                        )
+                                        .build()
+                                )
                                 .build()
                         )
                         .build()
@@ -431,6 +486,17 @@ internal class ErrorHandlingTest {
                                         .build()
                                 )
                                 .region("region")
+                                .sandbox(
+                                    AndroidInstanceCreateParams.Spec.Sandbox.builder()
+                                        .playwrightAndroid(
+                                            AndroidInstanceCreateParams.Spec.Sandbox
+                                                .PlaywrightAndroid
+                                                .builder()
+                                                .enabled(true)
+                                                .build()
+                                        )
+                                        .build()
+                                )
                                 .build()
                         )
                         .build()
@@ -495,6 +561,17 @@ internal class ErrorHandlingTest {
                                         .build()
                                 )
                                 .region("region")
+                                .sandbox(
+                                    AndroidInstanceCreateParams.Spec.Sandbox.builder()
+                                        .playwrightAndroid(
+                                            AndroidInstanceCreateParams.Spec.Sandbox
+                                                .PlaywrightAndroid
+                                                .builder()
+                                                .enabled(true)
+                                                .build()
+                                        )
+                                        .build()
+                                )
                                 .build()
                         )
                         .build()
@@ -559,6 +636,17 @@ internal class ErrorHandlingTest {
                                         .build()
                                 )
                                 .region("region")
+                                .sandbox(
+                                    AndroidInstanceCreateParams.Spec.Sandbox.builder()
+                                        .playwrightAndroid(
+                                            AndroidInstanceCreateParams.Spec.Sandbox
+                                                .PlaywrightAndroid
+                                                .builder()
+                                                .enabled(true)
+                                                .build()
+                                        )
+                                        .build()
+                                )
                                 .build()
                         )
                         .build()
@@ -623,6 +711,17 @@ internal class ErrorHandlingTest {
                                         .build()
                                 )
                                 .region("region")
+                                .sandbox(
+                                    AndroidInstanceCreateParams.Spec.Sandbox.builder()
+                                        .playwrightAndroid(
+                                            AndroidInstanceCreateParams.Spec.Sandbox
+                                                .PlaywrightAndroid
+                                                .builder()
+                                                .enabled(true)
+                                                .build()
+                                        )
+                                        .build()
+                                )
                                 .build()
                         )
                         .build()
@@ -687,6 +786,17 @@ internal class ErrorHandlingTest {
                                         .build()
                                 )
                                 .region("region")
+                                .sandbox(
+                                    AndroidInstanceCreateParams.Spec.Sandbox.builder()
+                                        .playwrightAndroid(
+                                            AndroidInstanceCreateParams.Spec.Sandbox
+                                                .PlaywrightAndroid
+                                                .builder()
+                                                .enabled(true)
+                                                .build()
+                                        )
+                                        .build()
+                                )
                                 .build()
                         )
                         .build()
@@ -751,6 +861,17 @@ internal class ErrorHandlingTest {
                                         .build()
                                 )
                                 .region("region")
+                                .sandbox(
+                                    AndroidInstanceCreateParams.Spec.Sandbox.builder()
+                                        .playwrightAndroid(
+                                            AndroidInstanceCreateParams.Spec.Sandbox
+                                                .PlaywrightAndroid
+                                                .builder()
+                                                .enabled(true)
+                                                .build()
+                                        )
+                                        .build()
+                                )
                                 .build()
                         )
                         .build()
@@ -815,6 +936,17 @@ internal class ErrorHandlingTest {
                                         .build()
                                 )
                                 .region("region")
+                                .sandbox(
+                                    AndroidInstanceCreateParams.Spec.Sandbox.builder()
+                                        .playwrightAndroid(
+                                            AndroidInstanceCreateParams.Spec.Sandbox
+                                                .PlaywrightAndroid
+                                                .builder()
+                                                .enabled(true)
+                                                .build()
+                                        )
+                                        .build()
+                                )
                                 .build()
                         )
                         .build()
@@ -879,6 +1011,17 @@ internal class ErrorHandlingTest {
                                         .build()
                                 )
                                 .region("region")
+                                .sandbox(
+                                    AndroidInstanceCreateParams.Spec.Sandbox.builder()
+                                        .playwrightAndroid(
+                                            AndroidInstanceCreateParams.Spec.Sandbox
+                                                .PlaywrightAndroid
+                                                .builder()
+                                                .enabled(true)
+                                                .build()
+                                        )
+                                        .build()
+                                )
                                 .build()
                         )
                         .build()
@@ -943,6 +1086,17 @@ internal class ErrorHandlingTest {
                                         .build()
                                 )
                                 .region("region")
+                                .sandbox(
+                                    AndroidInstanceCreateParams.Spec.Sandbox.builder()
+                                        .playwrightAndroid(
+                                            AndroidInstanceCreateParams.Spec.Sandbox
+                                                .PlaywrightAndroid
+                                                .builder()
+                                                .enabled(true)
+                                                .build()
+                                        )
+                                        .build()
+                                )
                                 .build()
                         )
                         .build()
@@ -1007,6 +1161,17 @@ internal class ErrorHandlingTest {
                                         .build()
                                 )
                                 .region("region")
+                                .sandbox(
+                                    AndroidInstanceCreateParams.Spec.Sandbox.builder()
+                                        .playwrightAndroid(
+                                            AndroidInstanceCreateParams.Spec.Sandbox
+                                                .PlaywrightAndroid
+                                                .builder()
+                                                .enabled(true)
+                                                .build()
+                                        )
+                                        .build()
+                                )
                                 .build()
                         )
                         .build()
@@ -1071,6 +1236,17 @@ internal class ErrorHandlingTest {
                                         .build()
                                 )
                                 .region("region")
+                                .sandbox(
+                                    AndroidInstanceCreateParams.Spec.Sandbox.builder()
+                                        .playwrightAndroid(
+                                            AndroidInstanceCreateParams.Spec.Sandbox
+                                                .PlaywrightAndroid
+                                                .builder()
+                                                .enabled(true)
+                                                .build()
+                                        )
+                                        .build()
+                                )
                                 .build()
                         )
                         .build()
@@ -1133,6 +1309,17 @@ internal class ErrorHandlingTest {
                                         .build()
                                 )
                                 .region("region")
+                                .sandbox(
+                                    AndroidInstanceCreateParams.Spec.Sandbox.builder()
+                                        .playwrightAndroid(
+                                            AndroidInstanceCreateParams.Spec.Sandbox
+                                                .PlaywrightAndroid
+                                                .builder()
+                                                .enabled(true)
+                                                .build()
+                                        )
+                                        .build()
+                                )
                                 .build()
                         )
                         .build()

@@ -22,6 +22,7 @@ import com.limrun.api.models.assets.AssetDeleteParams
 import com.limrun.api.models.assets.AssetGetOrCreateParams
 import com.limrun.api.models.assets.AssetGetOrCreateResponse
 import com.limrun.api.models.assets.AssetGetParams
+import com.limrun.api.models.assets.AssetListPageAsync
 import com.limrun.api.models.assets.AssetListParams
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
@@ -42,7 +43,7 @@ class AssetServiceAsyncImpl internal constructor(private val clientOptions: Clie
     override fun list(
         params: AssetListParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<List<Asset>> =
+    ): CompletableFuture<AssetListPageAsync> =
         // get /v1/assets
         withRawResponse().list(params, requestOptions).thenApply { it.parse() }
 
@@ -86,7 +87,7 @@ class AssetServiceAsyncImpl internal constructor(private val clientOptions: Clie
         override fun list(
             params: AssetListParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<List<Asset>>> {
+        ): CompletableFuture<HttpResponseFor<AssetListPageAsync>> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
@@ -105,6 +106,14 @@ class AssetServiceAsyncImpl internal constructor(private val clientOptions: Clie
                                 if (requestOptions.responseValidation!!) {
                                     it.forEach { it.validate() }
                                 }
+                            }
+                            .let {
+                                AssetListPageAsync.builder()
+                                    .service(AssetServiceAsyncImpl(clientOptions))
+                                    .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
+                                    .params(params)
+                                    .items(it)
+                                    .build()
                             }
                     }
                 }

@@ -79,6 +79,16 @@ internal class ServiceParamsTest {
                                 .build()
                         )
                         .region("region")
+                        .sandbox(
+                            AndroidInstanceCreateParams.Spec.Sandbox.builder()
+                                .playwrightAndroid(
+                                    AndroidInstanceCreateParams.Spec.Sandbox.PlaywrightAndroid
+                                        .builder()
+                                        .enabled(true)
+                                        .build()
+                                )
+                                .build()
+                        )
                         .build()
                 )
                 .putAdditionalHeader("Secret-Header", "42")

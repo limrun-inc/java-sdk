@@ -47,6 +47,15 @@ internal class AndroidInstanceCreateParamsTest {
                             .build()
                     )
                     .region("region")
+                    .sandbox(
+                        AndroidInstanceCreateParams.Spec.Sandbox.builder()
+                            .playwrightAndroid(
+                                AndroidInstanceCreateParams.Spec.Sandbox.PlaywrightAndroid.builder()
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .build()
+                    )
                     .build()
             )
             .build()
@@ -91,6 +100,16 @@ internal class AndroidInstanceCreateParamsTest {
                                 .build()
                         )
                         .region("region")
+                        .sandbox(
+                            AndroidInstanceCreateParams.Spec.Sandbox.builder()
+                                .playwrightAndroid(
+                                    AndroidInstanceCreateParams.Spec.Sandbox.PlaywrightAndroid
+                                        .builder()
+                                        .enabled(true)
+                                        .build()
+                                )
+                                .build()
+                        )
                         .build()
                 )
                 .build()
@@ -151,6 +170,16 @@ internal class AndroidInstanceCreateParamsTest {
                                 .build()
                         )
                         .region("region")
+                        .sandbox(
+                            AndroidInstanceCreateParams.Spec.Sandbox.builder()
+                                .playwrightAndroid(
+                                    AndroidInstanceCreateParams.Spec.Sandbox.PlaywrightAndroid
+                                        .builder()
+                                        .enabled(true)
+                                        .build()
+                                )
+                                .build()
+                        )
                         .build()
                 )
                 .build()
@@ -192,6 +221,15 @@ internal class AndroidInstanceCreateParamsTest {
                             .build()
                     )
                     .region("region")
+                    .sandbox(
+                        AndroidInstanceCreateParams.Spec.Sandbox.builder()
+                            .playwrightAndroid(
+                                AndroidInstanceCreateParams.Spec.Sandbox.PlaywrightAndroid.builder()
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .build()
+                    )
                     .build()
             )
     }
