@@ -2072,7 +2072,7 @@ private constructor(
             @JsonCreator(mode = JsonCreator.Mode.DISABLED)
             private constructor(
                 private val kind: JsonField<Kind>,
-                private val chromeFlag: JsonField<String>,
+                private val chromeFlag: JsonField<ChromeFlag>,
                 private val additionalProperties: MutableMap<String, JsonValue>,
             ) {
 
@@ -2081,7 +2081,7 @@ private constructor(
                     @JsonProperty("kind") @ExcludeMissing kind: JsonField<Kind> = JsonMissing.of(),
                     @JsonProperty("chromeFlag")
                     @ExcludeMissing
-                    chromeFlag: JsonField<String> = JsonMissing.of(),
+                    chromeFlag: JsonField<ChromeFlag> = JsonMissing.of(),
                 ) : this(kind, chromeFlag, mutableMapOf())
 
                 /**
@@ -2095,7 +2095,7 @@ private constructor(
                  * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g.
                  *   if the server responded with an unexpected value).
                  */
-                fun chromeFlag(): Optional<String> = chromeFlag.getOptional("chromeFlag")
+                fun chromeFlag(): Optional<ChromeFlag> = chromeFlag.getOptional("chromeFlag")
 
                 /**
                  * Returns the raw JSON value of [kind].
@@ -2113,7 +2113,7 @@ private constructor(
                  */
                 @JsonProperty("chromeFlag")
                 @ExcludeMissing
-                fun _chromeFlag(): JsonField<String> = chromeFlag
+                fun _chromeFlag(): JsonField<ChromeFlag> = chromeFlag
 
                 @JsonAnySetter
                 private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -2144,7 +2144,7 @@ private constructor(
                 class Builder internal constructor() {
 
                     private var kind: JsonField<Kind>? = null
-                    private var chromeFlag: JsonField<String> = JsonMissing.of()
+                    private var chromeFlag: JsonField<ChromeFlag> = JsonMissing.of()
                     private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                     @JvmSynthetic
@@ -2165,16 +2165,16 @@ private constructor(
                      */
                     fun kind(kind: JsonField<Kind>) = apply { this.kind = kind }
 
-                    fun chromeFlag(chromeFlag: String) = chromeFlag(JsonField.of(chromeFlag))
+                    fun chromeFlag(chromeFlag: ChromeFlag) = chromeFlag(JsonField.of(chromeFlag))
 
                     /**
                      * Sets [Builder.chromeFlag] to an arbitrary JSON value.
                      *
-                     * You should usually call [Builder.chromeFlag] with a well-typed [String] value
-                     * instead. This method is primarily for setting the field to an undocumented or
-                     * not yet supported value.
+                     * You should usually call [Builder.chromeFlag] with a well-typed [ChromeFlag]
+                     * value instead. This method is primarily for setting the field to an
+                     * undocumented or not yet supported value.
                      */
-                    fun chromeFlag(chromeFlag: JsonField<String>) = apply {
+                    fun chromeFlag(chromeFlag: JsonField<ChromeFlag>) = apply {
                         this.chromeFlag = chromeFlag
                     }
 
@@ -2228,7 +2228,7 @@ private constructor(
                     }
 
                     kind().validate()
-                    chromeFlag()
+                    chromeFlag().ifPresent { it.validate() }
                     validated = true
                 }
 
@@ -2249,7 +2249,7 @@ private constructor(
                 @JvmSynthetic
                 internal fun validity(): Int =
                     (kind.asKnown().getOrNull()?.validity() ?: 0) +
-                        (if (chromeFlag.asKnown().isPresent) 1 else 0)
+                        (chromeFlag.asKnown().getOrNull()?.validity() ?: 0)
 
                 class Kind @JsonCreator private constructor(private val value: JsonField<String>) :
                     Enum {
@@ -2371,6 +2371,140 @@ private constructor(
                         }
 
                         return other is Kind && value == other.value
+                    }
+
+                    override fun hashCode() = value.hashCode()
+
+                    override fun toString() = value.toString()
+                }
+
+                class ChromeFlag
+                @JsonCreator
+                private constructor(private val value: JsonField<String>) : Enum {
+
+                    /**
+                     * Returns this class instance's raw value.
+                     *
+                     * This is usually only useful if this instance was deserialized from data that
+                     * doesn't match any known member, and you want to know that value. For example,
+                     * if the SDK is on an older version than the API, then the API may respond with
+                     * new members that the SDK is unaware of.
+                     */
+                    @com.fasterxml.jackson.annotation.JsonValue
+                    fun _value(): JsonField<String> = value
+
+                    companion object {
+
+                        @JvmField
+                        val ENABLE_COMMAND_LINE_ON_NON_ROOTED_DEVICES_1 =
+                            of("enable-command-line-on-non-rooted-devices@1")
+
+                        @JvmStatic fun of(value: String) = ChromeFlag(JsonField.of(value))
+                    }
+
+                    /** An enum containing [ChromeFlag]'s known values. */
+                    enum class Known {
+                        ENABLE_COMMAND_LINE_ON_NON_ROOTED_DEVICES_1
+                    }
+
+                    /**
+                     * An enum containing [ChromeFlag]'s known values, as well as an [_UNKNOWN]
+                     * member.
+                     *
+                     * An instance of [ChromeFlag] can contain an unknown value in a couple of
+                     * cases:
+                     * - It was deserialized from data that doesn't match any known member. For
+                     *   example, if the SDK is on an older version than the API, then the API may
+                     *   respond with new members that the SDK is unaware of.
+                     * - It was constructed with an arbitrary value using the [of] method.
+                     */
+                    enum class Value {
+                        ENABLE_COMMAND_LINE_ON_NON_ROOTED_DEVICES_1,
+                        /**
+                         * An enum member indicating that [ChromeFlag] was instantiated with an
+                         * unknown value.
+                         */
+                        _UNKNOWN,
+                    }
+
+                    /**
+                     * Returns an enum member corresponding to this class instance's value, or
+                     * [Value._UNKNOWN] if the class was instantiated with an unknown value.
+                     *
+                     * Use the [known] method instead if you're certain the value is always known or
+                     * if you want to throw for the unknown case.
+                     */
+                    fun value(): Value =
+                        when (this) {
+                            ENABLE_COMMAND_LINE_ON_NON_ROOTED_DEVICES_1 ->
+                                Value.ENABLE_COMMAND_LINE_ON_NON_ROOTED_DEVICES_1
+                            else -> Value._UNKNOWN
+                        }
+
+                    /**
+                     * Returns an enum member corresponding to this class instance's value.
+                     *
+                     * Use the [value] method instead if you're uncertain the value is always known
+                     * and don't want to throw for the unknown case.
+                     *
+                     * @throws LimrunInvalidDataException if this class instance's value is a not a
+                     *   known member.
+                     */
+                    fun known(): Known =
+                        when (this) {
+                            ENABLE_COMMAND_LINE_ON_NON_ROOTED_DEVICES_1 ->
+                                Known.ENABLE_COMMAND_LINE_ON_NON_ROOTED_DEVICES_1
+                            else -> throw LimrunInvalidDataException("Unknown ChromeFlag: $value")
+                        }
+
+                    /**
+                     * Returns this class instance's primitive wire representation.
+                     *
+                     * This differs from the [toString] method because that method is primarily for
+                     * debugging and generally doesn't throw.
+                     *
+                     * @throws LimrunInvalidDataException if this class instance's value does not
+                     *   have the expected primitive type.
+                     */
+                    fun asString(): String =
+                        _value().asString().orElseThrow {
+                            LimrunInvalidDataException("Value is not a String")
+                        }
+
+                    private var validated: Boolean = false
+
+                    fun validate(): ChromeFlag = apply {
+                        if (validated) {
+                            return@apply
+                        }
+
+                        known()
+                        validated = true
+                    }
+
+                    fun isValid(): Boolean =
+                        try {
+                            validate()
+                            true
+                        } catch (e: LimrunInvalidDataException) {
+                            false
+                        }
+
+                    /**
+                     * Returns a score indicating how many valid values are contained in this object
+                     * recursively.
+                     *
+                     * Used for best match union deserialization.
+                     */
+                    @JvmSynthetic
+                    internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+                    override fun equals(other: Any?): Boolean {
+                        if (this === other) {
+                            return true
+                        }
+
+                        return other is ChromeFlag && value == other.value
                     }
 
                     override fun hashCode() = value.hashCode()
