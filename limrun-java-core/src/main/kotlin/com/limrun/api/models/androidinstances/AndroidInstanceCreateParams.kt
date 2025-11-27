@@ -1501,10 +1501,11 @@ private constructor(
         @JsonCreator(mode = JsonCreator.Mode.DISABLED)
         private constructor(
             private val kind: JsonField<Kind>,
-            private val source: JsonField<Source>,
             private val assetIds: JsonField<List<String>>,
             private val assetName: JsonField<String>,
             private val assetNames: JsonField<List<String>>,
+            private val configuration: JsonField<Configuration>,
+            private val source: JsonField<Source>,
             private val url: JsonField<String>,
             private val urls: JsonField<List<String>>,
             private val additionalProperties: MutableMap<String, JsonValue>,
@@ -1513,9 +1514,6 @@ private constructor(
             @JsonCreator
             private constructor(
                 @JsonProperty("kind") @ExcludeMissing kind: JsonField<Kind> = JsonMissing.of(),
-                @JsonProperty("source")
-                @ExcludeMissing
-                source: JsonField<Source> = JsonMissing.of(),
                 @JsonProperty("assetIds")
                 @ExcludeMissing
                 assetIds: JsonField<List<String>> = JsonMissing.of(),
@@ -1525,11 +1523,27 @@ private constructor(
                 @JsonProperty("assetNames")
                 @ExcludeMissing
                 assetNames: JsonField<List<String>> = JsonMissing.of(),
+                @JsonProperty("configuration")
+                @ExcludeMissing
+                configuration: JsonField<Configuration> = JsonMissing.of(),
+                @JsonProperty("source")
+                @ExcludeMissing
+                source: JsonField<Source> = JsonMissing.of(),
                 @JsonProperty("url") @ExcludeMissing url: JsonField<String> = JsonMissing.of(),
                 @JsonProperty("urls")
                 @ExcludeMissing
                 urls: JsonField<List<String>> = JsonMissing.of(),
-            ) : this(kind, source, assetIds, assetName, assetNames, url, urls, mutableMapOf())
+            ) : this(
+                kind,
+                assetIds,
+                assetName,
+                assetNames,
+                configuration,
+                source,
+                url,
+                urls,
+                mutableMapOf(),
+            )
 
             /**
              * @throws LimrunInvalidDataException if the JSON field has an unexpected type or is
@@ -1537,13 +1551,6 @@ private constructor(
              *   value).
              */
             fun kind(): Kind = kind.getRequired("kind")
-
-            /**
-             * @throws LimrunInvalidDataException if the JSON field has an unexpected type or is
-             *   unexpectedly missing or null (e.g. if the server responded with an unexpected
-             *   value).
-             */
-            fun source(): Source = source.getRequired("source")
 
             /**
              * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -1567,6 +1574,19 @@ private constructor(
              * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if
              *   the server responded with an unexpected value).
              */
+            fun configuration(): Optional<Configuration> =
+                configuration.getOptional("configuration")
+
+            /**
+             * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if
+             *   the server responded with an unexpected value).
+             */
+            fun source(): Optional<Source> = source.getOptional("source")
+
+            /**
+             * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if
+             *   the server responded with an unexpected value).
+             */
             fun url(): Optional<String> = url.getOptional("url")
 
             /**
@@ -1581,13 +1601,6 @@ private constructor(
              * Unlike [kind], this method doesn't throw if the JSON field has an unexpected type.
              */
             @JsonProperty("kind") @ExcludeMissing fun _kind(): JsonField<Kind> = kind
-
-            /**
-             * Returns the raw JSON value of [source].
-             *
-             * Unlike [source], this method doesn't throw if the JSON field has an unexpected type.
-             */
-            @JsonProperty("source") @ExcludeMissing fun _source(): JsonField<Source> = source
 
             /**
              * Returns the raw JSON value of [assetIds].
@@ -1618,6 +1631,23 @@ private constructor(
             @JsonProperty("assetNames")
             @ExcludeMissing
             fun _assetNames(): JsonField<List<String>> = assetNames
+
+            /**
+             * Returns the raw JSON value of [configuration].
+             *
+             * Unlike [configuration], this method doesn't throw if the JSON field has an unexpected
+             * type.
+             */
+            @JsonProperty("configuration")
+            @ExcludeMissing
+            fun _configuration(): JsonField<Configuration> = configuration
+
+            /**
+             * Returns the raw JSON value of [source].
+             *
+             * Unlike [source], this method doesn't throw if the JSON field has an unexpected type.
+             */
+            @JsonProperty("source") @ExcludeMissing fun _source(): JsonField<Source> = source
 
             /**
              * Returns the raw JSON value of [url].
@@ -1653,7 +1683,6 @@ private constructor(
                  * The following fields are required:
                  * ```java
                  * .kind()
-                 * .source()
                  * ```
                  */
                 @JvmStatic fun builder() = Builder()
@@ -1663,10 +1692,11 @@ private constructor(
             class Builder internal constructor() {
 
                 private var kind: JsonField<Kind>? = null
-                private var source: JsonField<Source>? = null
                 private var assetIds: JsonField<MutableList<String>>? = null
                 private var assetName: JsonField<String> = JsonMissing.of()
                 private var assetNames: JsonField<MutableList<String>>? = null
+                private var configuration: JsonField<Configuration> = JsonMissing.of()
+                private var source: JsonField<Source> = JsonMissing.of()
                 private var url: JsonField<String> = JsonMissing.of()
                 private var urls: JsonField<MutableList<String>>? = null
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -1674,10 +1704,11 @@ private constructor(
                 @JvmSynthetic
                 internal fun from(initialAsset: InitialAsset) = apply {
                     kind = initialAsset.kind
-                    source = initialAsset.source
                     assetIds = initialAsset.assetIds.map { it.toMutableList() }
                     assetName = initialAsset.assetName
                     assetNames = initialAsset.assetNames.map { it.toMutableList() }
+                    configuration = initialAsset.configuration
+                    source = initialAsset.source
                     url = initialAsset.url
                     urls = initialAsset.urls.map { it.toMutableList() }
                     additionalProperties = initialAsset.additionalProperties.toMutableMap()
@@ -1693,17 +1724,6 @@ private constructor(
                  * supported value.
                  */
                 fun kind(kind: JsonField<Kind>) = apply { this.kind = kind }
-
-                fun source(source: Source) = source(JsonField.of(source))
-
-                /**
-                 * Sets [Builder.source] to an arbitrary JSON value.
-                 *
-                 * You should usually call [Builder.source] with a well-typed [Source] value
-                 * instead. This method is primarily for setting the field to an undocumented or not
-                 * yet supported value.
-                 */
-                fun source(source: JsonField<Source>) = apply { this.source = source }
 
                 fun assetIds(assetIds: List<String>) = assetIds(JsonField.of(assetIds))
 
@@ -1765,6 +1785,31 @@ private constructor(
                             checkKnown("assetNames", it).add(assetName)
                         }
                 }
+
+                fun configuration(configuration: Configuration) =
+                    configuration(JsonField.of(configuration))
+
+                /**
+                 * Sets [Builder.configuration] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.configuration] with a well-typed [Configuration]
+                 * value instead. This method is primarily for setting the field to an undocumented
+                 * or not yet supported value.
+                 */
+                fun configuration(configuration: JsonField<Configuration>) = apply {
+                    this.configuration = configuration
+                }
+
+                fun source(source: Source) = source(JsonField.of(source))
+
+                /**
+                 * Sets [Builder.source] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.source] with a well-typed [Source] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun source(source: JsonField<Source>) = apply { this.source = source }
 
                 fun url(url: String) = url(JsonField.of(url))
 
@@ -1832,7 +1877,6 @@ private constructor(
                  * The following fields are required:
                  * ```java
                  * .kind()
-                 * .source()
                  * ```
                  *
                  * @throws IllegalStateException if any required field is unset.
@@ -1840,10 +1884,11 @@ private constructor(
                 fun build(): InitialAsset =
                     InitialAsset(
                         checkRequired("kind", kind),
-                        checkRequired("source", source),
                         (assetIds ?: JsonMissing.of()).map { it.toImmutable() },
                         assetName,
                         (assetNames ?: JsonMissing.of()).map { it.toImmutable() },
+                        configuration,
+                        source,
                         url,
                         (urls ?: JsonMissing.of()).map { it.toImmutable() },
                         additionalProperties.toMutableMap(),
@@ -1858,10 +1903,11 @@ private constructor(
                 }
 
                 kind().validate()
-                source().validate()
                 assetIds()
                 assetName()
                 assetNames()
+                configuration().ifPresent { it.validate() }
+                source().ifPresent { it.validate() }
                 url()
                 urls()
                 validated = true
@@ -1884,10 +1930,11 @@ private constructor(
             @JvmSynthetic
             internal fun validity(): Int =
                 (kind.asKnown().getOrNull()?.validity() ?: 0) +
-                    (source.asKnown().getOrNull()?.validity() ?: 0) +
                     (assetIds.asKnown().getOrNull()?.size ?: 0) +
                     (if (assetName.asKnown().isPresent) 1 else 0) +
                     (assetNames.asKnown().getOrNull()?.size ?: 0) +
+                    (configuration.asKnown().getOrNull()?.validity() ?: 0) +
+                    (source.asKnown().getOrNull()?.validity() ?: 0) +
                     (if (url.asKnown().isPresent) 1 else 0) +
                     (urls.asKnown().getOrNull()?.size ?: 0)
 
@@ -1908,12 +1955,15 @@ private constructor(
 
                     @JvmField val APP = of("App")
 
+                    @JvmField val CONFIGURATION = of("Configuration")
+
                     @JvmStatic fun of(value: String) = Kind(JsonField.of(value))
                 }
 
                 /** An enum containing [Kind]'s known values. */
                 enum class Known {
-                    APP
+                    APP,
+                    CONFIGURATION,
                 }
 
                 /**
@@ -1927,6 +1977,7 @@ private constructor(
                  */
                 enum class Value {
                     APP,
+                    CONFIGURATION,
                     /**
                      * An enum member indicating that [Kind] was instantiated with an unknown value.
                      */
@@ -1943,6 +1994,7 @@ private constructor(
                 fun value(): Value =
                     when (this) {
                         APP -> Value.APP
+                        CONFIGURATION -> Value.CONFIGURATION
                         else -> Value._UNKNOWN
                     }
 
@@ -1958,6 +2010,7 @@ private constructor(
                 fun known(): Known =
                     when (this) {
                         APP -> Known.APP
+                        CONFIGURATION -> Known.CONFIGURATION
                         else -> throw LimrunInvalidDataException("Unknown Kind: $value")
                     }
 
@@ -2013,6 +2066,337 @@ private constructor(
                 override fun hashCode() = value.hashCode()
 
                 override fun toString() = value.toString()
+            }
+
+            class Configuration
+            @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+            private constructor(
+                private val kind: JsonField<Kind>,
+                private val chromeFlag: JsonField<String>,
+                private val additionalProperties: MutableMap<String, JsonValue>,
+            ) {
+
+                @JsonCreator
+                private constructor(
+                    @JsonProperty("kind") @ExcludeMissing kind: JsonField<Kind> = JsonMissing.of(),
+                    @JsonProperty("chromeFlag")
+                    @ExcludeMissing
+                    chromeFlag: JsonField<String> = JsonMissing.of(),
+                ) : this(kind, chromeFlag, mutableMapOf())
+
+                /**
+                 * @throws LimrunInvalidDataException if the JSON field has an unexpected type or is
+                 *   unexpectedly missing or null (e.g. if the server responded with an unexpected
+                 *   value).
+                 */
+                fun kind(): Kind = kind.getRequired("kind")
+
+                /**
+                 * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g.
+                 *   if the server responded with an unexpected value).
+                 */
+                fun chromeFlag(): Optional<String> = chromeFlag.getOptional("chromeFlag")
+
+                /**
+                 * Returns the raw JSON value of [kind].
+                 *
+                 * Unlike [kind], this method doesn't throw if the JSON field has an unexpected
+                 * type.
+                 */
+                @JsonProperty("kind") @ExcludeMissing fun _kind(): JsonField<Kind> = kind
+
+                /**
+                 * Returns the raw JSON value of [chromeFlag].
+                 *
+                 * Unlike [chromeFlag], this method doesn't throw if the JSON field has an
+                 * unexpected type.
+                 */
+                @JsonProperty("chromeFlag")
+                @ExcludeMissing
+                fun _chromeFlag(): JsonField<String> = chromeFlag
+
+                @JsonAnySetter
+                private fun putAdditionalProperty(key: String, value: JsonValue) {
+                    additionalProperties.put(key, value)
+                }
+
+                @JsonAnyGetter
+                @ExcludeMissing
+                fun _additionalProperties(): Map<String, JsonValue> =
+                    Collections.unmodifiableMap(additionalProperties)
+
+                fun toBuilder() = Builder().from(this)
+
+                companion object {
+
+                    /**
+                     * Returns a mutable builder for constructing an instance of [Configuration].
+                     *
+                     * The following fields are required:
+                     * ```java
+                     * .kind()
+                     * ```
+                     */
+                    @JvmStatic fun builder() = Builder()
+                }
+
+                /** A builder for [Configuration]. */
+                class Builder internal constructor() {
+
+                    private var kind: JsonField<Kind>? = null
+                    private var chromeFlag: JsonField<String> = JsonMissing.of()
+                    private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+                    @JvmSynthetic
+                    internal fun from(configuration: Configuration) = apply {
+                        kind = configuration.kind
+                        chromeFlag = configuration.chromeFlag
+                        additionalProperties = configuration.additionalProperties.toMutableMap()
+                    }
+
+                    fun kind(kind: Kind) = kind(JsonField.of(kind))
+
+                    /**
+                     * Sets [Builder.kind] to an arbitrary JSON value.
+                     *
+                     * You should usually call [Builder.kind] with a well-typed [Kind] value
+                     * instead. This method is primarily for setting the field to an undocumented or
+                     * not yet supported value.
+                     */
+                    fun kind(kind: JsonField<Kind>) = apply { this.kind = kind }
+
+                    fun chromeFlag(chromeFlag: String) = chromeFlag(JsonField.of(chromeFlag))
+
+                    /**
+                     * Sets [Builder.chromeFlag] to an arbitrary JSON value.
+                     *
+                     * You should usually call [Builder.chromeFlag] with a well-typed [String] value
+                     * instead. This method is primarily for setting the field to an undocumented or
+                     * not yet supported value.
+                     */
+                    fun chromeFlag(chromeFlag: JsonField<String>) = apply {
+                        this.chromeFlag = chromeFlag
+                    }
+
+                    fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                        this.additionalProperties.clear()
+                        putAllAdditionalProperties(additionalProperties)
+                    }
+
+                    fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                        additionalProperties.put(key, value)
+                    }
+
+                    fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                        apply {
+                            this.additionalProperties.putAll(additionalProperties)
+                        }
+
+                    fun removeAdditionalProperty(key: String) = apply {
+                        additionalProperties.remove(key)
+                    }
+
+                    fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                        keys.forEach(::removeAdditionalProperty)
+                    }
+
+                    /**
+                     * Returns an immutable instance of [Configuration].
+                     *
+                     * Further updates to this [Builder] will not mutate the returned instance.
+                     *
+                     * The following fields are required:
+                     * ```java
+                     * .kind()
+                     * ```
+                     *
+                     * @throws IllegalStateException if any required field is unset.
+                     */
+                    fun build(): Configuration =
+                        Configuration(
+                            checkRequired("kind", kind),
+                            chromeFlag,
+                            additionalProperties.toMutableMap(),
+                        )
+                }
+
+                private var validated: Boolean = false
+
+                fun validate(): Configuration = apply {
+                    if (validated) {
+                        return@apply
+                    }
+
+                    kind().validate()
+                    chromeFlag()
+                    validated = true
+                }
+
+                fun isValid(): Boolean =
+                    try {
+                        validate()
+                        true
+                    } catch (e: LimrunInvalidDataException) {
+                        false
+                    }
+
+                /**
+                 * Returns a score indicating how many valid values are contained in this object
+                 * recursively.
+                 *
+                 * Used for best match union deserialization.
+                 */
+                @JvmSynthetic
+                internal fun validity(): Int =
+                    (kind.asKnown().getOrNull()?.validity() ?: 0) +
+                        (if (chromeFlag.asKnown().isPresent) 1 else 0)
+
+                class Kind @JsonCreator private constructor(private val value: JsonField<String>) :
+                    Enum {
+
+                    /**
+                     * Returns this class instance's raw value.
+                     *
+                     * This is usually only useful if this instance was deserialized from data that
+                     * doesn't match any known member, and you want to know that value. For example,
+                     * if the SDK is on an older version than the API, then the API may respond with
+                     * new members that the SDK is unaware of.
+                     */
+                    @com.fasterxml.jackson.annotation.JsonValue
+                    fun _value(): JsonField<String> = value
+
+                    companion object {
+
+                        @JvmField val CHROME_FLAG = of("ChromeFlag")
+
+                        @JvmStatic fun of(value: String) = Kind(JsonField.of(value))
+                    }
+
+                    /** An enum containing [Kind]'s known values. */
+                    enum class Known {
+                        CHROME_FLAG
+                    }
+
+                    /**
+                     * An enum containing [Kind]'s known values, as well as an [_UNKNOWN] member.
+                     *
+                     * An instance of [Kind] can contain an unknown value in a couple of cases:
+                     * - It was deserialized from data that doesn't match any known member. For
+                     *   example, if the SDK is on an older version than the API, then the API may
+                     *   respond with new members that the SDK is unaware of.
+                     * - It was constructed with an arbitrary value using the [of] method.
+                     */
+                    enum class Value {
+                        CHROME_FLAG,
+                        /**
+                         * An enum member indicating that [Kind] was instantiated with an unknown
+                         * value.
+                         */
+                        _UNKNOWN,
+                    }
+
+                    /**
+                     * Returns an enum member corresponding to this class instance's value, or
+                     * [Value._UNKNOWN] if the class was instantiated with an unknown value.
+                     *
+                     * Use the [known] method instead if you're certain the value is always known or
+                     * if you want to throw for the unknown case.
+                     */
+                    fun value(): Value =
+                        when (this) {
+                            CHROME_FLAG -> Value.CHROME_FLAG
+                            else -> Value._UNKNOWN
+                        }
+
+                    /**
+                     * Returns an enum member corresponding to this class instance's value.
+                     *
+                     * Use the [value] method instead if you're uncertain the value is always known
+                     * and don't want to throw for the unknown case.
+                     *
+                     * @throws LimrunInvalidDataException if this class instance's value is a not a
+                     *   known member.
+                     */
+                    fun known(): Known =
+                        when (this) {
+                            CHROME_FLAG -> Known.CHROME_FLAG
+                            else -> throw LimrunInvalidDataException("Unknown Kind: $value")
+                        }
+
+                    /**
+                     * Returns this class instance's primitive wire representation.
+                     *
+                     * This differs from the [toString] method because that method is primarily for
+                     * debugging and generally doesn't throw.
+                     *
+                     * @throws LimrunInvalidDataException if this class instance's value does not
+                     *   have the expected primitive type.
+                     */
+                    fun asString(): String =
+                        _value().asString().orElseThrow {
+                            LimrunInvalidDataException("Value is not a String")
+                        }
+
+                    private var validated: Boolean = false
+
+                    fun validate(): Kind = apply {
+                        if (validated) {
+                            return@apply
+                        }
+
+                        known()
+                        validated = true
+                    }
+
+                    fun isValid(): Boolean =
+                        try {
+                            validate()
+                            true
+                        } catch (e: LimrunInvalidDataException) {
+                            false
+                        }
+
+                    /**
+                     * Returns a score indicating how many valid values are contained in this object
+                     * recursively.
+                     *
+                     * Used for best match union deserialization.
+                     */
+                    @JvmSynthetic
+                    internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+                    override fun equals(other: Any?): Boolean {
+                        if (this === other) {
+                            return true
+                        }
+
+                        return other is Kind && value == other.value
+                    }
+
+                    override fun hashCode() = value.hashCode()
+
+                    override fun toString() = value.toString()
+                }
+
+                override fun equals(other: Any?): Boolean {
+                    if (this === other) {
+                        return true
+                    }
+
+                    return other is Configuration &&
+                        kind == other.kind &&
+                        chromeFlag == other.chromeFlag &&
+                        additionalProperties == other.additionalProperties
+                }
+
+                private val hashCode: Int by lazy {
+                    Objects.hash(kind, chromeFlag, additionalProperties)
+                }
+
+                override fun hashCode(): Int = hashCode
+
+                override fun toString() =
+                    "Configuration{kind=$kind, chromeFlag=$chromeFlag, additionalProperties=$additionalProperties}"
             }
 
             class Source @JsonCreator private constructor(private val value: JsonField<String>) :
@@ -2171,10 +2555,11 @@ private constructor(
 
                 return other is InitialAsset &&
                     kind == other.kind &&
-                    source == other.source &&
                     assetIds == other.assetIds &&
                     assetName == other.assetName &&
                     assetNames == other.assetNames &&
+                    configuration == other.configuration &&
+                    source == other.source &&
                     url == other.url &&
                     urls == other.urls &&
                     additionalProperties == other.additionalProperties
@@ -2183,10 +2568,11 @@ private constructor(
             private val hashCode: Int by lazy {
                 Objects.hash(
                     kind,
-                    source,
                     assetIds,
                     assetName,
                     assetNames,
+                    configuration,
+                    source,
                     url,
                     urls,
                     additionalProperties,
@@ -2196,7 +2582,7 @@ private constructor(
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "InitialAsset{kind=$kind, source=$source, assetIds=$assetIds, assetName=$assetName, assetNames=$assetNames, url=$url, urls=$urls, additionalProperties=$additionalProperties}"
+                "InitialAsset{kind=$kind, assetIds=$assetIds, assetName=$assetName, assetNames=$assetNames, configuration=$configuration, source=$source, url=$url, urls=$urls, additionalProperties=$additionalProperties}"
         }
 
         class Sandbox
