@@ -64,7 +64,12 @@ internal class AndroidInstanceServiceTest {
                                                     .Kind
                                                     .CHROME_FLAG
                                             )
-                                            .chromeFlag("chromeFlag")
+                                            .chromeFlag(
+                                                AndroidInstanceCreateParams.Spec.InitialAsset
+                                                    .Configuration
+                                                    .ChromeFlag
+                                                    .ENABLE_COMMAND_LINE_ON_NON_ROOTED_DEVICES_1
+                                            )
                                             .build()
                                     )
                                     .source(
