@@ -38,10 +38,21 @@ internal class AndroidInstanceCreateParamsTest {
                     .addInitialAsset(
                         AndroidInstanceCreateParams.Spec.InitialAsset.builder()
                             .kind(AndroidInstanceCreateParams.Spec.InitialAsset.Kind.APP)
-                            .source(AndroidInstanceCreateParams.Spec.InitialAsset.Source.URL)
                             .addAssetId("string")
                             .assetName("assetName")
                             .addAssetName("string")
+                            .configuration(
+                                AndroidInstanceCreateParams.Spec.InitialAsset.Configuration
+                                    .builder()
+                                    .kind(
+                                        AndroidInstanceCreateParams.Spec.InitialAsset.Configuration
+                                            .Kind
+                                            .CHROME_FLAG
+                                    )
+                                    .chromeFlag("chromeFlag")
+                                    .build()
+                            )
+                            .source(AndroidInstanceCreateParams.Spec.InitialAsset.Source.URL)
                             .url("url")
                             .addUrl("string")
                             .build()
@@ -91,10 +102,22 @@ internal class AndroidInstanceCreateParamsTest {
                         .addInitialAsset(
                             AndroidInstanceCreateParams.Spec.InitialAsset.builder()
                                 .kind(AndroidInstanceCreateParams.Spec.InitialAsset.Kind.APP)
-                                .source(AndroidInstanceCreateParams.Spec.InitialAsset.Source.URL)
                                 .addAssetId("string")
                                 .assetName("assetName")
                                 .addAssetName("string")
+                                .configuration(
+                                    AndroidInstanceCreateParams.Spec.InitialAsset.Configuration
+                                        .builder()
+                                        .kind(
+                                            AndroidInstanceCreateParams.Spec.InitialAsset
+                                                .Configuration
+                                                .Kind
+                                                .CHROME_FLAG
+                                        )
+                                        .chromeFlag("chromeFlag")
+                                        .build()
+                                )
+                                .source(AndroidInstanceCreateParams.Spec.InitialAsset.Source.URL)
                                 .url("url")
                                 .addUrl("string")
                                 .build()
@@ -161,10 +184,22 @@ internal class AndroidInstanceCreateParamsTest {
                         .addInitialAsset(
                             AndroidInstanceCreateParams.Spec.InitialAsset.builder()
                                 .kind(AndroidInstanceCreateParams.Spec.InitialAsset.Kind.APP)
-                                .source(AndroidInstanceCreateParams.Spec.InitialAsset.Source.URL)
                                 .addAssetId("string")
                                 .assetName("assetName")
                                 .addAssetName("string")
+                                .configuration(
+                                    AndroidInstanceCreateParams.Spec.InitialAsset.Configuration
+                                        .builder()
+                                        .kind(
+                                            AndroidInstanceCreateParams.Spec.InitialAsset
+                                                .Configuration
+                                                .Kind
+                                                .CHROME_FLAG
+                                        )
+                                        .chromeFlag("chromeFlag")
+                                        .build()
+                                )
+                                .source(AndroidInstanceCreateParams.Spec.InitialAsset.Source.URL)
                                 .url("url")
                                 .addUrl("string")
                                 .build()
@@ -212,10 +247,21 @@ internal class AndroidInstanceCreateParamsTest {
                     .addInitialAsset(
                         AndroidInstanceCreateParams.Spec.InitialAsset.builder()
                             .kind(AndroidInstanceCreateParams.Spec.InitialAsset.Kind.APP)
-                            .source(AndroidInstanceCreateParams.Spec.InitialAsset.Source.URL)
                             .addAssetId("string")
                             .assetName("assetName")
                             .addAssetName("string")
+                            .configuration(
+                                AndroidInstanceCreateParams.Spec.InitialAsset.Configuration
+                                    .builder()
+                                    .kind(
+                                        AndroidInstanceCreateParams.Spec.InitialAsset.Configuration
+                                            .Kind
+                                            .CHROME_FLAG
+                                    )
+                                    .chromeFlag("chromeFlag")
+                                    .build()
+                            )
+                            .source(AndroidInstanceCreateParams.Spec.InitialAsset.Source.URL)
                             .url("url")
                             .addUrl("string")
                             .build()
