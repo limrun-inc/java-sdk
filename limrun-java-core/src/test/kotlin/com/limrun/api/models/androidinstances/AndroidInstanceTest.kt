@@ -51,6 +51,7 @@ internal class AndroidInstanceTest {
                                 )
                                 .build()
                         )
+                        .targetHttpPortUrlPrefix("targetHttpPortUrlPrefix")
                         .build()
                 )
                 .build()
@@ -94,6 +95,7 @@ internal class AndroidInstanceTest {
                             )
                             .build()
                     )
+                    .targetHttpPortUrlPrefix("targetHttpPortUrlPrefix")
                     .build()
             )
     }
@@ -139,6 +141,7 @@ internal class AndroidInstanceTest {
                                 )
                                 .build()
                         )
+                        .targetHttpPortUrlPrefix("targetHttpPortUrlPrefix")
                         .build()
                 )
                 .build()
