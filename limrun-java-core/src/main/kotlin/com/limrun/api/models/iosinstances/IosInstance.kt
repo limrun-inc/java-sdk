@@ -952,8 +952,9 @@ private constructor(
     private constructor(
         private val token: JsonField<String>,
         private val state: JsonField<State>,
+        private val apiUrl: JsonField<String>,
         private val endpointWebSocketUrl: JsonField<String>,
-        private val portForwardWebSocketUrl: JsonField<String>,
+        private val targetHttpPortUrlPrefix: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -961,13 +962,21 @@ private constructor(
         private constructor(
             @JsonProperty("token") @ExcludeMissing token: JsonField<String> = JsonMissing.of(),
             @JsonProperty("state") @ExcludeMissing state: JsonField<State> = JsonMissing.of(),
+            @JsonProperty("apiUrl") @ExcludeMissing apiUrl: JsonField<String> = JsonMissing.of(),
             @JsonProperty("endpointWebSocketUrl")
             @ExcludeMissing
             endpointWebSocketUrl: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("portForwardWebSocketUrl")
+            @JsonProperty("targetHttpPortUrlPrefix")
             @ExcludeMissing
-            portForwardWebSocketUrl: JsonField<String> = JsonMissing.of(),
-        ) : this(token, state, endpointWebSocketUrl, portForwardWebSocketUrl, mutableMapOf())
+            targetHttpPortUrlPrefix: JsonField<String> = JsonMissing.of(),
+        ) : this(
+            token,
+            state,
+            apiUrl,
+            endpointWebSocketUrl,
+            targetHttpPortUrlPrefix,
+            mutableMapOf(),
+        )
 
         /**
          * @throws LimrunInvalidDataException if the JSON field has an unexpected type or is
@@ -985,6 +994,12 @@ private constructor(
          * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
          *   server responded with an unexpected value).
          */
+        fun apiUrl(): Optional<String> = apiUrl.getOptional("apiUrl")
+
+        /**
+         * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
         fun endpointWebSocketUrl(): Optional<String> =
             endpointWebSocketUrl.getOptional("endpointWebSocketUrl")
 
@@ -992,8 +1007,8 @@ private constructor(
          * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
          *   server responded with an unexpected value).
          */
-        fun portForwardWebSocketUrl(): Optional<String> =
-            portForwardWebSocketUrl.getOptional("portForwardWebSocketUrl")
+        fun targetHttpPortUrlPrefix(): Optional<String> =
+            targetHttpPortUrlPrefix.getOptional("targetHttpPortUrlPrefix")
 
         /**
          * Returns the raw JSON value of [token].
@@ -1010,6 +1025,13 @@ private constructor(
         @JsonProperty("state") @ExcludeMissing fun _state(): JsonField<State> = state
 
         /**
+         * Returns the raw JSON value of [apiUrl].
+         *
+         * Unlike [apiUrl], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("apiUrl") @ExcludeMissing fun _apiUrl(): JsonField<String> = apiUrl
+
+        /**
          * Returns the raw JSON value of [endpointWebSocketUrl].
          *
          * Unlike [endpointWebSocketUrl], this method doesn't throw if the JSON field has an
@@ -1020,14 +1042,14 @@ private constructor(
         fun _endpointWebSocketUrl(): JsonField<String> = endpointWebSocketUrl
 
         /**
-         * Returns the raw JSON value of [portForwardWebSocketUrl].
+         * Returns the raw JSON value of [targetHttpPortUrlPrefix].
          *
-         * Unlike [portForwardWebSocketUrl], this method doesn't throw if the JSON field has an
+         * Unlike [targetHttpPortUrlPrefix], this method doesn't throw if the JSON field has an
          * unexpected type.
          */
-        @JsonProperty("portForwardWebSocketUrl")
+        @JsonProperty("targetHttpPortUrlPrefix")
         @ExcludeMissing
-        fun _portForwardWebSocketUrl(): JsonField<String> = portForwardWebSocketUrl
+        fun _targetHttpPortUrlPrefix(): JsonField<String> = targetHttpPortUrlPrefix
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -1060,16 +1082,18 @@ private constructor(
 
             private var token: JsonField<String>? = null
             private var state: JsonField<State>? = null
+            private var apiUrl: JsonField<String> = JsonMissing.of()
             private var endpointWebSocketUrl: JsonField<String> = JsonMissing.of()
-            private var portForwardWebSocketUrl: JsonField<String> = JsonMissing.of()
+            private var targetHttpPortUrlPrefix: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
             internal fun from(status: Status) = apply {
                 token = status.token
                 state = status.state
+                apiUrl = status.apiUrl
                 endpointWebSocketUrl = status.endpointWebSocketUrl
-                portForwardWebSocketUrl = status.portForwardWebSocketUrl
+                targetHttpPortUrlPrefix = status.targetHttpPortUrlPrefix
                 additionalProperties = status.additionalProperties.toMutableMap()
             }
 
@@ -1095,6 +1119,17 @@ private constructor(
              */
             fun state(state: JsonField<State>) = apply { this.state = state }
 
+            fun apiUrl(apiUrl: String) = apiUrl(JsonField.of(apiUrl))
+
+            /**
+             * Sets [Builder.apiUrl] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.apiUrl] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun apiUrl(apiUrl: JsonField<String>) = apply { this.apiUrl = apiUrl }
+
             fun endpointWebSocketUrl(endpointWebSocketUrl: String) =
                 endpointWebSocketUrl(JsonField.of(endpointWebSocketUrl))
 
@@ -1109,18 +1144,18 @@ private constructor(
                 this.endpointWebSocketUrl = endpointWebSocketUrl
             }
 
-            fun portForwardWebSocketUrl(portForwardWebSocketUrl: String) =
-                portForwardWebSocketUrl(JsonField.of(portForwardWebSocketUrl))
+            fun targetHttpPortUrlPrefix(targetHttpPortUrlPrefix: String) =
+                targetHttpPortUrlPrefix(JsonField.of(targetHttpPortUrlPrefix))
 
             /**
-             * Sets [Builder.portForwardWebSocketUrl] to an arbitrary JSON value.
+             * Sets [Builder.targetHttpPortUrlPrefix] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.portForwardWebSocketUrl] with a well-typed [String]
+             * You should usually call [Builder.targetHttpPortUrlPrefix] with a well-typed [String]
              * value instead. This method is primarily for setting the field to an undocumented or
              * not yet supported value.
              */
-            fun portForwardWebSocketUrl(portForwardWebSocketUrl: JsonField<String>) = apply {
-                this.portForwardWebSocketUrl = portForwardWebSocketUrl
+            fun targetHttpPortUrlPrefix(targetHttpPortUrlPrefix: JsonField<String>) = apply {
+                this.targetHttpPortUrlPrefix = targetHttpPortUrlPrefix
             }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -1159,8 +1194,9 @@ private constructor(
                 Status(
                     checkRequired("token", token),
                     checkRequired("state", state),
+                    apiUrl,
                     endpointWebSocketUrl,
-                    portForwardWebSocketUrl,
+                    targetHttpPortUrlPrefix,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -1174,8 +1210,9 @@ private constructor(
 
             token()
             state().validate()
+            apiUrl()
             endpointWebSocketUrl()
-            portForwardWebSocketUrl()
+            targetHttpPortUrlPrefix()
             validated = true
         }
 
@@ -1197,8 +1234,9 @@ private constructor(
         internal fun validity(): Int =
             (if (token.asKnown().isPresent) 1 else 0) +
                 (state.asKnown().getOrNull()?.validity() ?: 0) +
+                (if (apiUrl.asKnown().isPresent) 1 else 0) +
                 (if (endpointWebSocketUrl.asKnown().isPresent) 1 else 0) +
-                (if (portForwardWebSocketUrl.asKnown().isPresent) 1 else 0)
+                (if (targetHttpPortUrlPrefix.asKnown().isPresent) 1 else 0)
 
         class State @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
@@ -1355,8 +1393,9 @@ private constructor(
             return other is Status &&
                 token == other.token &&
                 state == other.state &&
+                apiUrl == other.apiUrl &&
                 endpointWebSocketUrl == other.endpointWebSocketUrl &&
-                portForwardWebSocketUrl == other.portForwardWebSocketUrl &&
+                targetHttpPortUrlPrefix == other.targetHttpPortUrlPrefix &&
                 additionalProperties == other.additionalProperties
         }
 
@@ -1364,8 +1403,9 @@ private constructor(
             Objects.hash(
                 token,
                 state,
+                apiUrl,
                 endpointWebSocketUrl,
-                portForwardWebSocketUrl,
+                targetHttpPortUrlPrefix,
                 additionalProperties,
             )
         }
@@ -1373,7 +1413,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Status{token=$token, state=$state, endpointWebSocketUrl=$endpointWebSocketUrl, portForwardWebSocketUrl=$portForwardWebSocketUrl, additionalProperties=$additionalProperties}"
+            "Status{token=$token, state=$state, apiUrl=$apiUrl, endpointWebSocketUrl=$endpointWebSocketUrl, targetHttpPortUrlPrefix=$targetHttpPortUrlPrefix, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

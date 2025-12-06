@@ -955,6 +955,7 @@ private constructor(
         private val adbWebSocketUrl: JsonField<String>,
         private val endpointWebSocketUrl: JsonField<String>,
         private val sandbox: JsonField<Sandbox>,
+        private val targetHttpPortUrlPrefix: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -969,7 +970,18 @@ private constructor(
             @ExcludeMissing
             endpointWebSocketUrl: JsonField<String> = JsonMissing.of(),
             @JsonProperty("sandbox") @ExcludeMissing sandbox: JsonField<Sandbox> = JsonMissing.of(),
-        ) : this(token, state, adbWebSocketUrl, endpointWebSocketUrl, sandbox, mutableMapOf())
+            @JsonProperty("targetHttpPortUrlPrefix")
+            @ExcludeMissing
+            targetHttpPortUrlPrefix: JsonField<String> = JsonMissing.of(),
+        ) : this(
+            token,
+            state,
+            adbWebSocketUrl,
+            endpointWebSocketUrl,
+            sandbox,
+            targetHttpPortUrlPrefix,
+            mutableMapOf(),
+        )
 
         /**
          * @throws LimrunInvalidDataException if the JSON field has an unexpected type or is
@@ -1001,6 +1013,13 @@ private constructor(
          *   server responded with an unexpected value).
          */
         fun sandbox(): Optional<Sandbox> = sandbox.getOptional("sandbox")
+
+        /**
+         * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun targetHttpPortUrlPrefix(): Optional<String> =
+            targetHttpPortUrlPrefix.getOptional("targetHttpPortUrlPrefix")
 
         /**
          * Returns the raw JSON value of [token].
@@ -1043,6 +1062,16 @@ private constructor(
          */
         @JsonProperty("sandbox") @ExcludeMissing fun _sandbox(): JsonField<Sandbox> = sandbox
 
+        /**
+         * Returns the raw JSON value of [targetHttpPortUrlPrefix].
+         *
+         * Unlike [targetHttpPortUrlPrefix], this method doesn't throw if the JSON field has an
+         * unexpected type.
+         */
+        @JsonProperty("targetHttpPortUrlPrefix")
+        @ExcludeMissing
+        fun _targetHttpPortUrlPrefix(): JsonField<String> = targetHttpPortUrlPrefix
+
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
             additionalProperties.put(key, value)
@@ -1077,6 +1106,7 @@ private constructor(
             private var adbWebSocketUrl: JsonField<String> = JsonMissing.of()
             private var endpointWebSocketUrl: JsonField<String> = JsonMissing.of()
             private var sandbox: JsonField<Sandbox> = JsonMissing.of()
+            private var targetHttpPortUrlPrefix: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
@@ -1086,6 +1116,7 @@ private constructor(
                 adbWebSocketUrl = status.adbWebSocketUrl
                 endpointWebSocketUrl = status.endpointWebSocketUrl
                 sandbox = status.sandbox
+                targetHttpPortUrlPrefix = status.targetHttpPortUrlPrefix
                 additionalProperties = status.additionalProperties.toMutableMap()
             }
 
@@ -1150,6 +1181,20 @@ private constructor(
              */
             fun sandbox(sandbox: JsonField<Sandbox>) = apply { this.sandbox = sandbox }
 
+            fun targetHttpPortUrlPrefix(targetHttpPortUrlPrefix: String) =
+                targetHttpPortUrlPrefix(JsonField.of(targetHttpPortUrlPrefix))
+
+            /**
+             * Sets [Builder.targetHttpPortUrlPrefix] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.targetHttpPortUrlPrefix] with a well-typed [String]
+             * value instead. This method is primarily for setting the field to an undocumented or
+             * not yet supported value.
+             */
+            fun targetHttpPortUrlPrefix(targetHttpPortUrlPrefix: JsonField<String>) = apply {
+                this.targetHttpPortUrlPrefix = targetHttpPortUrlPrefix
+            }
+
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
                 putAllAdditionalProperties(additionalProperties)
@@ -1189,6 +1234,7 @@ private constructor(
                     adbWebSocketUrl,
                     endpointWebSocketUrl,
                     sandbox,
+                    targetHttpPortUrlPrefix,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -1205,6 +1251,7 @@ private constructor(
             adbWebSocketUrl()
             endpointWebSocketUrl()
             sandbox().ifPresent { it.validate() }
+            targetHttpPortUrlPrefix()
             validated = true
         }
 
@@ -1228,7 +1275,8 @@ private constructor(
                 (state.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (adbWebSocketUrl.asKnown().isPresent) 1 else 0) +
                 (if (endpointWebSocketUrl.asKnown().isPresent) 1 else 0) +
-                (sandbox.asKnown().getOrNull()?.validity() ?: 0)
+                (sandbox.asKnown().getOrNull()?.validity() ?: 0) +
+                (if (targetHttpPortUrlPrefix.asKnown().isPresent) 1 else 0)
 
         class State @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
@@ -1688,6 +1736,7 @@ private constructor(
                 adbWebSocketUrl == other.adbWebSocketUrl &&
                 endpointWebSocketUrl == other.endpointWebSocketUrl &&
                 sandbox == other.sandbox &&
+                targetHttpPortUrlPrefix == other.targetHttpPortUrlPrefix &&
                 additionalProperties == other.additionalProperties
         }
 
@@ -1698,6 +1747,7 @@ private constructor(
                 adbWebSocketUrl,
                 endpointWebSocketUrl,
                 sandbox,
+                targetHttpPortUrlPrefix,
                 additionalProperties,
             )
         }
@@ -1705,7 +1755,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Status{token=$token, state=$state, adbWebSocketUrl=$adbWebSocketUrl, endpointWebSocketUrl=$endpointWebSocketUrl, sandbox=$sandbox, additionalProperties=$additionalProperties}"
+            "Status{token=$token, state=$state, adbWebSocketUrl=$adbWebSocketUrl, endpointWebSocketUrl=$endpointWebSocketUrl, sandbox=$sandbox, targetHttpPortUrlPrefix=$targetHttpPortUrlPrefix, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

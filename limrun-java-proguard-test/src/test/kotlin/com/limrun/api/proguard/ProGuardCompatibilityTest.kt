@@ -95,6 +95,7 @@ internal class ProGuardCompatibilityTest {
                                 )
                                 .build()
                         )
+                        .targetHttpPortUrlPrefix("targetHttpPortUrlPrefix")
                         .build()
                 )
                 .build()
