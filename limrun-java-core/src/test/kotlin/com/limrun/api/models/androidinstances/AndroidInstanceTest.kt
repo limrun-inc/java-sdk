@@ -42,6 +42,7 @@ internal class AndroidInstanceTest {
                         .state(AndroidInstance.Status.State.UNKNOWN)
                         .adbWebSocketUrl("adbWebSocketUrl")
                         .endpointWebSocketUrl("endpointWebSocketUrl")
+                        .errorMessage("errorMessage")
                         .sandbox(
                             AndroidInstance.Status.Sandbox.builder()
                                 .playwrightAndroid(
@@ -86,6 +87,7 @@ internal class AndroidInstanceTest {
                     .state(AndroidInstance.Status.State.UNKNOWN)
                     .adbWebSocketUrl("adbWebSocketUrl")
                     .endpointWebSocketUrl("endpointWebSocketUrl")
+                    .errorMessage("errorMessage")
                     .sandbox(
                         AndroidInstance.Status.Sandbox.builder()
                             .playwrightAndroid(
@@ -132,6 +134,7 @@ internal class AndroidInstanceTest {
                         .state(AndroidInstance.Status.State.UNKNOWN)
                         .adbWebSocketUrl("adbWebSocketUrl")
                         .endpointWebSocketUrl("endpointWebSocketUrl")
+                        .errorMessage("errorMessage")
                         .sandbox(
                             AndroidInstance.Status.Sandbox.builder()
                                 .playwrightAndroid(
