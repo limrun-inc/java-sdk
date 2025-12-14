@@ -954,6 +954,7 @@ private constructor(
         private val state: JsonField<State>,
         private val apiUrl: JsonField<String>,
         private val endpointWebSocketUrl: JsonField<String>,
+        private val errorMessage: JsonField<String>,
         private val targetHttpPortUrlPrefix: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
@@ -966,6 +967,9 @@ private constructor(
             @JsonProperty("endpointWebSocketUrl")
             @ExcludeMissing
             endpointWebSocketUrl: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("errorMessage")
+            @ExcludeMissing
+            errorMessage: JsonField<String> = JsonMissing.of(),
             @JsonProperty("targetHttpPortUrlPrefix")
             @ExcludeMissing
             targetHttpPortUrlPrefix: JsonField<String> = JsonMissing.of(),
@@ -974,6 +978,7 @@ private constructor(
             state,
             apiUrl,
             endpointWebSocketUrl,
+            errorMessage,
             targetHttpPortUrlPrefix,
             mutableMapOf(),
         )
@@ -1002,6 +1007,12 @@ private constructor(
          */
         fun endpointWebSocketUrl(): Optional<String> =
             endpointWebSocketUrl.getOptional("endpointWebSocketUrl")
+
+        /**
+         * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun errorMessage(): Optional<String> = errorMessage.getOptional("errorMessage")
 
         /**
          * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -1040,6 +1051,16 @@ private constructor(
         @JsonProperty("endpointWebSocketUrl")
         @ExcludeMissing
         fun _endpointWebSocketUrl(): JsonField<String> = endpointWebSocketUrl
+
+        /**
+         * Returns the raw JSON value of [errorMessage].
+         *
+         * Unlike [errorMessage], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("errorMessage")
+        @ExcludeMissing
+        fun _errorMessage(): JsonField<String> = errorMessage
 
         /**
          * Returns the raw JSON value of [targetHttpPortUrlPrefix].
@@ -1084,6 +1105,7 @@ private constructor(
             private var state: JsonField<State>? = null
             private var apiUrl: JsonField<String> = JsonMissing.of()
             private var endpointWebSocketUrl: JsonField<String> = JsonMissing.of()
+            private var errorMessage: JsonField<String> = JsonMissing.of()
             private var targetHttpPortUrlPrefix: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -1093,6 +1115,7 @@ private constructor(
                 state = status.state
                 apiUrl = status.apiUrl
                 endpointWebSocketUrl = status.endpointWebSocketUrl
+                errorMessage = status.errorMessage
                 targetHttpPortUrlPrefix = status.targetHttpPortUrlPrefix
                 additionalProperties = status.additionalProperties.toMutableMap()
             }
@@ -1142,6 +1165,19 @@ private constructor(
              */
             fun endpointWebSocketUrl(endpointWebSocketUrl: JsonField<String>) = apply {
                 this.endpointWebSocketUrl = endpointWebSocketUrl
+            }
+
+            fun errorMessage(errorMessage: String) = errorMessage(JsonField.of(errorMessage))
+
+            /**
+             * Sets [Builder.errorMessage] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.errorMessage] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun errorMessage(errorMessage: JsonField<String>) = apply {
+                this.errorMessage = errorMessage
             }
 
             fun targetHttpPortUrlPrefix(targetHttpPortUrlPrefix: String) =
@@ -1196,6 +1232,7 @@ private constructor(
                     checkRequired("state", state),
                     apiUrl,
                     endpointWebSocketUrl,
+                    errorMessage,
                     targetHttpPortUrlPrefix,
                     additionalProperties.toMutableMap(),
                 )
@@ -1212,6 +1249,7 @@ private constructor(
             state().validate()
             apiUrl()
             endpointWebSocketUrl()
+            errorMessage()
             targetHttpPortUrlPrefix()
             validated = true
         }
@@ -1236,6 +1274,7 @@ private constructor(
                 (state.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (apiUrl.asKnown().isPresent) 1 else 0) +
                 (if (endpointWebSocketUrl.asKnown().isPresent) 1 else 0) +
+                (if (errorMessage.asKnown().isPresent) 1 else 0) +
                 (if (targetHttpPortUrlPrefix.asKnown().isPresent) 1 else 0)
 
         class State @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
@@ -1395,6 +1434,7 @@ private constructor(
                 state == other.state &&
                 apiUrl == other.apiUrl &&
                 endpointWebSocketUrl == other.endpointWebSocketUrl &&
+                errorMessage == other.errorMessage &&
                 targetHttpPortUrlPrefix == other.targetHttpPortUrlPrefix &&
                 additionalProperties == other.additionalProperties
         }
@@ -1405,6 +1445,7 @@ private constructor(
                 state,
                 apiUrl,
                 endpointWebSocketUrl,
+                errorMessage,
                 targetHttpPortUrlPrefix,
                 additionalProperties,
             )
@@ -1413,7 +1454,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Status{token=$token, state=$state, apiUrl=$apiUrl, endpointWebSocketUrl=$endpointWebSocketUrl, targetHttpPortUrlPrefix=$targetHttpPortUrlPrefix, additionalProperties=$additionalProperties}"
+            "Status{token=$token, state=$state, apiUrl=$apiUrl, endpointWebSocketUrl=$endpointWebSocketUrl, errorMessage=$errorMessage, targetHttpPortUrlPrefix=$targetHttpPortUrlPrefix, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {
