@@ -29,12 +29,25 @@ internal class AssetServiceTest {
                 AssetListParams.builder()
                     .includeDownloadUrl(true)
                     .includeUploadUrl(true)
-                    .md5Filter("md5Filter")
+                    .limit(50L)
                     .nameFilter("nameFilter")
                     .build()
             )
 
         assets.forEach { it.validate() }
+    }
+
+    @Disabled("Prism tests are disabled")
+    @Test
+    fun delete() {
+        val client =
+            LimrunOkHttpClient.builder()
+                .baseUrl(TestServerExtension.BASE_URL)
+                .apiKey("My API Key")
+                .build()
+        val assetService = client.assets()
+
+        assetService.delete("assetId")
     }
 
     @Disabled("Prism tests are disabled")

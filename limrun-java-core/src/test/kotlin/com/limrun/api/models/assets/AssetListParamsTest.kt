@@ -13,7 +13,7 @@ internal class AssetListParamsTest {
         AssetListParams.builder()
             .includeDownloadUrl(true)
             .includeUploadUrl(true)
-            .md5Filter("md5Filter")
+            .limit(50L)
             .nameFilter("nameFilter")
             .build()
     }
@@ -24,7 +24,7 @@ internal class AssetListParamsTest {
             AssetListParams.builder()
                 .includeDownloadUrl(true)
                 .includeUploadUrl(true)
-                .md5Filter("md5Filter")
+                .limit(50L)
                 .nameFilter("nameFilter")
                 .build()
 
@@ -35,7 +35,7 @@ internal class AssetListParamsTest {
                 QueryParams.builder()
                     .put("includeDownloadUrl", "true")
                     .put("includeUploadUrl", "true")
-                    .put("md5Filter", "md5Filter")
+                    .put("limit", "50")
                     .put("nameFilter", "nameFilter")
                     .build()
             )

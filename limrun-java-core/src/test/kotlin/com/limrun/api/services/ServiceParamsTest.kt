@@ -44,6 +44,7 @@ internal class ServiceParamsTest {
 
         androidInstanceService.create(
             AndroidInstanceCreateParams.builder()
+                .reuseIfExists(true)
                 .wait(true)
                 .metadata(
                     AndroidInstanceCreateParams.Metadata.builder()
@@ -61,6 +62,7 @@ internal class ServiceParamsTest {
                             AndroidInstanceCreateParams.Spec.Clue.builder()
                                 .kind(AndroidInstanceCreateParams.Spec.Clue.Kind.CLIENT_IP)
                                 .clientIp("clientIp")
+                                .osVersion("osVersion")
                                 .build()
                         )
                         .hardTimeout("hardTimeout")
@@ -68,12 +70,42 @@ internal class ServiceParamsTest {
                         .addInitialAsset(
                             AndroidInstanceCreateParams.Spec.InitialAsset.builder()
                                 .kind(AndroidInstanceCreateParams.Spec.InitialAsset.Kind.APP)
-                                .source(AndroidInstanceCreateParams.Spec.InitialAsset.Source.URL)
+                                .addAssetId("string")
                                 .assetName("assetName")
+                                .addAssetName("string")
+                                .configuration(
+                                    AndroidInstanceCreateParams.Spec.InitialAsset.Configuration
+                                        .builder()
+                                        .kind(
+                                            AndroidInstanceCreateParams.Spec.InitialAsset
+                                                .Configuration
+                                                .Kind
+                                                .CHROME_FLAG
+                                        )
+                                        .chromeFlag(
+                                            AndroidInstanceCreateParams.Spec.InitialAsset
+                                                .Configuration
+                                                .ChromeFlag
+                                                .ENABLE_COMMAND_LINE_ON_NON_ROOTED_DEVICES_1
+                                        )
+                                        .build()
+                                )
+                                .source(AndroidInstanceCreateParams.Spec.InitialAsset.Source.URL)
                                 .url("url")
+                                .addUrl("string")
                                 .build()
                         )
                         .region("region")
+                        .sandbox(
+                            AndroidInstanceCreateParams.Spec.Sandbox.builder()
+                                .playwrightAndroid(
+                                    AndroidInstanceCreateParams.Spec.Sandbox.PlaywrightAndroid
+                                        .builder()
+                                        .enabled(true)
+                                        .build()
+                                )
+                                .build()
+                        )
                         .build()
                 )
                 .putAdditionalHeader("Secret-Header", "42")

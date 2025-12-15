@@ -6,7 +6,6 @@ import com.limrun.api.TestServerExtension
 import com.limrun.api.client.okhttp.LimrunOkHttpClient
 import com.limrun.api.core.JsonValue
 import com.limrun.api.models.androidinstances.AndroidInstanceCreateParams
-import com.limrun.api.models.androidinstances.AndroidInstanceListParams
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -27,6 +26,7 @@ internal class AndroidInstanceServiceTest {
         val androidInstance =
             androidInstanceService.create(
                 AndroidInstanceCreateParams.builder()
+                    .reuseIfExists(true)
                     .wait(true)
                     .metadata(
                         AndroidInstanceCreateParams.Metadata.builder()
@@ -44,6 +44,7 @@ internal class AndroidInstanceServiceTest {
                                 AndroidInstanceCreateParams.Spec.Clue.builder()
                                     .kind(AndroidInstanceCreateParams.Spec.Clue.Kind.CLIENT_IP)
                                     .clientIp("clientIp")
+                                    .osVersion("osVersion")
                                     .build()
                             )
                             .hardTimeout("hardTimeout")
@@ -51,14 +52,44 @@ internal class AndroidInstanceServiceTest {
                             .addInitialAsset(
                                 AndroidInstanceCreateParams.Spec.InitialAsset.builder()
                                     .kind(AndroidInstanceCreateParams.Spec.InitialAsset.Kind.APP)
+                                    .addAssetId("string")
+                                    .assetName("assetName")
+                                    .addAssetName("string")
+                                    .configuration(
+                                        AndroidInstanceCreateParams.Spec.InitialAsset.Configuration
+                                            .builder()
+                                            .kind(
+                                                AndroidInstanceCreateParams.Spec.InitialAsset
+                                                    .Configuration
+                                                    .Kind
+                                                    .CHROME_FLAG
+                                            )
+                                            .chromeFlag(
+                                                AndroidInstanceCreateParams.Spec.InitialAsset
+                                                    .Configuration
+                                                    .ChromeFlag
+                                                    .ENABLE_COMMAND_LINE_ON_NON_ROOTED_DEVICES_1
+                                            )
+                                            .build()
+                                    )
                                     .source(
                                         AndroidInstanceCreateParams.Spec.InitialAsset.Source.URL
                                     )
-                                    .assetName("assetName")
                                     .url("url")
+                                    .addUrl("string")
                                     .build()
                             )
                             .region("region")
+                            .sandbox(
+                                AndroidInstanceCreateParams.Spec.Sandbox.builder()
+                                    .playwrightAndroid(
+                                        AndroidInstanceCreateParams.Spec.Sandbox.PlaywrightAndroid
+                                            .builder()
+                                            .enabled(true)
+                                            .build()
+                                    )
+                                    .build()
+                            )
                             .build()
                     )
                     .build()
@@ -77,16 +108,9 @@ internal class AndroidInstanceServiceTest {
                 .build()
         val androidInstanceService = client.androidInstances()
 
-        val androidInstances =
-            androidInstanceService.list(
-                AndroidInstanceListParams.builder()
-                    .labelSelector("env=prod,version=1.2")
-                    .region("region")
-                    .state(AndroidInstanceListParams.State.UNKNOWN)
-                    .build()
-            )
+        val page = androidInstanceService.list()
 
-        androidInstances.forEach { it.validate() }
+        page.items().forEach { it.validate() }
     }
 
     @Disabled("Prism tests are disabled")

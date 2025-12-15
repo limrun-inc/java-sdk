@@ -2,8 +2,8 @@
 
 <!-- x-release-please-start-version -->
 
-[![Maven Central](https://img.shields.io/maven-central/v/com.limrun.api/limrun-java)](https://central.sonatype.com/artifact/com.limrun.api/limrun-java/0.0.1)
-[![javadoc](https://javadoc.io/badge2/com.limrun.api/limrun-java/0.0.1/javadoc.svg)](https://javadoc.io/doc/com.limrun.api/limrun-java/0.0.1)
+[![Maven Central](https://img.shields.io/maven-central/v/com.limrun.api/limrun-java)](https://central.sonatype.com/artifact/com.limrun.api/limrun-java/0.1.0)
+[![javadoc](https://javadoc.io/badge2/com.limrun.api/limrun-java/0.1.0/javadoc.svg)](https://javadoc.io/doc/com.limrun.api/limrun-java/0.1.0)
 
 <!-- x-release-please-end -->
 
@@ -13,7 +13,7 @@ It is generated with [Stainless](https://www.stainless.com/).
 
 <!-- x-release-please-start-version -->
 
-The REST API documentation can be found on [lim.run](https://lim.run). Javadocs are available on [javadoc.io](https://javadoc.io/doc/com.limrun.api/limrun-java/0.0.1).
+The REST API documentation can be found on [lim.run](https://lim.run). Javadocs are available on [javadoc.io](https://javadoc.io/doc/com.limrun.api/limrun-java/0.1.0).
 
 <!-- x-release-please-end -->
 
@@ -24,7 +24,7 @@ The REST API documentation can be found on [lim.run](https://lim.run). Javadocs 
 ### Gradle
 
 ```kotlin
-implementation("com.limrun.api:limrun-java:0.0.1")
+implementation("com.limrun.api:limrun-java:0.1.0")
 ```
 
 ### Maven
@@ -33,7 +33,7 @@ implementation("com.limrun.api:limrun-java:0.0.1")
 <dependency>
   <groupId>com.limrun.api</groupId>
   <artifactId>limrun-java</artifactId>
-  <version>0.0.1</version>
+  <version>0.1.0</version>
 </dependency>
 ```
 
@@ -51,8 +51,8 @@ import com.limrun.api.client.okhttp.LimrunOkHttpClient;
 import com.limrun.api.models.androidinstances.AndroidInstance;
 import com.limrun.api.models.androidinstances.AndroidInstanceCreateParams;
 
-// Configures using the `limrun.limToken` and `limrun.baseUrl` system properties
-// Or configures using the `LIM_TOKEN` and `LIMRUN_BASE_URL` environment variables
+// Configures using the `limrun.limApiKey` and `limrun.baseUrl` system properties
+// Or configures using the `LIM_API_KEY` and `LIMRUN_BASE_URL` environment variables
 LimrunClient client = LimrunOkHttpClient.fromEnv();
 
 AndroidInstance androidInstance = client.androidInstances().create();
@@ -66,8 +66,8 @@ Configure the client using system properties or environment variables:
 import com.limrun.api.client.LimrunClient;
 import com.limrun.api.client.okhttp.LimrunOkHttpClient;
 
-// Configures using the `limrun.limToken` and `limrun.baseUrl` system properties
-// Or configures using the `LIM_TOKEN` and `LIMRUN_BASE_URL` environment variables
+// Configures using the `limrun.limApiKey` and `limrun.baseUrl` system properties
+// Or configures using the `LIM_API_KEY` and `LIMRUN_BASE_URL` environment variables
 LimrunClient client = LimrunOkHttpClient.fromEnv();
 ```
 
@@ -89,8 +89,8 @@ import com.limrun.api.client.LimrunClient;
 import com.limrun.api.client.okhttp.LimrunOkHttpClient;
 
 LimrunClient client = LimrunOkHttpClient.builder()
-    // Configures using the `limrun.limToken` and `limrun.baseUrl` system properties
-    // Or configures using the `LIM_TOKEN` and `LIMRUN_BASE_URL` environment variables
+    // Configures using the `limrun.limApiKey` and `limrun.baseUrl` system properties
+    // Or configures using the `LIM_API_KEY` and `LIMRUN_BASE_URL` environment variables
     .fromEnv()
     .apiKey("My API Key")
     .build();
@@ -98,10 +98,10 @@ LimrunClient client = LimrunOkHttpClient.builder()
 
 See this table for the available options:
 
-| Setter    | System property   | Environment variable | Required | Default value              |
-| --------- | ----------------- | -------------------- | -------- | -------------------------- |
-| `apiKey`  | `limrun.limToken` | `LIM_TOKEN`          | false    | -                          |
-| `baseUrl` | `limrun.baseUrl`  | `LIMRUN_BASE_URL`    | true     | `"https://api.limrun.com"` |
+| Setter    | System property    | Environment variable | Required | Default value              |
+| --------- | ------------------ | -------------------- | -------- | -------------------------- |
+| `apiKey`  | `limrun.limApiKey` | `LIM_API_KEY`        | false    | -                          |
+| `baseUrl` | `limrun.baseUrl`   | `LIMRUN_BASE_URL`    | true     | `"https://api.limrun.com"` |
 
 System properties take precedence over environment variables.
 
@@ -149,8 +149,8 @@ import com.limrun.api.models.androidinstances.AndroidInstance;
 import com.limrun.api.models.androidinstances.AndroidInstanceCreateParams;
 import java.util.concurrent.CompletableFuture;
 
-// Configures using the `limrun.limToken` and `limrun.baseUrl` system properties
-// Or configures using the `LIM_TOKEN` and `LIMRUN_BASE_URL` environment variables
+// Configures using the `limrun.limApiKey` and `limrun.baseUrl` system properties
+// Or configures using the `LIM_API_KEY` and `LIMRUN_BASE_URL` environment variables
 LimrunClient client = LimrunOkHttpClient.fromEnv();
 
 CompletableFuture<AndroidInstance> androidInstance = client.async().androidInstances().create();
@@ -165,8 +165,8 @@ import com.limrun.api.models.androidinstances.AndroidInstance;
 import com.limrun.api.models.androidinstances.AndroidInstanceCreateParams;
 import java.util.concurrent.CompletableFuture;
 
-// Configures using the `limrun.limToken` and `limrun.baseUrl` system properties
-// Or configures using the `LIM_TOKEN` and `LIMRUN_BASE_URL` environment variables
+// Configures using the `limrun.limApiKey` and `limrun.baseUrl` system properties
+// Or configures using the `LIM_API_KEY` and `LIMRUN_BASE_URL` environment variables
 LimrunClientAsync client = LimrunOkHttpClientAsync.fromEnv();
 
 CompletableFuture<AndroidInstance> androidInstance = client.androidInstances().create();
@@ -232,13 +232,13 @@ The SDK uses the standard [OkHttp logging interceptor](https://github.com/square
 Enable logging by setting the `LIMRUN_LOG` environment variable to `info`:
 
 ```sh
-$ export LIMRUN_LOG=info
+export LIMRUN_LOG=info
 ```
 
 Or to `debug` for more verbose logging:
 
 ```sh
-$ export LIMRUN_LOG=debug
+export LIMRUN_LOG=debug
 ```
 
 ## ProGuard and R8

@@ -5,6 +5,7 @@ package com.limrun.api.services.blocking
 import com.limrun.api.core.ClientOptions
 import com.limrun.api.core.RequestOptions
 import com.limrun.api.core.checkRequired
+import com.limrun.api.core.handlers.emptyHandler
 import com.limrun.api.core.handlers.errorBodyHandler
 import com.limrun.api.core.handlers.errorHandler
 import com.limrun.api.core.handlers.jsonHandler
@@ -17,6 +18,7 @@ import com.limrun.api.core.http.json
 import com.limrun.api.core.http.parseable
 import com.limrun.api.core.prepare
 import com.limrun.api.models.assets.Asset
+import com.limrun.api.models.assets.AssetDeleteParams
 import com.limrun.api.models.assets.AssetGetOrCreateParams
 import com.limrun.api.models.assets.AssetGetOrCreateResponse
 import com.limrun.api.models.assets.AssetGetParams
@@ -39,6 +41,11 @@ class AssetServiceImpl internal constructor(private val clientOptions: ClientOpt
     override fun list(params: AssetListParams, requestOptions: RequestOptions): List<Asset> =
         // get /v1/assets
         withRawResponse().list(params, requestOptions).parse()
+
+    override fun delete(params: AssetDeleteParams, requestOptions: RequestOptions) {
+        // delete /v1/assets/{assetId}
+        withRawResponse().delete(params, requestOptions)
+    }
 
     override fun get(params: AssetGetParams, requestOptions: RequestOptions): Asset =
         // get /v1/assets/{assetId}
@@ -88,6 +95,30 @@ class AssetServiceImpl internal constructor(private val clientOptions: ClientOpt
                             it.forEach { it.validate() }
                         }
                     }
+            }
+        }
+
+        private val deleteHandler: Handler<Void?> = emptyHandler()
+
+        override fun delete(
+            params: AssetDeleteParams,
+            requestOptions: RequestOptions,
+        ): HttpResponse {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("assetId", params.assetId().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.DELETE)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("v1", "assets", params._pathParam(0))
+                    .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return errorHandler.handle(response).parseable {
+                response.use { deleteHandler.handle(it) }
             }
         }
 

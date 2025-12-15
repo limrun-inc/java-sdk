@@ -72,6 +72,7 @@ internal class ErrorHandlingTest {
             assertThrows<BadRequestException> {
                 androidInstanceService.create(
                     AndroidInstanceCreateParams.builder()
+                        .reuseIfExists(true)
                         .wait(true)
                         .metadata(
                             AndroidInstanceCreateParams.Metadata.builder()
@@ -89,6 +90,7 @@ internal class ErrorHandlingTest {
                                     AndroidInstanceCreateParams.Spec.Clue.builder()
                                         .kind(AndroidInstanceCreateParams.Spec.Clue.Kind.CLIENT_IP)
                                         .clientIp("clientIp")
+                                        .osVersion("osVersion")
                                         .build()
                                 )
                                 .hardTimeout("hardTimeout")
@@ -98,14 +100,46 @@ internal class ErrorHandlingTest {
                                         .kind(
                                             AndroidInstanceCreateParams.Spec.InitialAsset.Kind.APP
                                         )
+                                        .addAssetId("string")
+                                        .assetName("assetName")
+                                        .addAssetName("string")
+                                        .configuration(
+                                            AndroidInstanceCreateParams.Spec.InitialAsset
+                                                .Configuration
+                                                .builder()
+                                                .kind(
+                                                    AndroidInstanceCreateParams.Spec.InitialAsset
+                                                        .Configuration
+                                                        .Kind
+                                                        .CHROME_FLAG
+                                                )
+                                                .chromeFlag(
+                                                    AndroidInstanceCreateParams.Spec.InitialAsset
+                                                        .Configuration
+                                                        .ChromeFlag
+                                                        .ENABLE_COMMAND_LINE_ON_NON_ROOTED_DEVICES_1
+                                                )
+                                                .build()
+                                        )
                                         .source(
                                             AndroidInstanceCreateParams.Spec.InitialAsset.Source.URL
                                         )
-                                        .assetName("assetName")
                                         .url("url")
+                                        .addUrl("string")
                                         .build()
                                 )
                                 .region("region")
+                                .sandbox(
+                                    AndroidInstanceCreateParams.Spec.Sandbox.builder()
+                                        .playwrightAndroid(
+                                            AndroidInstanceCreateParams.Spec.Sandbox
+                                                .PlaywrightAndroid
+                                                .builder()
+                                                .enabled(true)
+                                                .build()
+                                        )
+                                        .build()
+                                )
                                 .build()
                         )
                         .build()
@@ -131,6 +165,7 @@ internal class ErrorHandlingTest {
             assertThrows<BadRequestException> {
                 androidInstanceService.create(
                     AndroidInstanceCreateParams.builder()
+                        .reuseIfExists(true)
                         .wait(true)
                         .metadata(
                             AndroidInstanceCreateParams.Metadata.builder()
@@ -148,6 +183,7 @@ internal class ErrorHandlingTest {
                                     AndroidInstanceCreateParams.Spec.Clue.builder()
                                         .kind(AndroidInstanceCreateParams.Spec.Clue.Kind.CLIENT_IP)
                                         .clientIp("clientIp")
+                                        .osVersion("osVersion")
                                         .build()
                                 )
                                 .hardTimeout("hardTimeout")
@@ -157,14 +193,46 @@ internal class ErrorHandlingTest {
                                         .kind(
                                             AndroidInstanceCreateParams.Spec.InitialAsset.Kind.APP
                                         )
+                                        .addAssetId("string")
+                                        .assetName("assetName")
+                                        .addAssetName("string")
+                                        .configuration(
+                                            AndroidInstanceCreateParams.Spec.InitialAsset
+                                                .Configuration
+                                                .builder()
+                                                .kind(
+                                                    AndroidInstanceCreateParams.Spec.InitialAsset
+                                                        .Configuration
+                                                        .Kind
+                                                        .CHROME_FLAG
+                                                )
+                                                .chromeFlag(
+                                                    AndroidInstanceCreateParams.Spec.InitialAsset
+                                                        .Configuration
+                                                        .ChromeFlag
+                                                        .ENABLE_COMMAND_LINE_ON_NON_ROOTED_DEVICES_1
+                                                )
+                                                .build()
+                                        )
                                         .source(
                                             AndroidInstanceCreateParams.Spec.InitialAsset.Source.URL
                                         )
-                                        .assetName("assetName")
                                         .url("url")
+                                        .addUrl("string")
                                         .build()
                                 )
                                 .region("region")
+                                .sandbox(
+                                    AndroidInstanceCreateParams.Spec.Sandbox.builder()
+                                        .playwrightAndroid(
+                                            AndroidInstanceCreateParams.Spec.Sandbox
+                                                .PlaywrightAndroid
+                                                .builder()
+                                                .enabled(true)
+                                                .build()
+                                        )
+                                        .build()
+                                )
                                 .build()
                         )
                         .build()
@@ -190,6 +258,7 @@ internal class ErrorHandlingTest {
             assertThrows<UnauthorizedException> {
                 androidInstanceService.create(
                     AndroidInstanceCreateParams.builder()
+                        .reuseIfExists(true)
                         .wait(true)
                         .metadata(
                             AndroidInstanceCreateParams.Metadata.builder()
@@ -207,6 +276,7 @@ internal class ErrorHandlingTest {
                                     AndroidInstanceCreateParams.Spec.Clue.builder()
                                         .kind(AndroidInstanceCreateParams.Spec.Clue.Kind.CLIENT_IP)
                                         .clientIp("clientIp")
+                                        .osVersion("osVersion")
                                         .build()
                                 )
                                 .hardTimeout("hardTimeout")
@@ -216,14 +286,46 @@ internal class ErrorHandlingTest {
                                         .kind(
                                             AndroidInstanceCreateParams.Spec.InitialAsset.Kind.APP
                                         )
+                                        .addAssetId("string")
+                                        .assetName("assetName")
+                                        .addAssetName("string")
+                                        .configuration(
+                                            AndroidInstanceCreateParams.Spec.InitialAsset
+                                                .Configuration
+                                                .builder()
+                                                .kind(
+                                                    AndroidInstanceCreateParams.Spec.InitialAsset
+                                                        .Configuration
+                                                        .Kind
+                                                        .CHROME_FLAG
+                                                )
+                                                .chromeFlag(
+                                                    AndroidInstanceCreateParams.Spec.InitialAsset
+                                                        .Configuration
+                                                        .ChromeFlag
+                                                        .ENABLE_COMMAND_LINE_ON_NON_ROOTED_DEVICES_1
+                                                )
+                                                .build()
+                                        )
                                         .source(
                                             AndroidInstanceCreateParams.Spec.InitialAsset.Source.URL
                                         )
-                                        .assetName("assetName")
                                         .url("url")
+                                        .addUrl("string")
                                         .build()
                                 )
                                 .region("region")
+                                .sandbox(
+                                    AndroidInstanceCreateParams.Spec.Sandbox.builder()
+                                        .playwrightAndroid(
+                                            AndroidInstanceCreateParams.Spec.Sandbox
+                                                .PlaywrightAndroid
+                                                .builder()
+                                                .enabled(true)
+                                                .build()
+                                        )
+                                        .build()
+                                )
                                 .build()
                         )
                         .build()
@@ -249,6 +351,7 @@ internal class ErrorHandlingTest {
             assertThrows<UnauthorizedException> {
                 androidInstanceService.create(
                     AndroidInstanceCreateParams.builder()
+                        .reuseIfExists(true)
                         .wait(true)
                         .metadata(
                             AndroidInstanceCreateParams.Metadata.builder()
@@ -266,6 +369,7 @@ internal class ErrorHandlingTest {
                                     AndroidInstanceCreateParams.Spec.Clue.builder()
                                         .kind(AndroidInstanceCreateParams.Spec.Clue.Kind.CLIENT_IP)
                                         .clientIp("clientIp")
+                                        .osVersion("osVersion")
                                         .build()
                                 )
                                 .hardTimeout("hardTimeout")
@@ -275,14 +379,46 @@ internal class ErrorHandlingTest {
                                         .kind(
                                             AndroidInstanceCreateParams.Spec.InitialAsset.Kind.APP
                                         )
+                                        .addAssetId("string")
+                                        .assetName("assetName")
+                                        .addAssetName("string")
+                                        .configuration(
+                                            AndroidInstanceCreateParams.Spec.InitialAsset
+                                                .Configuration
+                                                .builder()
+                                                .kind(
+                                                    AndroidInstanceCreateParams.Spec.InitialAsset
+                                                        .Configuration
+                                                        .Kind
+                                                        .CHROME_FLAG
+                                                )
+                                                .chromeFlag(
+                                                    AndroidInstanceCreateParams.Spec.InitialAsset
+                                                        .Configuration
+                                                        .ChromeFlag
+                                                        .ENABLE_COMMAND_LINE_ON_NON_ROOTED_DEVICES_1
+                                                )
+                                                .build()
+                                        )
                                         .source(
                                             AndroidInstanceCreateParams.Spec.InitialAsset.Source.URL
                                         )
-                                        .assetName("assetName")
                                         .url("url")
+                                        .addUrl("string")
                                         .build()
                                 )
                                 .region("region")
+                                .sandbox(
+                                    AndroidInstanceCreateParams.Spec.Sandbox.builder()
+                                        .playwrightAndroid(
+                                            AndroidInstanceCreateParams.Spec.Sandbox
+                                                .PlaywrightAndroid
+                                                .builder()
+                                                .enabled(true)
+                                                .build()
+                                        )
+                                        .build()
+                                )
                                 .build()
                         )
                         .build()
@@ -308,6 +444,7 @@ internal class ErrorHandlingTest {
             assertThrows<PermissionDeniedException> {
                 androidInstanceService.create(
                     AndroidInstanceCreateParams.builder()
+                        .reuseIfExists(true)
                         .wait(true)
                         .metadata(
                             AndroidInstanceCreateParams.Metadata.builder()
@@ -325,6 +462,7 @@ internal class ErrorHandlingTest {
                                     AndroidInstanceCreateParams.Spec.Clue.builder()
                                         .kind(AndroidInstanceCreateParams.Spec.Clue.Kind.CLIENT_IP)
                                         .clientIp("clientIp")
+                                        .osVersion("osVersion")
                                         .build()
                                 )
                                 .hardTimeout("hardTimeout")
@@ -334,14 +472,46 @@ internal class ErrorHandlingTest {
                                         .kind(
                                             AndroidInstanceCreateParams.Spec.InitialAsset.Kind.APP
                                         )
+                                        .addAssetId("string")
+                                        .assetName("assetName")
+                                        .addAssetName("string")
+                                        .configuration(
+                                            AndroidInstanceCreateParams.Spec.InitialAsset
+                                                .Configuration
+                                                .builder()
+                                                .kind(
+                                                    AndroidInstanceCreateParams.Spec.InitialAsset
+                                                        .Configuration
+                                                        .Kind
+                                                        .CHROME_FLAG
+                                                )
+                                                .chromeFlag(
+                                                    AndroidInstanceCreateParams.Spec.InitialAsset
+                                                        .Configuration
+                                                        .ChromeFlag
+                                                        .ENABLE_COMMAND_LINE_ON_NON_ROOTED_DEVICES_1
+                                                )
+                                                .build()
+                                        )
                                         .source(
                                             AndroidInstanceCreateParams.Spec.InitialAsset.Source.URL
                                         )
-                                        .assetName("assetName")
                                         .url("url")
+                                        .addUrl("string")
                                         .build()
                                 )
                                 .region("region")
+                                .sandbox(
+                                    AndroidInstanceCreateParams.Spec.Sandbox.builder()
+                                        .playwrightAndroid(
+                                            AndroidInstanceCreateParams.Spec.Sandbox
+                                                .PlaywrightAndroid
+                                                .builder()
+                                                .enabled(true)
+                                                .build()
+                                        )
+                                        .build()
+                                )
                                 .build()
                         )
                         .build()
@@ -367,6 +537,7 @@ internal class ErrorHandlingTest {
             assertThrows<PermissionDeniedException> {
                 androidInstanceService.create(
                     AndroidInstanceCreateParams.builder()
+                        .reuseIfExists(true)
                         .wait(true)
                         .metadata(
                             AndroidInstanceCreateParams.Metadata.builder()
@@ -384,6 +555,7 @@ internal class ErrorHandlingTest {
                                     AndroidInstanceCreateParams.Spec.Clue.builder()
                                         .kind(AndroidInstanceCreateParams.Spec.Clue.Kind.CLIENT_IP)
                                         .clientIp("clientIp")
+                                        .osVersion("osVersion")
                                         .build()
                                 )
                                 .hardTimeout("hardTimeout")
@@ -393,14 +565,46 @@ internal class ErrorHandlingTest {
                                         .kind(
                                             AndroidInstanceCreateParams.Spec.InitialAsset.Kind.APP
                                         )
+                                        .addAssetId("string")
+                                        .assetName("assetName")
+                                        .addAssetName("string")
+                                        .configuration(
+                                            AndroidInstanceCreateParams.Spec.InitialAsset
+                                                .Configuration
+                                                .builder()
+                                                .kind(
+                                                    AndroidInstanceCreateParams.Spec.InitialAsset
+                                                        .Configuration
+                                                        .Kind
+                                                        .CHROME_FLAG
+                                                )
+                                                .chromeFlag(
+                                                    AndroidInstanceCreateParams.Spec.InitialAsset
+                                                        .Configuration
+                                                        .ChromeFlag
+                                                        .ENABLE_COMMAND_LINE_ON_NON_ROOTED_DEVICES_1
+                                                )
+                                                .build()
+                                        )
                                         .source(
                                             AndroidInstanceCreateParams.Spec.InitialAsset.Source.URL
                                         )
-                                        .assetName("assetName")
                                         .url("url")
+                                        .addUrl("string")
                                         .build()
                                 )
                                 .region("region")
+                                .sandbox(
+                                    AndroidInstanceCreateParams.Spec.Sandbox.builder()
+                                        .playwrightAndroid(
+                                            AndroidInstanceCreateParams.Spec.Sandbox
+                                                .PlaywrightAndroid
+                                                .builder()
+                                                .enabled(true)
+                                                .build()
+                                        )
+                                        .build()
+                                )
                                 .build()
                         )
                         .build()
@@ -426,6 +630,7 @@ internal class ErrorHandlingTest {
             assertThrows<NotFoundException> {
                 androidInstanceService.create(
                     AndroidInstanceCreateParams.builder()
+                        .reuseIfExists(true)
                         .wait(true)
                         .metadata(
                             AndroidInstanceCreateParams.Metadata.builder()
@@ -443,6 +648,7 @@ internal class ErrorHandlingTest {
                                     AndroidInstanceCreateParams.Spec.Clue.builder()
                                         .kind(AndroidInstanceCreateParams.Spec.Clue.Kind.CLIENT_IP)
                                         .clientIp("clientIp")
+                                        .osVersion("osVersion")
                                         .build()
                                 )
                                 .hardTimeout("hardTimeout")
@@ -452,14 +658,46 @@ internal class ErrorHandlingTest {
                                         .kind(
                                             AndroidInstanceCreateParams.Spec.InitialAsset.Kind.APP
                                         )
+                                        .addAssetId("string")
+                                        .assetName("assetName")
+                                        .addAssetName("string")
+                                        .configuration(
+                                            AndroidInstanceCreateParams.Spec.InitialAsset
+                                                .Configuration
+                                                .builder()
+                                                .kind(
+                                                    AndroidInstanceCreateParams.Spec.InitialAsset
+                                                        .Configuration
+                                                        .Kind
+                                                        .CHROME_FLAG
+                                                )
+                                                .chromeFlag(
+                                                    AndroidInstanceCreateParams.Spec.InitialAsset
+                                                        .Configuration
+                                                        .ChromeFlag
+                                                        .ENABLE_COMMAND_LINE_ON_NON_ROOTED_DEVICES_1
+                                                )
+                                                .build()
+                                        )
                                         .source(
                                             AndroidInstanceCreateParams.Spec.InitialAsset.Source.URL
                                         )
-                                        .assetName("assetName")
                                         .url("url")
+                                        .addUrl("string")
                                         .build()
                                 )
                                 .region("region")
+                                .sandbox(
+                                    AndroidInstanceCreateParams.Spec.Sandbox.builder()
+                                        .playwrightAndroid(
+                                            AndroidInstanceCreateParams.Spec.Sandbox
+                                                .PlaywrightAndroid
+                                                .builder()
+                                                .enabled(true)
+                                                .build()
+                                        )
+                                        .build()
+                                )
                                 .build()
                         )
                         .build()
@@ -485,6 +723,7 @@ internal class ErrorHandlingTest {
             assertThrows<NotFoundException> {
                 androidInstanceService.create(
                     AndroidInstanceCreateParams.builder()
+                        .reuseIfExists(true)
                         .wait(true)
                         .metadata(
                             AndroidInstanceCreateParams.Metadata.builder()
@@ -502,6 +741,7 @@ internal class ErrorHandlingTest {
                                     AndroidInstanceCreateParams.Spec.Clue.builder()
                                         .kind(AndroidInstanceCreateParams.Spec.Clue.Kind.CLIENT_IP)
                                         .clientIp("clientIp")
+                                        .osVersion("osVersion")
                                         .build()
                                 )
                                 .hardTimeout("hardTimeout")
@@ -511,14 +751,46 @@ internal class ErrorHandlingTest {
                                         .kind(
                                             AndroidInstanceCreateParams.Spec.InitialAsset.Kind.APP
                                         )
+                                        .addAssetId("string")
+                                        .assetName("assetName")
+                                        .addAssetName("string")
+                                        .configuration(
+                                            AndroidInstanceCreateParams.Spec.InitialAsset
+                                                .Configuration
+                                                .builder()
+                                                .kind(
+                                                    AndroidInstanceCreateParams.Spec.InitialAsset
+                                                        .Configuration
+                                                        .Kind
+                                                        .CHROME_FLAG
+                                                )
+                                                .chromeFlag(
+                                                    AndroidInstanceCreateParams.Spec.InitialAsset
+                                                        .Configuration
+                                                        .ChromeFlag
+                                                        .ENABLE_COMMAND_LINE_ON_NON_ROOTED_DEVICES_1
+                                                )
+                                                .build()
+                                        )
                                         .source(
                                             AndroidInstanceCreateParams.Spec.InitialAsset.Source.URL
                                         )
-                                        .assetName("assetName")
                                         .url("url")
+                                        .addUrl("string")
                                         .build()
                                 )
                                 .region("region")
+                                .sandbox(
+                                    AndroidInstanceCreateParams.Spec.Sandbox.builder()
+                                        .playwrightAndroid(
+                                            AndroidInstanceCreateParams.Spec.Sandbox
+                                                .PlaywrightAndroid
+                                                .builder()
+                                                .enabled(true)
+                                                .build()
+                                        )
+                                        .build()
+                                )
                                 .build()
                         )
                         .build()
@@ -544,6 +816,7 @@ internal class ErrorHandlingTest {
             assertThrows<UnprocessableEntityException> {
                 androidInstanceService.create(
                     AndroidInstanceCreateParams.builder()
+                        .reuseIfExists(true)
                         .wait(true)
                         .metadata(
                             AndroidInstanceCreateParams.Metadata.builder()
@@ -561,6 +834,7 @@ internal class ErrorHandlingTest {
                                     AndroidInstanceCreateParams.Spec.Clue.builder()
                                         .kind(AndroidInstanceCreateParams.Spec.Clue.Kind.CLIENT_IP)
                                         .clientIp("clientIp")
+                                        .osVersion("osVersion")
                                         .build()
                                 )
                                 .hardTimeout("hardTimeout")
@@ -570,14 +844,46 @@ internal class ErrorHandlingTest {
                                         .kind(
                                             AndroidInstanceCreateParams.Spec.InitialAsset.Kind.APP
                                         )
+                                        .addAssetId("string")
+                                        .assetName("assetName")
+                                        .addAssetName("string")
+                                        .configuration(
+                                            AndroidInstanceCreateParams.Spec.InitialAsset
+                                                .Configuration
+                                                .builder()
+                                                .kind(
+                                                    AndroidInstanceCreateParams.Spec.InitialAsset
+                                                        .Configuration
+                                                        .Kind
+                                                        .CHROME_FLAG
+                                                )
+                                                .chromeFlag(
+                                                    AndroidInstanceCreateParams.Spec.InitialAsset
+                                                        .Configuration
+                                                        .ChromeFlag
+                                                        .ENABLE_COMMAND_LINE_ON_NON_ROOTED_DEVICES_1
+                                                )
+                                                .build()
+                                        )
                                         .source(
                                             AndroidInstanceCreateParams.Spec.InitialAsset.Source.URL
                                         )
-                                        .assetName("assetName")
                                         .url("url")
+                                        .addUrl("string")
                                         .build()
                                 )
                                 .region("region")
+                                .sandbox(
+                                    AndroidInstanceCreateParams.Spec.Sandbox.builder()
+                                        .playwrightAndroid(
+                                            AndroidInstanceCreateParams.Spec.Sandbox
+                                                .PlaywrightAndroid
+                                                .builder()
+                                                .enabled(true)
+                                                .build()
+                                        )
+                                        .build()
+                                )
                                 .build()
                         )
                         .build()
@@ -603,6 +909,7 @@ internal class ErrorHandlingTest {
             assertThrows<UnprocessableEntityException> {
                 androidInstanceService.create(
                     AndroidInstanceCreateParams.builder()
+                        .reuseIfExists(true)
                         .wait(true)
                         .metadata(
                             AndroidInstanceCreateParams.Metadata.builder()
@@ -620,6 +927,7 @@ internal class ErrorHandlingTest {
                                     AndroidInstanceCreateParams.Spec.Clue.builder()
                                         .kind(AndroidInstanceCreateParams.Spec.Clue.Kind.CLIENT_IP)
                                         .clientIp("clientIp")
+                                        .osVersion("osVersion")
                                         .build()
                                 )
                                 .hardTimeout("hardTimeout")
@@ -629,14 +937,46 @@ internal class ErrorHandlingTest {
                                         .kind(
                                             AndroidInstanceCreateParams.Spec.InitialAsset.Kind.APP
                                         )
+                                        .addAssetId("string")
+                                        .assetName("assetName")
+                                        .addAssetName("string")
+                                        .configuration(
+                                            AndroidInstanceCreateParams.Spec.InitialAsset
+                                                .Configuration
+                                                .builder()
+                                                .kind(
+                                                    AndroidInstanceCreateParams.Spec.InitialAsset
+                                                        .Configuration
+                                                        .Kind
+                                                        .CHROME_FLAG
+                                                )
+                                                .chromeFlag(
+                                                    AndroidInstanceCreateParams.Spec.InitialAsset
+                                                        .Configuration
+                                                        .ChromeFlag
+                                                        .ENABLE_COMMAND_LINE_ON_NON_ROOTED_DEVICES_1
+                                                )
+                                                .build()
+                                        )
                                         .source(
                                             AndroidInstanceCreateParams.Spec.InitialAsset.Source.URL
                                         )
-                                        .assetName("assetName")
                                         .url("url")
+                                        .addUrl("string")
                                         .build()
                                 )
                                 .region("region")
+                                .sandbox(
+                                    AndroidInstanceCreateParams.Spec.Sandbox.builder()
+                                        .playwrightAndroid(
+                                            AndroidInstanceCreateParams.Spec.Sandbox
+                                                .PlaywrightAndroid
+                                                .builder()
+                                                .enabled(true)
+                                                .build()
+                                        )
+                                        .build()
+                                )
                                 .build()
                         )
                         .build()
@@ -662,6 +1002,7 @@ internal class ErrorHandlingTest {
             assertThrows<RateLimitException> {
                 androidInstanceService.create(
                     AndroidInstanceCreateParams.builder()
+                        .reuseIfExists(true)
                         .wait(true)
                         .metadata(
                             AndroidInstanceCreateParams.Metadata.builder()
@@ -679,6 +1020,7 @@ internal class ErrorHandlingTest {
                                     AndroidInstanceCreateParams.Spec.Clue.builder()
                                         .kind(AndroidInstanceCreateParams.Spec.Clue.Kind.CLIENT_IP)
                                         .clientIp("clientIp")
+                                        .osVersion("osVersion")
                                         .build()
                                 )
                                 .hardTimeout("hardTimeout")
@@ -688,14 +1030,46 @@ internal class ErrorHandlingTest {
                                         .kind(
                                             AndroidInstanceCreateParams.Spec.InitialAsset.Kind.APP
                                         )
+                                        .addAssetId("string")
+                                        .assetName("assetName")
+                                        .addAssetName("string")
+                                        .configuration(
+                                            AndroidInstanceCreateParams.Spec.InitialAsset
+                                                .Configuration
+                                                .builder()
+                                                .kind(
+                                                    AndroidInstanceCreateParams.Spec.InitialAsset
+                                                        .Configuration
+                                                        .Kind
+                                                        .CHROME_FLAG
+                                                )
+                                                .chromeFlag(
+                                                    AndroidInstanceCreateParams.Spec.InitialAsset
+                                                        .Configuration
+                                                        .ChromeFlag
+                                                        .ENABLE_COMMAND_LINE_ON_NON_ROOTED_DEVICES_1
+                                                )
+                                                .build()
+                                        )
                                         .source(
                                             AndroidInstanceCreateParams.Spec.InitialAsset.Source.URL
                                         )
-                                        .assetName("assetName")
                                         .url("url")
+                                        .addUrl("string")
                                         .build()
                                 )
                                 .region("region")
+                                .sandbox(
+                                    AndroidInstanceCreateParams.Spec.Sandbox.builder()
+                                        .playwrightAndroid(
+                                            AndroidInstanceCreateParams.Spec.Sandbox
+                                                .PlaywrightAndroid
+                                                .builder()
+                                                .enabled(true)
+                                                .build()
+                                        )
+                                        .build()
+                                )
                                 .build()
                         )
                         .build()
@@ -721,6 +1095,7 @@ internal class ErrorHandlingTest {
             assertThrows<RateLimitException> {
                 androidInstanceService.create(
                     AndroidInstanceCreateParams.builder()
+                        .reuseIfExists(true)
                         .wait(true)
                         .metadata(
                             AndroidInstanceCreateParams.Metadata.builder()
@@ -738,6 +1113,7 @@ internal class ErrorHandlingTest {
                                     AndroidInstanceCreateParams.Spec.Clue.builder()
                                         .kind(AndroidInstanceCreateParams.Spec.Clue.Kind.CLIENT_IP)
                                         .clientIp("clientIp")
+                                        .osVersion("osVersion")
                                         .build()
                                 )
                                 .hardTimeout("hardTimeout")
@@ -747,14 +1123,46 @@ internal class ErrorHandlingTest {
                                         .kind(
                                             AndroidInstanceCreateParams.Spec.InitialAsset.Kind.APP
                                         )
+                                        .addAssetId("string")
+                                        .assetName("assetName")
+                                        .addAssetName("string")
+                                        .configuration(
+                                            AndroidInstanceCreateParams.Spec.InitialAsset
+                                                .Configuration
+                                                .builder()
+                                                .kind(
+                                                    AndroidInstanceCreateParams.Spec.InitialAsset
+                                                        .Configuration
+                                                        .Kind
+                                                        .CHROME_FLAG
+                                                )
+                                                .chromeFlag(
+                                                    AndroidInstanceCreateParams.Spec.InitialAsset
+                                                        .Configuration
+                                                        .ChromeFlag
+                                                        .ENABLE_COMMAND_LINE_ON_NON_ROOTED_DEVICES_1
+                                                )
+                                                .build()
+                                        )
                                         .source(
                                             AndroidInstanceCreateParams.Spec.InitialAsset.Source.URL
                                         )
-                                        .assetName("assetName")
                                         .url("url")
+                                        .addUrl("string")
                                         .build()
                                 )
                                 .region("region")
+                                .sandbox(
+                                    AndroidInstanceCreateParams.Spec.Sandbox.builder()
+                                        .playwrightAndroid(
+                                            AndroidInstanceCreateParams.Spec.Sandbox
+                                                .PlaywrightAndroid
+                                                .builder()
+                                                .enabled(true)
+                                                .build()
+                                        )
+                                        .build()
+                                )
                                 .build()
                         )
                         .build()
@@ -780,6 +1188,7 @@ internal class ErrorHandlingTest {
             assertThrows<InternalServerException> {
                 androidInstanceService.create(
                     AndroidInstanceCreateParams.builder()
+                        .reuseIfExists(true)
                         .wait(true)
                         .metadata(
                             AndroidInstanceCreateParams.Metadata.builder()
@@ -797,6 +1206,7 @@ internal class ErrorHandlingTest {
                                     AndroidInstanceCreateParams.Spec.Clue.builder()
                                         .kind(AndroidInstanceCreateParams.Spec.Clue.Kind.CLIENT_IP)
                                         .clientIp("clientIp")
+                                        .osVersion("osVersion")
                                         .build()
                                 )
                                 .hardTimeout("hardTimeout")
@@ -806,14 +1216,46 @@ internal class ErrorHandlingTest {
                                         .kind(
                                             AndroidInstanceCreateParams.Spec.InitialAsset.Kind.APP
                                         )
+                                        .addAssetId("string")
+                                        .assetName("assetName")
+                                        .addAssetName("string")
+                                        .configuration(
+                                            AndroidInstanceCreateParams.Spec.InitialAsset
+                                                .Configuration
+                                                .builder()
+                                                .kind(
+                                                    AndroidInstanceCreateParams.Spec.InitialAsset
+                                                        .Configuration
+                                                        .Kind
+                                                        .CHROME_FLAG
+                                                )
+                                                .chromeFlag(
+                                                    AndroidInstanceCreateParams.Spec.InitialAsset
+                                                        .Configuration
+                                                        .ChromeFlag
+                                                        .ENABLE_COMMAND_LINE_ON_NON_ROOTED_DEVICES_1
+                                                )
+                                                .build()
+                                        )
                                         .source(
                                             AndroidInstanceCreateParams.Spec.InitialAsset.Source.URL
                                         )
-                                        .assetName("assetName")
                                         .url("url")
+                                        .addUrl("string")
                                         .build()
                                 )
                                 .region("region")
+                                .sandbox(
+                                    AndroidInstanceCreateParams.Spec.Sandbox.builder()
+                                        .playwrightAndroid(
+                                            AndroidInstanceCreateParams.Spec.Sandbox
+                                                .PlaywrightAndroid
+                                                .builder()
+                                                .enabled(true)
+                                                .build()
+                                        )
+                                        .build()
+                                )
                                 .build()
                         )
                         .build()
@@ -839,6 +1281,7 @@ internal class ErrorHandlingTest {
             assertThrows<InternalServerException> {
                 androidInstanceService.create(
                     AndroidInstanceCreateParams.builder()
+                        .reuseIfExists(true)
                         .wait(true)
                         .metadata(
                             AndroidInstanceCreateParams.Metadata.builder()
@@ -856,6 +1299,7 @@ internal class ErrorHandlingTest {
                                     AndroidInstanceCreateParams.Spec.Clue.builder()
                                         .kind(AndroidInstanceCreateParams.Spec.Clue.Kind.CLIENT_IP)
                                         .clientIp("clientIp")
+                                        .osVersion("osVersion")
                                         .build()
                                 )
                                 .hardTimeout("hardTimeout")
@@ -865,14 +1309,46 @@ internal class ErrorHandlingTest {
                                         .kind(
                                             AndroidInstanceCreateParams.Spec.InitialAsset.Kind.APP
                                         )
+                                        .addAssetId("string")
+                                        .assetName("assetName")
+                                        .addAssetName("string")
+                                        .configuration(
+                                            AndroidInstanceCreateParams.Spec.InitialAsset
+                                                .Configuration
+                                                .builder()
+                                                .kind(
+                                                    AndroidInstanceCreateParams.Spec.InitialAsset
+                                                        .Configuration
+                                                        .Kind
+                                                        .CHROME_FLAG
+                                                )
+                                                .chromeFlag(
+                                                    AndroidInstanceCreateParams.Spec.InitialAsset
+                                                        .Configuration
+                                                        .ChromeFlag
+                                                        .ENABLE_COMMAND_LINE_ON_NON_ROOTED_DEVICES_1
+                                                )
+                                                .build()
+                                        )
                                         .source(
                                             AndroidInstanceCreateParams.Spec.InitialAsset.Source.URL
                                         )
-                                        .assetName("assetName")
                                         .url("url")
+                                        .addUrl("string")
                                         .build()
                                 )
                                 .region("region")
+                                .sandbox(
+                                    AndroidInstanceCreateParams.Spec.Sandbox.builder()
+                                        .playwrightAndroid(
+                                            AndroidInstanceCreateParams.Spec.Sandbox
+                                                .PlaywrightAndroid
+                                                .builder()
+                                                .enabled(true)
+                                                .build()
+                                        )
+                                        .build()
+                                )
                                 .build()
                         )
                         .build()
@@ -898,6 +1374,7 @@ internal class ErrorHandlingTest {
             assertThrows<UnexpectedStatusCodeException> {
                 androidInstanceService.create(
                     AndroidInstanceCreateParams.builder()
+                        .reuseIfExists(true)
                         .wait(true)
                         .metadata(
                             AndroidInstanceCreateParams.Metadata.builder()
@@ -915,6 +1392,7 @@ internal class ErrorHandlingTest {
                                     AndroidInstanceCreateParams.Spec.Clue.builder()
                                         .kind(AndroidInstanceCreateParams.Spec.Clue.Kind.CLIENT_IP)
                                         .clientIp("clientIp")
+                                        .osVersion("osVersion")
                                         .build()
                                 )
                                 .hardTimeout("hardTimeout")
@@ -924,14 +1402,46 @@ internal class ErrorHandlingTest {
                                         .kind(
                                             AndroidInstanceCreateParams.Spec.InitialAsset.Kind.APP
                                         )
+                                        .addAssetId("string")
+                                        .assetName("assetName")
+                                        .addAssetName("string")
+                                        .configuration(
+                                            AndroidInstanceCreateParams.Spec.InitialAsset
+                                                .Configuration
+                                                .builder()
+                                                .kind(
+                                                    AndroidInstanceCreateParams.Spec.InitialAsset
+                                                        .Configuration
+                                                        .Kind
+                                                        .CHROME_FLAG
+                                                )
+                                                .chromeFlag(
+                                                    AndroidInstanceCreateParams.Spec.InitialAsset
+                                                        .Configuration
+                                                        .ChromeFlag
+                                                        .ENABLE_COMMAND_LINE_ON_NON_ROOTED_DEVICES_1
+                                                )
+                                                .build()
+                                        )
                                         .source(
                                             AndroidInstanceCreateParams.Spec.InitialAsset.Source.URL
                                         )
-                                        .assetName("assetName")
                                         .url("url")
+                                        .addUrl("string")
                                         .build()
                                 )
                                 .region("region")
+                                .sandbox(
+                                    AndroidInstanceCreateParams.Spec.Sandbox.builder()
+                                        .playwrightAndroid(
+                                            AndroidInstanceCreateParams.Spec.Sandbox
+                                                .PlaywrightAndroid
+                                                .builder()
+                                                .enabled(true)
+                                                .build()
+                                        )
+                                        .build()
+                                )
                                 .build()
                         )
                         .build()
@@ -957,6 +1467,7 @@ internal class ErrorHandlingTest {
             assertThrows<UnexpectedStatusCodeException> {
                 androidInstanceService.create(
                     AndroidInstanceCreateParams.builder()
+                        .reuseIfExists(true)
                         .wait(true)
                         .metadata(
                             AndroidInstanceCreateParams.Metadata.builder()
@@ -974,6 +1485,7 @@ internal class ErrorHandlingTest {
                                     AndroidInstanceCreateParams.Spec.Clue.builder()
                                         .kind(AndroidInstanceCreateParams.Spec.Clue.Kind.CLIENT_IP)
                                         .clientIp("clientIp")
+                                        .osVersion("osVersion")
                                         .build()
                                 )
                                 .hardTimeout("hardTimeout")
@@ -983,14 +1495,46 @@ internal class ErrorHandlingTest {
                                         .kind(
                                             AndroidInstanceCreateParams.Spec.InitialAsset.Kind.APP
                                         )
+                                        .addAssetId("string")
+                                        .assetName("assetName")
+                                        .addAssetName("string")
+                                        .configuration(
+                                            AndroidInstanceCreateParams.Spec.InitialAsset
+                                                .Configuration
+                                                .builder()
+                                                .kind(
+                                                    AndroidInstanceCreateParams.Spec.InitialAsset
+                                                        .Configuration
+                                                        .Kind
+                                                        .CHROME_FLAG
+                                                )
+                                                .chromeFlag(
+                                                    AndroidInstanceCreateParams.Spec.InitialAsset
+                                                        .Configuration
+                                                        .ChromeFlag
+                                                        .ENABLE_COMMAND_LINE_ON_NON_ROOTED_DEVICES_1
+                                                )
+                                                .build()
+                                        )
                                         .source(
                                             AndroidInstanceCreateParams.Spec.InitialAsset.Source.URL
                                         )
-                                        .assetName("assetName")
                                         .url("url")
+                                        .addUrl("string")
                                         .build()
                                 )
                                 .region("region")
+                                .sandbox(
+                                    AndroidInstanceCreateParams.Spec.Sandbox.builder()
+                                        .playwrightAndroid(
+                                            AndroidInstanceCreateParams.Spec.Sandbox
+                                                .PlaywrightAndroid
+                                                .builder()
+                                                .enabled(true)
+                                                .build()
+                                        )
+                                        .build()
+                                )
                                 .build()
                         )
                         .build()
@@ -1014,6 +1558,7 @@ internal class ErrorHandlingTest {
             assertThrows<LimrunException> {
                 androidInstanceService.create(
                     AndroidInstanceCreateParams.builder()
+                        .reuseIfExists(true)
                         .wait(true)
                         .metadata(
                             AndroidInstanceCreateParams.Metadata.builder()
@@ -1031,6 +1576,7 @@ internal class ErrorHandlingTest {
                                     AndroidInstanceCreateParams.Spec.Clue.builder()
                                         .kind(AndroidInstanceCreateParams.Spec.Clue.Kind.CLIENT_IP)
                                         .clientIp("clientIp")
+                                        .osVersion("osVersion")
                                         .build()
                                 )
                                 .hardTimeout("hardTimeout")
@@ -1040,14 +1586,46 @@ internal class ErrorHandlingTest {
                                         .kind(
                                             AndroidInstanceCreateParams.Spec.InitialAsset.Kind.APP
                                         )
+                                        .addAssetId("string")
+                                        .assetName("assetName")
+                                        .addAssetName("string")
+                                        .configuration(
+                                            AndroidInstanceCreateParams.Spec.InitialAsset
+                                                .Configuration
+                                                .builder()
+                                                .kind(
+                                                    AndroidInstanceCreateParams.Spec.InitialAsset
+                                                        .Configuration
+                                                        .Kind
+                                                        .CHROME_FLAG
+                                                )
+                                                .chromeFlag(
+                                                    AndroidInstanceCreateParams.Spec.InitialAsset
+                                                        .Configuration
+                                                        .ChromeFlag
+                                                        .ENABLE_COMMAND_LINE_ON_NON_ROOTED_DEVICES_1
+                                                )
+                                                .build()
+                                        )
                                         .source(
                                             AndroidInstanceCreateParams.Spec.InitialAsset.Source.URL
                                         )
-                                        .assetName("assetName")
                                         .url("url")
+                                        .addUrl("string")
                                         .build()
                                 )
                                 .region("region")
+                                .sandbox(
+                                    AndroidInstanceCreateParams.Spec.Sandbox.builder()
+                                        .playwrightAndroid(
+                                            AndroidInstanceCreateParams.Spec.Sandbox
+                                                .PlaywrightAndroid
+                                                .builder()
+                                                .enabled(true)
+                                                .build()
+                                        )
+                                        .build()
+                                )
                                 .build()
                         )
                         .build()

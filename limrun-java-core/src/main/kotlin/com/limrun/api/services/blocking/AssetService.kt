@@ -5,8 +5,10 @@ package com.limrun.api.services.blocking
 import com.google.errorprone.annotations.MustBeClosed
 import com.limrun.api.core.ClientOptions
 import com.limrun.api.core.RequestOptions
+import com.limrun.api.core.http.HttpResponse
 import com.limrun.api.core.http.HttpResponseFor
 import com.limrun.api.models.assets.Asset
+import com.limrun.api.models.assets.AssetDeleteParams
 import com.limrun.api.models.assets.AssetGetOrCreateParams
 import com.limrun.api.models.assets.AssetGetOrCreateResponse
 import com.limrun.api.models.assets.AssetGetParams
@@ -43,6 +45,30 @@ interface AssetService {
     /** @see list */
     fun list(requestOptions: RequestOptions): List<Asset> =
         list(AssetListParams.none(), requestOptions)
+
+    /** Delete the asset with given ID. */
+    fun delete(assetId: String) = delete(assetId, AssetDeleteParams.none())
+
+    /** @see delete */
+    fun delete(
+        assetId: String,
+        params: AssetDeleteParams = AssetDeleteParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ) = delete(params.toBuilder().assetId(assetId).build(), requestOptions)
+
+    /** @see delete */
+    fun delete(assetId: String, params: AssetDeleteParams = AssetDeleteParams.none()) =
+        delete(assetId, params, RequestOptions.none())
+
+    /** @see delete */
+    fun delete(params: AssetDeleteParams, requestOptions: RequestOptions = RequestOptions.none())
+
+    /** @see delete */
+    fun delete(params: AssetDeleteParams) = delete(params, RequestOptions.none())
+
+    /** @see delete */
+    fun delete(assetId: String, requestOptions: RequestOptions) =
+        delete(assetId, AssetDeleteParams.none(), requestOptions)
 
     /** Get the asset with given ID. */
     fun get(assetId: String): Asset = get(assetId, AssetGetParams.none())
@@ -116,6 +142,44 @@ interface AssetService {
         @MustBeClosed
         fun list(requestOptions: RequestOptions): HttpResponseFor<List<Asset>> =
             list(AssetListParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `delete /v1/assets/{assetId}`, but is otherwise the same
+         * as [AssetService.delete].
+         */
+        @MustBeClosed
+        fun delete(assetId: String): HttpResponse = delete(assetId, AssetDeleteParams.none())
+
+        /** @see delete */
+        @MustBeClosed
+        fun delete(
+            assetId: String,
+            params: AssetDeleteParams = AssetDeleteParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponse = delete(params.toBuilder().assetId(assetId).build(), requestOptions)
+
+        /** @see delete */
+        @MustBeClosed
+        fun delete(
+            assetId: String,
+            params: AssetDeleteParams = AssetDeleteParams.none(),
+        ): HttpResponse = delete(assetId, params, RequestOptions.none())
+
+        /** @see delete */
+        @MustBeClosed
+        fun delete(
+            params: AssetDeleteParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponse
+
+        /** @see delete */
+        @MustBeClosed
+        fun delete(params: AssetDeleteParams): HttpResponse = delete(params, RequestOptions.none())
+
+        /** @see delete */
+        @MustBeClosed
+        fun delete(assetId: String, requestOptions: RequestOptions): HttpResponse =
+            delete(assetId, AssetDeleteParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `get /v1/assets/{assetId}`, but is otherwise the same as

@@ -2,26 +2,27 @@
 
 package com.limrun.api.models.androidinstances
 
-import com.fasterxml.jackson.annotation.JsonCreator
-import com.limrun.api.core.Enum
-import com.limrun.api.core.JsonField
 import com.limrun.api.core.Params
 import com.limrun.api.core.http.Headers
 import com.limrun.api.core.http.QueryParams
-import com.limrun.api.errors.LimrunInvalidDataException
 import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** List Android instances belonging to given organization */
+/** List Android instances */
 class AndroidInstanceListParams
 private constructor(
+    private val endingBefore: String?,
     private val labelSelector: String?,
+    private val limit: Long?,
     private val region: String?,
-    private val state: State?,
+    private val startingAfter: String?,
+    private val state: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
+
+    fun endingBefore(): Optional<String> = Optional.ofNullable(endingBefore)
 
     /**
      * Labels filter to apply to Android instances to return. Expects a comma-separated list of
@@ -29,11 +30,22 @@ private constructor(
      */
     fun labelSelector(): Optional<String> = Optional.ofNullable(labelSelector)
 
+    /** Maximum number of instances to be returned. The default is 50. */
+    fun limit(): Optional<Long> = Optional.ofNullable(limit)
+
     /** Region where the instance is scheduled on. */
     fun region(): Optional<String> = Optional.ofNullable(region)
 
-    /** State filter to apply to Android instances to return. */
-    fun state(): Optional<State> = Optional.ofNullable(state)
+    fun startingAfter(): Optional<String> = Optional.ofNullable(startingAfter)
+
+    /**
+     * State filter to apply to Android instances to return. Each comma-separated state will be used
+     * as part of an OR clause, e.g. "assigned,ready" will return all instances that are either
+     * assigned or ready.
+     *
+     * Valid states: creating, assigned, ready, terminated, unknown
+     */
+    fun state(): Optional<String> = Optional.ofNullable(state)
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -56,20 +68,31 @@ private constructor(
     /** A builder for [AndroidInstanceListParams]. */
     class Builder internal constructor() {
 
+        private var endingBefore: String? = null
         private var labelSelector: String? = null
+        private var limit: Long? = null
         private var region: String? = null
-        private var state: State? = null
+        private var startingAfter: String? = null
+        private var state: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
         internal fun from(androidInstanceListParams: AndroidInstanceListParams) = apply {
+            endingBefore = androidInstanceListParams.endingBefore
             labelSelector = androidInstanceListParams.labelSelector
+            limit = androidInstanceListParams.limit
             region = androidInstanceListParams.region
+            startingAfter = androidInstanceListParams.startingAfter
             state = androidInstanceListParams.state
             additionalHeaders = androidInstanceListParams.additionalHeaders.toBuilder()
             additionalQueryParams = androidInstanceListParams.additionalQueryParams.toBuilder()
         }
+
+        fun endingBefore(endingBefore: String?) = apply { this.endingBefore = endingBefore }
+
+        /** Alias for calling [Builder.endingBefore] with `endingBefore.orElse(null)`. */
+        fun endingBefore(endingBefore: Optional<String>) = endingBefore(endingBefore.getOrNull())
 
         /**
          * Labels filter to apply to Android instances to return. Expects a comma-separated list of
@@ -81,17 +104,42 @@ private constructor(
         fun labelSelector(labelSelector: Optional<String>) =
             labelSelector(labelSelector.getOrNull())
 
+        /** Maximum number of instances to be returned. The default is 50. */
+        fun limit(limit: Long?) = apply { this.limit = limit }
+
+        /**
+         * Alias for [Builder.limit].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
+        fun limit(limit: Long) = limit(limit as Long?)
+
+        /** Alias for calling [Builder.limit] with `limit.orElse(null)`. */
+        fun limit(limit: Optional<Long>) = limit(limit.getOrNull())
+
         /** Region where the instance is scheduled on. */
         fun region(region: String?) = apply { this.region = region }
 
         /** Alias for calling [Builder.region] with `region.orElse(null)`. */
         fun region(region: Optional<String>) = region(region.getOrNull())
 
-        /** State filter to apply to Android instances to return. */
-        fun state(state: State?) = apply { this.state = state }
+        fun startingAfter(startingAfter: String?) = apply { this.startingAfter = startingAfter }
+
+        /** Alias for calling [Builder.startingAfter] with `startingAfter.orElse(null)`. */
+        fun startingAfter(startingAfter: Optional<String>) =
+            startingAfter(startingAfter.getOrNull())
+
+        /**
+         * State filter to apply to Android instances to return. Each comma-separated state will be
+         * used as part of an OR clause, e.g. "assigned,ready" will return all instances that are
+         * either assigned or ready.
+         *
+         * Valid states: creating, assigned, ready, terminated, unknown
+         */
+        fun state(state: String?) = apply { this.state = state }
 
         /** Alias for calling [Builder.state] with `state.orElse(null)`. */
-        fun state(state: Optional<State>) = state(state.getOrNull())
+        fun state(state: Optional<String>) = state(state.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -198,8 +246,11 @@ private constructor(
          */
         fun build(): AndroidInstanceListParams =
             AndroidInstanceListParams(
+                endingBefore,
                 labelSelector,
+                limit,
                 region,
+                startingAfter,
                 state,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -211,150 +262,15 @@ private constructor(
     override fun _queryParams(): QueryParams =
         QueryParams.builder()
             .apply {
+                endingBefore?.let { put("endingBefore", it) }
                 labelSelector?.let { put("labelSelector", it) }
+                limit?.let { put("limit", it.toString()) }
                 region?.let { put("region", it) }
-                state?.let { put("state", it.toString()) }
+                startingAfter?.let { put("startingAfter", it) }
+                state?.let { put("state", it) }
                 putAll(additionalQueryParams)
             }
             .build()
-
-    /** State filter to apply to Android instances to return. */
-    class State @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
-
-        /**
-         * Returns this class instance's raw value.
-         *
-         * This is usually only useful if this instance was deserialized from data that doesn't
-         * match any known member, and you want to know that value. For example, if the SDK is on an
-         * older version than the API, then the API may respond with new members that the SDK is
-         * unaware of.
-         */
-        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-        companion object {
-
-            @JvmField val UNKNOWN = of("unknown")
-
-            @JvmField val CREATING = of("creating")
-
-            @JvmField val READY = of("ready")
-
-            @JvmField val TERMINATED = of("terminated")
-
-            @JvmStatic fun of(value: String) = State(JsonField.of(value))
-        }
-
-        /** An enum containing [State]'s known values. */
-        enum class Known {
-            UNKNOWN,
-            CREATING,
-            READY,
-            TERMINATED,
-        }
-
-        /**
-         * An enum containing [State]'s known values, as well as an [_UNKNOWN] member.
-         *
-         * An instance of [State] can contain an unknown value in a couple of cases:
-         * - It was deserialized from data that doesn't match any known member. For example, if the
-         *   SDK is on an older version than the API, then the API may respond with new members that
-         *   the SDK is unaware of.
-         * - It was constructed with an arbitrary value using the [of] method.
-         */
-        enum class Value {
-            UNKNOWN,
-            CREATING,
-            READY,
-            TERMINATED,
-            /** An enum member indicating that [State] was instantiated with an unknown value. */
-            _UNKNOWN,
-        }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
-         * if the class was instantiated with an unknown value.
-         *
-         * Use the [known] method instead if you're certain the value is always known or if you want
-         * to throw for the unknown case.
-         */
-        fun value(): Value =
-            when (this) {
-                UNKNOWN -> Value.UNKNOWN
-                CREATING -> Value.CREATING
-                READY -> Value.READY
-                TERMINATED -> Value.TERMINATED
-                else -> Value._UNKNOWN
-            }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value.
-         *
-         * Use the [value] method instead if you're uncertain the value is always known and don't
-         * want to throw for the unknown case.
-         *
-         * @throws LimrunInvalidDataException if this class instance's value is a not a known
-         *   member.
-         */
-        fun known(): Known =
-            when (this) {
-                UNKNOWN -> Known.UNKNOWN
-                CREATING -> Known.CREATING
-                READY -> Known.READY
-                TERMINATED -> Known.TERMINATED
-                else -> throw LimrunInvalidDataException("Unknown State: $value")
-            }
-
-        /**
-         * Returns this class instance's primitive wire representation.
-         *
-         * This differs from the [toString] method because that method is primarily for debugging
-         * and generally doesn't throw.
-         *
-         * @throws LimrunInvalidDataException if this class instance's value does not have the
-         *   expected primitive type.
-         */
-        fun asString(): String =
-            _value().asString().orElseThrow { LimrunInvalidDataException("Value is not a String") }
-
-        private var validated: Boolean = false
-
-        fun validate(): State = apply {
-            if (validated) {
-                return@apply
-            }
-
-            known()
-            validated = true
-        }
-
-        fun isValid(): Boolean =
-            try {
-                validate()
-                true
-            } catch (e: LimrunInvalidDataException) {
-                false
-            }
-
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
-        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return other is State && value == other.value
-        }
-
-        override fun hashCode() = value.hashCode()
-
-        override fun toString() = value.toString()
-    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -362,16 +278,28 @@ private constructor(
         }
 
         return other is AndroidInstanceListParams &&
+            endingBefore == other.endingBefore &&
             labelSelector == other.labelSelector &&
+            limit == other.limit &&
             region == other.region &&
+            startingAfter == other.startingAfter &&
             state == other.state &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
-        Objects.hash(labelSelector, region, state, additionalHeaders, additionalQueryParams)
+        Objects.hash(
+            endingBefore,
+            labelSelector,
+            limit,
+            region,
+            startingAfter,
+            state,
+            additionalHeaders,
+            additionalQueryParams,
+        )
 
     override fun toString() =
-        "AndroidInstanceListParams{labelSelector=$labelSelector, region=$region, state=$state, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "AndroidInstanceListParams{endingBefore=$endingBefore, labelSelector=$labelSelector, limit=$limit, region=$region, startingAfter=$startingAfter, state=$state, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

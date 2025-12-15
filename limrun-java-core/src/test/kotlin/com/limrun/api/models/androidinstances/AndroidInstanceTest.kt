@@ -42,6 +42,17 @@ internal class AndroidInstanceTest {
                         .state(AndroidInstance.Status.State.UNKNOWN)
                         .adbWebSocketUrl("adbWebSocketUrl")
                         .endpointWebSocketUrl("endpointWebSocketUrl")
+                        .errorMessage("errorMessage")
+                        .sandbox(
+                            AndroidInstance.Status.Sandbox.builder()
+                                .playwrightAndroid(
+                                    AndroidInstance.Status.Sandbox.PlaywrightAndroid.builder()
+                                        .url("url")
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .targetHttpPortUrlPrefix("targetHttpPortUrlPrefix")
                         .build()
                 )
                 .build()
@@ -76,6 +87,17 @@ internal class AndroidInstanceTest {
                     .state(AndroidInstance.Status.State.UNKNOWN)
                     .adbWebSocketUrl("adbWebSocketUrl")
                     .endpointWebSocketUrl("endpointWebSocketUrl")
+                    .errorMessage("errorMessage")
+                    .sandbox(
+                        AndroidInstance.Status.Sandbox.builder()
+                            .playwrightAndroid(
+                                AndroidInstance.Status.Sandbox.PlaywrightAndroid.builder()
+                                    .url("url")
+                                    .build()
+                            )
+                            .build()
+                    )
+                    .targetHttpPortUrlPrefix("targetHttpPortUrlPrefix")
                     .build()
             )
     }
@@ -112,6 +134,17 @@ internal class AndroidInstanceTest {
                         .state(AndroidInstance.Status.State.UNKNOWN)
                         .adbWebSocketUrl("adbWebSocketUrl")
                         .endpointWebSocketUrl("endpointWebSocketUrl")
+                        .errorMessage("errorMessage")
+                        .sandbox(
+                            AndroidInstance.Status.Sandbox.builder()
+                                .playwrightAndroid(
+                                    AndroidInstance.Status.Sandbox.PlaywrightAndroid.builder()
+                                        .url("url")
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .targetHttpPortUrlPrefix("targetHttpPortUrlPrefix")
                         .build()
                 )
                 .build()

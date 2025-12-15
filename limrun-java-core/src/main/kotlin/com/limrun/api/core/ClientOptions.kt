@@ -3,6 +3,7 @@
 package com.limrun.api.core
 
 import com.fasterxml.jackson.databind.json.JsonMapper
+import com.limrun.api.core.http.AsyncStreamResponse
 import com.limrun.api.core.http.Headers
 import com.limrun.api.core.http.HttpClient
 import com.limrun.api.core.http.PhantomReachableClosingHttpClient
@@ -11,6 +12,11 @@ import com.limrun.api.core.http.RetryingHttpClient
 import java.time.Clock
 import java.time.Duration
 import java.util.Optional
+import java.util.concurrent.Executor
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
+import java.util.concurrent.ThreadFactory
+import java.util.concurrent.atomic.AtomicLong
 import kotlin.jvm.optionals.getOrNull
 
 /** A class representing the SDK client configuration. */
@@ -40,6 +46,24 @@ private constructor(
      * needs to be overridden.
      */
     @get:JvmName("jsonMapper") val jsonMapper: JsonMapper,
+    /**
+     * The executor to use for running [AsyncStreamResponse.Handler] callbacks.
+     *
+     * Defaults to a dedicated cached thread pool.
+     *
+     * This class takes ownership of the executor and shuts it down, if possible, when closed.
+     */
+    @get:JvmName("streamHandlerExecutor") val streamHandlerExecutor: Executor,
+    /**
+     * The interface to use for delaying execution, like during retries.
+     *
+     * This is primarily useful for using fake delays in tests.
+     *
+     * Defaults to real execution delays.
+     *
+     * This class takes ownership of the sleeper and closes it when closed.
+     */
+    @get:JvmName("sleeper") val sleeper: Sleeper,
     /**
      * The clock to use for operations that require timing, like retries.
      *
@@ -131,6 +155,8 @@ private constructor(
         private var httpClient: HttpClient? = null
         private var checkJacksonVersionCompatibility: Boolean = true
         private var jsonMapper: JsonMapper = jsonMapper()
+        private var streamHandlerExecutor: Executor? = null
+        private var sleeper: Sleeper? = null
         private var clock: Clock = Clock.systemUTC()
         private var baseUrl: String? = null
         private var headers: Headers.Builder = Headers.builder()
@@ -145,6 +171,8 @@ private constructor(
             httpClient = clientOptions.originalHttpClient
             checkJacksonVersionCompatibility = clientOptions.checkJacksonVersionCompatibility
             jsonMapper = clientOptions.jsonMapper
+            streamHandlerExecutor = clientOptions.streamHandlerExecutor
+            sleeper = clientOptions.sleeper
             clock = clientOptions.clock
             baseUrl = clientOptions.baseUrl
             headers = clientOptions.headers.toBuilder()
@@ -184,6 +212,31 @@ private constructor(
          * rarely needs to be overridden.
          */
         fun jsonMapper(jsonMapper: JsonMapper) = apply { this.jsonMapper = jsonMapper }
+
+        /**
+         * The executor to use for running [AsyncStreamResponse.Handler] callbacks.
+         *
+         * Defaults to a dedicated cached thread pool.
+         *
+         * This class takes ownership of the executor and shuts it down, if possible, when closed.
+         */
+        fun streamHandlerExecutor(streamHandlerExecutor: Executor) = apply {
+            this.streamHandlerExecutor =
+                if (streamHandlerExecutor is ExecutorService)
+                    PhantomReachableExecutorService(streamHandlerExecutor)
+                else streamHandlerExecutor
+        }
+
+        /**
+         * The interface to use for delaying execution, like during retries.
+         *
+         * This is primarily useful for using fake delays in tests.
+         *
+         * Defaults to real execution delays.
+         *
+         * This class takes ownership of the sleeper and closes it when closed.
+         */
+        fun sleeper(sleeper: Sleeper) = apply { this.sleeper = PhantomReachableSleeper(sleeper) }
 
         /**
          * The clock to use for operations that require timing, like retries.
@@ -340,10 +393,10 @@ private constructor(
          *
          * See this table for the available options:
          *
-         * |Setter   |System property  |Environment variable|Required|Default value             |
-         * |---------|-----------------|--------------------|--------|--------------------------|
-         * |`apiKey` |`limrun.limToken`|`LIM_TOKEN`         |false   |-                         |
-         * |`baseUrl`|`limrun.baseUrl` |`LIMRUN_BASE_URL`   |true    |`"https://api.limrun.com"`|
+         * |Setter   |System property   |Environment variable|Required|Default value             |
+         * |---------|------------------|--------------------|--------|--------------------------|
+         * |`apiKey` |`limrun.limApiKey`|`LIM_API_KEY`       |false   |-                         |
+         * |`baseUrl`|`limrun.baseUrl`  |`LIMRUN_BASE_URL`   |true    |`"https://api.limrun.com"`|
          *
          * System properties take precedence over environment variables.
          */
@@ -351,7 +404,7 @@ private constructor(
             (System.getProperty("limrun.baseUrl") ?: System.getenv("LIMRUN_BASE_URL"))?.let {
                 baseUrl(it)
             }
-            (System.getProperty("limrun.limToken") ?: System.getenv("LIM_TOKEN"))?.let {
+            (System.getProperty("limrun.limApiKey") ?: System.getenv("LIM_API_KEY"))?.let {
                 apiKey(it)
             }
         }
@@ -370,6 +423,25 @@ private constructor(
          */
         fun build(): ClientOptions {
             val httpClient = checkRequired("httpClient", httpClient)
+            val streamHandlerExecutor =
+                streamHandlerExecutor
+                    ?: PhantomReachableExecutorService(
+                        Executors.newCachedThreadPool(
+                            object : ThreadFactory {
+
+                                private val threadFactory: ThreadFactory =
+                                    Executors.defaultThreadFactory()
+                                private val count = AtomicLong(0)
+
+                                override fun newThread(runnable: Runnable): Thread =
+                                    threadFactory.newThread(runnable).also {
+                                        it.name =
+                                            "limrun-stream-handler-thread-${count.getAndIncrement()}"
+                                    }
+                            }
+                        )
+                    )
+            val sleeper = sleeper ?: PhantomReachableSleeper(DefaultSleeper())
 
             val headers = Headers.builder()
             val queryParams = QueryParams.builder()
@@ -392,11 +464,14 @@ private constructor(
                 httpClient,
                 RetryingHttpClient.builder()
                     .httpClient(httpClient)
+                    .sleeper(sleeper)
                     .clock(clock)
                     .maxRetries(maxRetries)
                     .build(),
                 checkJacksonVersionCompatibility,
                 jsonMapper,
+                streamHandlerExecutor,
+                sleeper,
                 clock,
                 baseUrl,
                 headers.build(),
@@ -421,5 +496,7 @@ private constructor(
      */
     fun close() {
         httpClient.close()
+        (streamHandlerExecutor as? ExecutorService)?.shutdown()
+        sleeper.close()
     }
 }

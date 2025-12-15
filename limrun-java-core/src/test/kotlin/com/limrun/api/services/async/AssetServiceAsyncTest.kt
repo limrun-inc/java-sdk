@@ -29,13 +29,28 @@ internal class AssetServiceAsyncTest {
                 AssetListParams.builder()
                     .includeDownloadUrl(true)
                     .includeUploadUrl(true)
-                    .md5Filter("md5Filter")
+                    .limit(50L)
                     .nameFilter("nameFilter")
                     .build()
             )
 
         val assets = assetsFuture.get()
         assets.forEach { it.validate() }
+    }
+
+    @Disabled("Prism tests are disabled")
+    @Test
+    fun delete() {
+        val client =
+            LimrunOkHttpClientAsync.builder()
+                .baseUrl(TestServerExtension.BASE_URL)
+                .apiKey("My API Key")
+                .build()
+        val assetServiceAsync = client.assets()
+
+        val future = assetServiceAsync.delete("assetId")
+
+        val response = future.get()
     }
 
     @Disabled("Prism tests are disabled")

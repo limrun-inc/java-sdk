@@ -8,6 +8,8 @@ import com.limrun.api.services.async.AndroidInstanceServiceAsync
 import com.limrun.api.services.async.AndroidInstanceServiceAsyncImpl
 import com.limrun.api.services.async.AssetServiceAsync
 import com.limrun.api.services.async.AssetServiceAsyncImpl
+import com.limrun.api.services.async.IosInstanceServiceAsync
+import com.limrun.api.services.async.IosInstanceServiceAsyncImpl
 import java.util.function.Consumer
 
 class LimrunClientAsyncImpl(private val clientOptions: ClientOptions) : LimrunClientAsync {
@@ -35,6 +37,10 @@ class LimrunClientAsyncImpl(private val clientOptions: ClientOptions) : LimrunCl
         AssetServiceAsyncImpl(clientOptionsWithUserAgent)
     }
 
+    private val iosInstances: IosInstanceServiceAsync by lazy {
+        IosInstanceServiceAsyncImpl(clientOptionsWithUserAgent)
+    }
+
     override fun sync(): LimrunClient = sync
 
     override fun withRawResponse(): LimrunClientAsync.WithRawResponse = withRawResponse
@@ -45,6 +51,8 @@ class LimrunClientAsyncImpl(private val clientOptions: ClientOptions) : LimrunCl
     override fun androidInstances(): AndroidInstanceServiceAsync = androidInstances
 
     override fun assets(): AssetServiceAsync = assets
+
+    override fun iosInstances(): IosInstanceServiceAsync = iosInstances
 
     override fun close() = clientOptions.close()
 
@@ -59,6 +67,10 @@ class LimrunClientAsyncImpl(private val clientOptions: ClientOptions) : LimrunCl
             AssetServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val iosInstances: IosInstanceServiceAsync.WithRawResponse by lazy {
+            IosInstanceServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): LimrunClientAsync.WithRawResponse =
@@ -70,5 +82,7 @@ class LimrunClientAsyncImpl(private val clientOptions: ClientOptions) : LimrunCl
             androidInstances
 
         override fun assets(): AssetServiceAsync.WithRawResponse = assets
+
+        override fun iosInstances(): IosInstanceServiceAsync.WithRawResponse = iosInstances
     }
 }
