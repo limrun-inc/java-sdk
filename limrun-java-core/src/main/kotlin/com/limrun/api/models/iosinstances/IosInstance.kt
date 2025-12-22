@@ -955,6 +955,7 @@ private constructor(
         private val apiUrl: JsonField<String>,
         private val endpointWebSocketUrl: JsonField<String>,
         private val errorMessage: JsonField<String>,
+        private val mcpUrl: JsonField<String>,
         private val targetHttpPortUrlPrefix: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
@@ -970,6 +971,7 @@ private constructor(
             @JsonProperty("errorMessage")
             @ExcludeMissing
             errorMessage: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("mcpUrl") @ExcludeMissing mcpUrl: JsonField<String> = JsonMissing.of(),
             @JsonProperty("targetHttpPortUrlPrefix")
             @ExcludeMissing
             targetHttpPortUrlPrefix: JsonField<String> = JsonMissing.of(),
@@ -979,6 +981,7 @@ private constructor(
             apiUrl,
             endpointWebSocketUrl,
             errorMessage,
+            mcpUrl,
             targetHttpPortUrlPrefix,
             mutableMapOf(),
         )
@@ -1013,6 +1016,12 @@ private constructor(
          *   server responded with an unexpected value).
          */
         fun errorMessage(): Optional<String> = errorMessage.getOptional("errorMessage")
+
+        /**
+         * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun mcpUrl(): Optional<String> = mcpUrl.getOptional("mcpUrl")
 
         /**
          * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -1063,6 +1072,13 @@ private constructor(
         fun _errorMessage(): JsonField<String> = errorMessage
 
         /**
+         * Returns the raw JSON value of [mcpUrl].
+         *
+         * Unlike [mcpUrl], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("mcpUrl") @ExcludeMissing fun _mcpUrl(): JsonField<String> = mcpUrl
+
+        /**
          * Returns the raw JSON value of [targetHttpPortUrlPrefix].
          *
          * Unlike [targetHttpPortUrlPrefix], this method doesn't throw if the JSON field has an
@@ -1106,6 +1122,7 @@ private constructor(
             private var apiUrl: JsonField<String> = JsonMissing.of()
             private var endpointWebSocketUrl: JsonField<String> = JsonMissing.of()
             private var errorMessage: JsonField<String> = JsonMissing.of()
+            private var mcpUrl: JsonField<String> = JsonMissing.of()
             private var targetHttpPortUrlPrefix: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -1116,6 +1133,7 @@ private constructor(
                 apiUrl = status.apiUrl
                 endpointWebSocketUrl = status.endpointWebSocketUrl
                 errorMessage = status.errorMessage
+                mcpUrl = status.mcpUrl
                 targetHttpPortUrlPrefix = status.targetHttpPortUrlPrefix
                 additionalProperties = status.additionalProperties.toMutableMap()
             }
@@ -1180,6 +1198,17 @@ private constructor(
                 this.errorMessage = errorMessage
             }
 
+            fun mcpUrl(mcpUrl: String) = mcpUrl(JsonField.of(mcpUrl))
+
+            /**
+             * Sets [Builder.mcpUrl] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.mcpUrl] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun mcpUrl(mcpUrl: JsonField<String>) = apply { this.mcpUrl = mcpUrl }
+
             fun targetHttpPortUrlPrefix(targetHttpPortUrlPrefix: String) =
                 targetHttpPortUrlPrefix(JsonField.of(targetHttpPortUrlPrefix))
 
@@ -1233,6 +1262,7 @@ private constructor(
                     apiUrl,
                     endpointWebSocketUrl,
                     errorMessage,
+                    mcpUrl,
                     targetHttpPortUrlPrefix,
                     additionalProperties.toMutableMap(),
                 )
@@ -1250,6 +1280,7 @@ private constructor(
             apiUrl()
             endpointWebSocketUrl()
             errorMessage()
+            mcpUrl()
             targetHttpPortUrlPrefix()
             validated = true
         }
@@ -1275,6 +1306,7 @@ private constructor(
                 (if (apiUrl.asKnown().isPresent) 1 else 0) +
                 (if (endpointWebSocketUrl.asKnown().isPresent) 1 else 0) +
                 (if (errorMessage.asKnown().isPresent) 1 else 0) +
+                (if (mcpUrl.asKnown().isPresent) 1 else 0) +
                 (if (targetHttpPortUrlPrefix.asKnown().isPresent) 1 else 0)
 
         class State @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
@@ -1435,6 +1467,7 @@ private constructor(
                 apiUrl == other.apiUrl &&
                 endpointWebSocketUrl == other.endpointWebSocketUrl &&
                 errorMessage == other.errorMessage &&
+                mcpUrl == other.mcpUrl &&
                 targetHttpPortUrlPrefix == other.targetHttpPortUrlPrefix &&
                 additionalProperties == other.additionalProperties
         }
@@ -1446,6 +1479,7 @@ private constructor(
                 apiUrl,
                 endpointWebSocketUrl,
                 errorMessage,
+                mcpUrl,
                 targetHttpPortUrlPrefix,
                 additionalProperties,
             )
@@ -1454,7 +1488,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Status{token=$token, state=$state, apiUrl=$apiUrl, endpointWebSocketUrl=$endpointWebSocketUrl, errorMessage=$errorMessage, targetHttpPortUrlPrefix=$targetHttpPortUrlPrefix, additionalProperties=$additionalProperties}"
+            "Status{token=$token, state=$state, apiUrl=$apiUrl, endpointWebSocketUrl=$endpointWebSocketUrl, errorMessage=$errorMessage, mcpUrl=$mcpUrl, targetHttpPortUrlPrefix=$targetHttpPortUrlPrefix, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.2.0 (2025-12-22)
+
+Full Changelog: [v0.1.0...v0.2.0](https://github.com/limrun-inc/java-sdk/compare/v0.1.0...v0.2.0)
+
+### Features
+
+* **api:** add status.mcpUrl for ios ([f428625](https://github.com/limrun-inc/java-sdk/commit/f4286251ffab4d972d42b34eefc93e4715a4c7bf))
+* **api:** increase timeout to 5 minutes since big app installations may take longer than a minute ([b14dd27](https://github.com/limrun-inc/java-sdk/commit/b14dd27d6452eb3b6abb60a134e0244c3de674a9))
+
+
+### Documentation
+
+* add more examples ([b67df38](https://github.com/limrun-inc/java-sdk/commit/b67df3863715632d578cf104dbb99d023bcadf81))
+
 ## 0.1.0 (2025-12-15)
 
 Full Changelog: [v0.0.1...v0.1.0](https://github.com/limrun-inc/java-sdk/compare/v0.0.1...v0.1.0)
