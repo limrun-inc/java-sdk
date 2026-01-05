@@ -21,6 +21,7 @@ class Asset
 private constructor(
     private val id: JsonField<String>,
     private val name: JsonField<String>,
+    private val displayName: JsonField<String>,
     private val md5: JsonField<String>,
     private val signedDownloadUrl: JsonField<String>,
     private val signedUploadUrl: JsonField<String>,
@@ -31,6 +32,9 @@ private constructor(
     private constructor(
         @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
         @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("displayName")
+        @ExcludeMissing
+        displayName: JsonField<String> = JsonMissing.of(),
         @JsonProperty("md5") @ExcludeMissing md5: JsonField<String> = JsonMissing.of(),
         @JsonProperty("signedDownloadUrl")
         @ExcludeMissing
@@ -38,7 +42,7 @@ private constructor(
         @JsonProperty("signedUploadUrl")
         @ExcludeMissing
         signedUploadUrl: JsonField<String> = JsonMissing.of(),
-    ) : this(id, name, md5, signedDownloadUrl, signedUploadUrl, mutableMapOf())
+    ) : this(id, name, displayName, md5, signedDownloadUrl, signedUploadUrl, mutableMapOf())
 
     /**
      * @throws LimrunInvalidDataException if the JSON field has an unexpected type or is
@@ -51,6 +55,14 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun name(): String = name.getRequired("name")
+
+    /**
+     * Human-readable display name for the asset. If not set, the name should be used.
+     *
+     * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun displayName(): Optional<String> = displayName.getOptional("displayName")
 
     /**
      * Returned only if there is a corresponding file uploaded already.
@@ -85,6 +97,13 @@ private constructor(
      * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
+
+    /**
+     * Returns the raw JSON value of [displayName].
+     *
+     * Unlike [displayName], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("displayName") @ExcludeMissing fun _displayName(): JsonField<String> = displayName
 
     /**
      * Returns the raw JSON value of [md5].
@@ -143,6 +162,7 @@ private constructor(
 
         private var id: JsonField<String>? = null
         private var name: JsonField<String>? = null
+        private var displayName: JsonField<String> = JsonMissing.of()
         private var md5: JsonField<String> = JsonMissing.of()
         private var signedDownloadUrl: JsonField<String> = JsonMissing.of()
         private var signedUploadUrl: JsonField<String> = JsonMissing.of()
@@ -152,6 +172,7 @@ private constructor(
         internal fun from(asset: Asset) = apply {
             id = asset.id
             name = asset.name
+            displayName = asset.displayName
             md5 = asset.md5
             signedDownloadUrl = asset.signedDownloadUrl
             signedUploadUrl = asset.signedUploadUrl
@@ -177,6 +198,18 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun name(name: JsonField<String>) = apply { this.name = name }
+
+        /** Human-readable display name for the asset. If not set, the name should be used. */
+        fun displayName(displayName: String) = displayName(JsonField.of(displayName))
+
+        /**
+         * Sets [Builder.displayName] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.displayName] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun displayName(displayName: JsonField<String>) = apply { this.displayName = displayName }
 
         /** Returned only if there is a corresponding file uploaded already. */
         fun md5(md5: String) = md5(JsonField.of(md5))
@@ -253,6 +286,7 @@ private constructor(
             Asset(
                 checkRequired("id", id),
                 checkRequired("name", name),
+                displayName,
                 md5,
                 signedDownloadUrl,
                 signedUploadUrl,
@@ -269,6 +303,7 @@ private constructor(
 
         id()
         name()
+        displayName()
         md5()
         signedDownloadUrl()
         signedUploadUrl()
@@ -292,6 +327,7 @@ private constructor(
     internal fun validity(): Int =
         (if (id.asKnown().isPresent) 1 else 0) +
             (if (name.asKnown().isPresent) 1 else 0) +
+            (if (displayName.asKnown().isPresent) 1 else 0) +
             (if (md5.asKnown().isPresent) 1 else 0) +
             (if (signedDownloadUrl.asKnown().isPresent) 1 else 0) +
             (if (signedUploadUrl.asKnown().isPresent) 1 else 0)
@@ -304,6 +340,7 @@ private constructor(
         return other is Asset &&
             id == other.id &&
             name == other.name &&
+            displayName == other.displayName &&
             md5 == other.md5 &&
             signedDownloadUrl == other.signedDownloadUrl &&
             signedUploadUrl == other.signedUploadUrl &&
@@ -311,11 +348,19 @@ private constructor(
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(id, name, md5, signedDownloadUrl, signedUploadUrl, additionalProperties)
+        Objects.hash(
+            id,
+            name,
+            displayName,
+            md5,
+            signedDownloadUrl,
+            signedUploadUrl,
+            additionalProperties,
+        )
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Asset{id=$id, name=$name, md5=$md5, signedDownloadUrl=$signedDownloadUrl, signedUploadUrl=$signedUploadUrl, additionalProperties=$additionalProperties}"
+        "Asset{id=$id, name=$name, displayName=$displayName, md5=$md5, signedDownloadUrl=$signedDownloadUrl, signedUploadUrl=$signedUploadUrl, additionalProperties=$additionalProperties}"
 }
