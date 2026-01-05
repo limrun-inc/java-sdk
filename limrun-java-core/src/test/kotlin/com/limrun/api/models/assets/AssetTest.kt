@@ -17,6 +17,7 @@ internal class AssetTest {
                 .name("name")
                 .displayName("displayName")
                 .md5("md5")
+                .os(Asset.Os.IOS)
                 .signedDownloadUrl("signedDownloadUrl")
                 .signedUploadUrl("signedUploadUrl")
                 .build()
@@ -25,6 +26,7 @@ internal class AssetTest {
         assertThat(asset.name()).isEqualTo("name")
         assertThat(asset.displayName()).contains("displayName")
         assertThat(asset.md5()).contains("md5")
+        assertThat(asset.os()).contains(Asset.Os.IOS)
         assertThat(asset.signedDownloadUrl()).contains("signedDownloadUrl")
         assertThat(asset.signedUploadUrl()).contains("signedUploadUrl")
     }
@@ -38,6 +40,7 @@ internal class AssetTest {
                 .name("name")
                 .displayName("displayName")
                 .md5("md5")
+                .os(Asset.Os.IOS)
                 .signedDownloadUrl("signedDownloadUrl")
                 .signedUploadUrl("signedUploadUrl")
                 .build()
