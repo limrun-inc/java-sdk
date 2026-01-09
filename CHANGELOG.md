@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.2.0 (2026-01-09)
+
+Full Changelog: [v0.1.0...v0.2.0](https://github.com/limrun-inc/java-sdk/compare/v0.1.0...v0.2.0)
+
+### Features
+
+* **api:** add displayName to asset ([5bc3543](https://github.com/limrun-inc/java-sdk/commit/5bc3543916894173c3ebc2cfd833b4f2bc5fcd57))
+* **api:** add optional os field to assets ([498ef02](https://github.com/limrun-inc/java-sdk/commit/498ef0209db5a80cf29e798c24b19f92d8f74ce6))
+* **api:** add status.mcpUrl for ios ([f428625](https://github.com/limrun-inc/java-sdk/commit/f4286251ffab4d972d42b34eefc93e4715a4c7bf))
+* **api:** increase timeout to 5 minutes since big app installations may take longer than a minute ([b14dd27](https://github.com/limrun-inc/java-sdk/commit/b14dd27d6452eb3b6abb60a134e0244c3de674a9))
+* **client:** add `HttpRequest#url()` method ([ed55316](https://github.com/limrun-inc/java-sdk/commit/ed55316ee4e61a234a5b2b7a94cb6feccca1ae5d))
+* **client:** allow configuring dispatcher executor service ([494257b](https://github.com/limrun-inc/java-sdk/commit/494257b745805402e87e7fd96745455e2d052952))
+
+
+### Documentation
+
+* add more examples ([b67df38](https://github.com/limrun-inc/java-sdk/commit/b67df3863715632d578cf104dbb99d023bcadf81))
+
 ## 0.1.0 (2025-12-15)
 
 Full Changelog: [v0.0.1...v0.1.0](https://github.com/limrun-inc/java-sdk/compare/v0.0.1...v0.1.0)
