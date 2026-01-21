@@ -48,6 +48,15 @@ internal class IosInstanceCreateParamsTest {
                             .build()
                     )
                     .region("region")
+                    .sandbox(
+                        IosInstanceCreateParams.Spec.Sandbox.builder()
+                            .xcode(
+                                IosInstanceCreateParams.Spec.Sandbox.Xcode.builder()
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .build()
+                    )
                     .build()
             )
             .build()
@@ -93,6 +102,15 @@ internal class IosInstanceCreateParamsTest {
                                 .build()
                         )
                         .region("region")
+                        .sandbox(
+                            IosInstanceCreateParams.Spec.Sandbox.builder()
+                                .xcode(
+                                    IosInstanceCreateParams.Spec.Sandbox.Xcode.builder()
+                                        .enabled(true)
+                                        .build()
+                                )
+                                .build()
+                        )
                         .build()
                 )
                 .build()
@@ -154,6 +172,15 @@ internal class IosInstanceCreateParamsTest {
                                 .build()
                         )
                         .region("region")
+                        .sandbox(
+                            IosInstanceCreateParams.Spec.Sandbox.builder()
+                                .xcode(
+                                    IosInstanceCreateParams.Spec.Sandbox.Xcode.builder()
+                                        .enabled(true)
+                                        .build()
+                                )
+                                .build()
+                        )
                         .build()
                 )
                 .build()
@@ -196,6 +223,15 @@ internal class IosInstanceCreateParamsTest {
                             .build()
                     )
                     .region("region")
+                    .sandbox(
+                        IosInstanceCreateParams.Spec.Sandbox.builder()
+                            .xcode(
+                                IosInstanceCreateParams.Spec.Sandbox.Xcode.builder()
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .build()
+                    )
                     .build()
             )
     }

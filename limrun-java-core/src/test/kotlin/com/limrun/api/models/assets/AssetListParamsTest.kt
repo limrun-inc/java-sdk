@@ -11,6 +11,7 @@ internal class AssetListParamsTest {
     @Test
     fun create() {
         AssetListParams.builder()
+            .includeAppStore(true)
             .includeDownloadUrl(true)
             .includeUploadUrl(true)
             .limit(50L)
@@ -22,6 +23,7 @@ internal class AssetListParamsTest {
     fun queryParams() {
         val params =
             AssetListParams.builder()
+                .includeAppStore(true)
                 .includeDownloadUrl(true)
                 .includeUploadUrl(true)
                 .limit(50L)
@@ -33,6 +35,7 @@ internal class AssetListParamsTest {
         assertThat(queryParams)
             .isEqualTo(
                 QueryParams.builder()
+                    .put("includeAppStore", "true")
                     .put("includeDownloadUrl", "true")
                     .put("includeUploadUrl", "true")
                     .put("limit", "50")

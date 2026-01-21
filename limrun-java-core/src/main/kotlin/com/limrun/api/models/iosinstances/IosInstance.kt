@@ -956,6 +956,7 @@ private constructor(
         private val endpointWebSocketUrl: JsonField<String>,
         private val errorMessage: JsonField<String>,
         private val mcpUrl: JsonField<String>,
+        private val sandbox: JsonField<Sandbox>,
         private val targetHttpPortUrlPrefix: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
@@ -972,6 +973,7 @@ private constructor(
             @ExcludeMissing
             errorMessage: JsonField<String> = JsonMissing.of(),
             @JsonProperty("mcpUrl") @ExcludeMissing mcpUrl: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("sandbox") @ExcludeMissing sandbox: JsonField<Sandbox> = JsonMissing.of(),
             @JsonProperty("targetHttpPortUrlPrefix")
             @ExcludeMissing
             targetHttpPortUrlPrefix: JsonField<String> = JsonMissing.of(),
@@ -982,6 +984,7 @@ private constructor(
             endpointWebSocketUrl,
             errorMessage,
             mcpUrl,
+            sandbox,
             targetHttpPortUrlPrefix,
             mutableMapOf(),
         )
@@ -1022,6 +1025,12 @@ private constructor(
          *   server responded with an unexpected value).
          */
         fun mcpUrl(): Optional<String> = mcpUrl.getOptional("mcpUrl")
+
+        /**
+         * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun sandbox(): Optional<Sandbox> = sandbox.getOptional("sandbox")
 
         /**
          * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -1079,6 +1088,13 @@ private constructor(
         @JsonProperty("mcpUrl") @ExcludeMissing fun _mcpUrl(): JsonField<String> = mcpUrl
 
         /**
+         * Returns the raw JSON value of [sandbox].
+         *
+         * Unlike [sandbox], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("sandbox") @ExcludeMissing fun _sandbox(): JsonField<Sandbox> = sandbox
+
+        /**
          * Returns the raw JSON value of [targetHttpPortUrlPrefix].
          *
          * Unlike [targetHttpPortUrlPrefix], this method doesn't throw if the JSON field has an
@@ -1123,6 +1139,7 @@ private constructor(
             private var endpointWebSocketUrl: JsonField<String> = JsonMissing.of()
             private var errorMessage: JsonField<String> = JsonMissing.of()
             private var mcpUrl: JsonField<String> = JsonMissing.of()
+            private var sandbox: JsonField<Sandbox> = JsonMissing.of()
             private var targetHttpPortUrlPrefix: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -1134,6 +1151,7 @@ private constructor(
                 endpointWebSocketUrl = status.endpointWebSocketUrl
                 errorMessage = status.errorMessage
                 mcpUrl = status.mcpUrl
+                sandbox = status.sandbox
                 targetHttpPortUrlPrefix = status.targetHttpPortUrlPrefix
                 additionalProperties = status.additionalProperties.toMutableMap()
             }
@@ -1209,6 +1227,17 @@ private constructor(
              */
             fun mcpUrl(mcpUrl: JsonField<String>) = apply { this.mcpUrl = mcpUrl }
 
+            fun sandbox(sandbox: Sandbox) = sandbox(JsonField.of(sandbox))
+
+            /**
+             * Sets [Builder.sandbox] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.sandbox] with a well-typed [Sandbox] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun sandbox(sandbox: JsonField<Sandbox>) = apply { this.sandbox = sandbox }
+
             fun targetHttpPortUrlPrefix(targetHttpPortUrlPrefix: String) =
                 targetHttpPortUrlPrefix(JsonField.of(targetHttpPortUrlPrefix))
 
@@ -1263,6 +1292,7 @@ private constructor(
                     endpointWebSocketUrl,
                     errorMessage,
                     mcpUrl,
+                    sandbox,
                     targetHttpPortUrlPrefix,
                     additionalProperties.toMutableMap(),
                 )
@@ -1281,6 +1311,7 @@ private constructor(
             endpointWebSocketUrl()
             errorMessage()
             mcpUrl()
+            sandbox().ifPresent { it.validate() }
             targetHttpPortUrlPrefix()
             validated = true
         }
@@ -1307,6 +1338,7 @@ private constructor(
                 (if (endpointWebSocketUrl.asKnown().isPresent) 1 else 0) +
                 (if (errorMessage.asKnown().isPresent) 1 else 0) +
                 (if (mcpUrl.asKnown().isPresent) 1 else 0) +
+                (sandbox.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (targetHttpPortUrlPrefix.asKnown().isPresent) 1 else 0)
 
         class State @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
@@ -1456,6 +1488,289 @@ private constructor(
             override fun toString() = value.toString()
         }
 
+        class Sandbox
+        @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+        private constructor(
+            private val xcode: JsonField<Xcode>,
+            private val additionalProperties: MutableMap<String, JsonValue>,
+        ) {
+
+            @JsonCreator
+            private constructor(
+                @JsonProperty("xcode") @ExcludeMissing xcode: JsonField<Xcode> = JsonMissing.of()
+            ) : this(xcode, mutableMapOf())
+
+            /**
+             * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if
+             *   the server responded with an unexpected value).
+             */
+            fun xcode(): Optional<Xcode> = xcode.getOptional("xcode")
+
+            /**
+             * Returns the raw JSON value of [xcode].
+             *
+             * Unlike [xcode], this method doesn't throw if the JSON field has an unexpected type.
+             */
+            @JsonProperty("xcode") @ExcludeMissing fun _xcode(): JsonField<Xcode> = xcode
+
+            @JsonAnySetter
+            private fun putAdditionalProperty(key: String, value: JsonValue) {
+                additionalProperties.put(key, value)
+            }
+
+            @JsonAnyGetter
+            @ExcludeMissing
+            fun _additionalProperties(): Map<String, JsonValue> =
+                Collections.unmodifiableMap(additionalProperties)
+
+            fun toBuilder() = Builder().from(this)
+
+            companion object {
+
+                /** Returns a mutable builder for constructing an instance of [Sandbox]. */
+                @JvmStatic fun builder() = Builder()
+            }
+
+            /** A builder for [Sandbox]. */
+            class Builder internal constructor() {
+
+                private var xcode: JsonField<Xcode> = JsonMissing.of()
+                private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+                @JvmSynthetic
+                internal fun from(sandbox: Sandbox) = apply {
+                    xcode = sandbox.xcode
+                    additionalProperties = sandbox.additionalProperties.toMutableMap()
+                }
+
+                fun xcode(xcode: Xcode) = xcode(JsonField.of(xcode))
+
+                /**
+                 * Sets [Builder.xcode] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.xcode] with a well-typed [Xcode] value instead.
+                 * This method is primarily for setting the field to an undocumented or not yet
+                 * supported value.
+                 */
+                fun xcode(xcode: JsonField<Xcode>) = apply { this.xcode = xcode }
+
+                fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
+
+                fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                    additionalProperties.put(key, value)
+                }
+
+                fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                    apply {
+                        this.additionalProperties.putAll(additionalProperties)
+                    }
+
+                fun removeAdditionalProperty(key: String) = apply {
+                    additionalProperties.remove(key)
+                }
+
+                fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
+
+                /**
+                 * Returns an immutable instance of [Sandbox].
+                 *
+                 * Further updates to this [Builder] will not mutate the returned instance.
+                 */
+                fun build(): Sandbox = Sandbox(xcode, additionalProperties.toMutableMap())
+            }
+
+            private var validated: Boolean = false
+
+            fun validate(): Sandbox = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                xcode().ifPresent { it.validate() }
+                validated = true
+            }
+
+            fun isValid(): Boolean =
+                try {
+                    validate()
+                    true
+                } catch (e: LimrunInvalidDataException) {
+                    false
+                }
+
+            /**
+             * Returns a score indicating how many valid values are contained in this object
+             * recursively.
+             *
+             * Used for best match union deserialization.
+             */
+            @JvmSynthetic
+            internal fun validity(): Int = (xcode.asKnown().getOrNull()?.validity() ?: 0)
+
+            class Xcode
+            @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+            private constructor(
+                private val url: JsonField<String>,
+                private val additionalProperties: MutableMap<String, JsonValue>,
+            ) {
+
+                @JsonCreator
+                private constructor(
+                    @JsonProperty("url") @ExcludeMissing url: JsonField<String> = JsonMissing.of()
+                ) : this(url, mutableMapOf())
+
+                /**
+                 * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g.
+                 *   if the server responded with an unexpected value).
+                 */
+                fun url(): Optional<String> = url.getOptional("url")
+
+                /**
+                 * Returns the raw JSON value of [url].
+                 *
+                 * Unlike [url], this method doesn't throw if the JSON field has an unexpected type.
+                 */
+                @JsonProperty("url") @ExcludeMissing fun _url(): JsonField<String> = url
+
+                @JsonAnySetter
+                private fun putAdditionalProperty(key: String, value: JsonValue) {
+                    additionalProperties.put(key, value)
+                }
+
+                @JsonAnyGetter
+                @ExcludeMissing
+                fun _additionalProperties(): Map<String, JsonValue> =
+                    Collections.unmodifiableMap(additionalProperties)
+
+                fun toBuilder() = Builder().from(this)
+
+                companion object {
+
+                    /** Returns a mutable builder for constructing an instance of [Xcode]. */
+                    @JvmStatic fun builder() = Builder()
+                }
+
+                /** A builder for [Xcode]. */
+                class Builder internal constructor() {
+
+                    private var url: JsonField<String> = JsonMissing.of()
+                    private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+                    @JvmSynthetic
+                    internal fun from(xcode: Xcode) = apply {
+                        url = xcode.url
+                        additionalProperties = xcode.additionalProperties.toMutableMap()
+                    }
+
+                    fun url(url: String) = url(JsonField.of(url))
+
+                    /**
+                     * Sets [Builder.url] to an arbitrary JSON value.
+                     *
+                     * You should usually call [Builder.url] with a well-typed [String] value
+                     * instead. This method is primarily for setting the field to an undocumented or
+                     * not yet supported value.
+                     */
+                    fun url(url: JsonField<String>) = apply { this.url = url }
+
+                    fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                        this.additionalProperties.clear()
+                        putAllAdditionalProperties(additionalProperties)
+                    }
+
+                    fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                        additionalProperties.put(key, value)
+                    }
+
+                    fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                        apply {
+                            this.additionalProperties.putAll(additionalProperties)
+                        }
+
+                    fun removeAdditionalProperty(key: String) = apply {
+                        additionalProperties.remove(key)
+                    }
+
+                    fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                        keys.forEach(::removeAdditionalProperty)
+                    }
+
+                    /**
+                     * Returns an immutable instance of [Xcode].
+                     *
+                     * Further updates to this [Builder] will not mutate the returned instance.
+                     */
+                    fun build(): Xcode = Xcode(url, additionalProperties.toMutableMap())
+                }
+
+                private var validated: Boolean = false
+
+                fun validate(): Xcode = apply {
+                    if (validated) {
+                        return@apply
+                    }
+
+                    url()
+                    validated = true
+                }
+
+                fun isValid(): Boolean =
+                    try {
+                        validate()
+                        true
+                    } catch (e: LimrunInvalidDataException) {
+                        false
+                    }
+
+                /**
+                 * Returns a score indicating how many valid values are contained in this object
+                 * recursively.
+                 *
+                 * Used for best match union deserialization.
+                 */
+                @JvmSynthetic internal fun validity(): Int = (if (url.asKnown().isPresent) 1 else 0)
+
+                override fun equals(other: Any?): Boolean {
+                    if (this === other) {
+                        return true
+                    }
+
+                    return other is Xcode &&
+                        url == other.url &&
+                        additionalProperties == other.additionalProperties
+                }
+
+                private val hashCode: Int by lazy { Objects.hash(url, additionalProperties) }
+
+                override fun hashCode(): Int = hashCode
+
+                override fun toString() =
+                    "Xcode{url=$url, additionalProperties=$additionalProperties}"
+            }
+
+            override fun equals(other: Any?): Boolean {
+                if (this === other) {
+                    return true
+                }
+
+                return other is Sandbox &&
+                    xcode == other.xcode &&
+                    additionalProperties == other.additionalProperties
+            }
+
+            private val hashCode: Int by lazy { Objects.hash(xcode, additionalProperties) }
+
+            override fun hashCode(): Int = hashCode
+
+            override fun toString() =
+                "Sandbox{xcode=$xcode, additionalProperties=$additionalProperties}"
+        }
+
         override fun equals(other: Any?): Boolean {
             if (this === other) {
                 return true
@@ -1468,6 +1783,7 @@ private constructor(
                 endpointWebSocketUrl == other.endpointWebSocketUrl &&
                 errorMessage == other.errorMessage &&
                 mcpUrl == other.mcpUrl &&
+                sandbox == other.sandbox &&
                 targetHttpPortUrlPrefix == other.targetHttpPortUrlPrefix &&
                 additionalProperties == other.additionalProperties
         }
@@ -1480,6 +1796,7 @@ private constructor(
                 endpointWebSocketUrl,
                 errorMessage,
                 mcpUrl,
+                sandbox,
                 targetHttpPortUrlPrefix,
                 additionalProperties,
             )
@@ -1488,7 +1805,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Status{token=$token, state=$state, apiUrl=$apiUrl, endpointWebSocketUrl=$endpointWebSocketUrl, errorMessage=$errorMessage, mcpUrl=$mcpUrl, targetHttpPortUrlPrefix=$targetHttpPortUrlPrefix, additionalProperties=$additionalProperties}"
+            "Status{token=$token, state=$state, apiUrl=$apiUrl, endpointWebSocketUrl=$endpointWebSocketUrl, errorMessage=$errorMessage, mcpUrl=$mcpUrl, sandbox=$sandbox, targetHttpPortUrlPrefix=$targetHttpPortUrlPrefix, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {
