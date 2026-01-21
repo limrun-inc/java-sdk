@@ -62,6 +62,15 @@ internal class IosInstanceServiceTest {
                                     .build()
                             )
                             .region("region")
+                            .sandbox(
+                                IosInstanceCreateParams.Spec.Sandbox.builder()
+                                    .xcode(
+                                        IosInstanceCreateParams.Spec.Sandbox.Xcode.builder()
+                                            .enabled(true)
+                                            .build()
+                                    )
+                                    .build()
+                            )
                             .build()
                     )
                     .build()
