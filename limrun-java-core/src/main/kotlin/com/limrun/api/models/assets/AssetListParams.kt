@@ -12,6 +12,7 @@ import kotlin.jvm.optionals.getOrNull
 /** List organization's all assets with given filters. If none given, return all assets. */
 class AssetListParams
 private constructor(
+    private val includeAppStore: Boolean?,
     private val includeDownloadUrl: Boolean?,
     private val includeUploadUrl: Boolean?,
     private val limit: Long?,
@@ -19,6 +20,12 @@ private constructor(
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
+
+    /**
+     * If true, also includes assets from Limrun App Store where you have access to. App Store
+     * assets will be returned with a "appstore/" prefix in their names.
+     */
+    fun includeAppStore(): Optional<Boolean> = Optional.ofNullable(includeAppStore)
 
     /** Toggles whether a download URL should be included in the response */
     fun includeDownloadUrl(): Optional<Boolean> = Optional.ofNullable(includeDownloadUrl)
@@ -51,6 +58,7 @@ private constructor(
     /** A builder for [AssetListParams]. */
     class Builder internal constructor() {
 
+        private var includeAppStore: Boolean? = null
         private var includeDownloadUrl: Boolean? = null
         private var includeUploadUrl: Boolean? = null
         private var limit: Long? = null
@@ -60,6 +68,7 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(assetListParams: AssetListParams) = apply {
+            includeAppStore = assetListParams.includeAppStore
             includeDownloadUrl = assetListParams.includeDownloadUrl
             includeUploadUrl = assetListParams.includeUploadUrl
             limit = assetListParams.limit
@@ -67,6 +76,25 @@ private constructor(
             additionalHeaders = assetListParams.additionalHeaders.toBuilder()
             additionalQueryParams = assetListParams.additionalQueryParams.toBuilder()
         }
+
+        /**
+         * If true, also includes assets from Limrun App Store where you have access to. App Store
+         * assets will be returned with a "appstore/" prefix in their names.
+         */
+        fun includeAppStore(includeAppStore: Boolean?) = apply {
+            this.includeAppStore = includeAppStore
+        }
+
+        /**
+         * Alias for [Builder.includeAppStore].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
+        fun includeAppStore(includeAppStore: Boolean) = includeAppStore(includeAppStore as Boolean?)
+
+        /** Alias for calling [Builder.includeAppStore] with `includeAppStore.orElse(null)`. */
+        fun includeAppStore(includeAppStore: Optional<Boolean>) =
+            includeAppStore(includeAppStore.getOrNull())
 
         /** Toggles whether a download URL should be included in the response */
         fun includeDownloadUrl(includeDownloadUrl: Boolean?) = apply {
@@ -228,6 +256,7 @@ private constructor(
          */
         fun build(): AssetListParams =
             AssetListParams(
+                includeAppStore,
                 includeDownloadUrl,
                 includeUploadUrl,
                 limit,
@@ -242,6 +271,7 @@ private constructor(
     override fun _queryParams(): QueryParams =
         QueryParams.builder()
             .apply {
+                includeAppStore?.let { put("includeAppStore", it.toString()) }
                 includeDownloadUrl?.let { put("includeDownloadUrl", it.toString()) }
                 includeUploadUrl?.let { put("includeUploadUrl", it.toString()) }
                 limit?.let { put("limit", it.toString()) }
@@ -256,6 +286,7 @@ private constructor(
         }
 
         return other is AssetListParams &&
+            includeAppStore == other.includeAppStore &&
             includeDownloadUrl == other.includeDownloadUrl &&
             includeUploadUrl == other.includeUploadUrl &&
             limit == other.limit &&
@@ -266,6 +297,7 @@ private constructor(
 
     override fun hashCode(): Int =
         Objects.hash(
+            includeAppStore,
             includeDownloadUrl,
             includeUploadUrl,
             limit,
@@ -275,5 +307,5 @@ private constructor(
         )
 
     override fun toString() =
-        "AssetListParams{includeDownloadUrl=$includeDownloadUrl, includeUploadUrl=$includeUploadUrl, limit=$limit, nameFilter=$nameFilter, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "AssetListParams{includeAppStore=$includeAppStore, includeDownloadUrl=$includeDownloadUrl, includeUploadUrl=$includeUploadUrl, limit=$limit, nameFilter=$nameFilter, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

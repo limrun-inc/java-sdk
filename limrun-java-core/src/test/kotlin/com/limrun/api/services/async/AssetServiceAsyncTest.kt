@@ -27,6 +27,7 @@ internal class AssetServiceAsyncTest {
         val assetsFuture =
             assetServiceAsync.list(
                 AssetListParams.builder()
+                    .includeAppStore(true)
                     .includeDownloadUrl(true)
                     .includeUploadUrl(true)
                     .limit(50L)

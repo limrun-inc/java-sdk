@@ -43,6 +43,14 @@ internal class IosInstanceTest {
                         .apiUrl("apiUrl")
                         .endpointWebSocketUrl("endpointWebSocketUrl")
                         .errorMessage("errorMessage")
+                        .mcpUrl("mcpUrl")
+                        .sandbox(
+                            IosInstance.Status.Sandbox.builder()
+                                .xcode(
+                                    IosInstance.Status.Sandbox.Xcode.builder().url("url").build()
+                                )
+                                .build()
+                        )
                         .targetHttpPortUrlPrefix("targetHttpPortUrlPrefix")
                         .build()
                 )
@@ -79,6 +87,12 @@ internal class IosInstanceTest {
                     .apiUrl("apiUrl")
                     .endpointWebSocketUrl("endpointWebSocketUrl")
                     .errorMessage("errorMessage")
+                    .mcpUrl("mcpUrl")
+                    .sandbox(
+                        IosInstance.Status.Sandbox.builder()
+                            .xcode(IosInstance.Status.Sandbox.Xcode.builder().url("url").build())
+                            .build()
+                    )
                     .targetHttpPortUrlPrefix("targetHttpPortUrlPrefix")
                     .build()
             )
@@ -117,6 +131,14 @@ internal class IosInstanceTest {
                         .apiUrl("apiUrl")
                         .endpointWebSocketUrl("endpointWebSocketUrl")
                         .errorMessage("errorMessage")
+                        .mcpUrl("mcpUrl")
+                        .sandbox(
+                            IosInstance.Status.Sandbox.builder()
+                                .xcode(
+                                    IosInstance.Status.Sandbox.Xcode.builder().url("url").build()
+                                )
+                                .build()
+                        )
                         .targetHttpPortUrlPrefix("targetHttpPortUrlPrefix")
                         .build()
                 )
