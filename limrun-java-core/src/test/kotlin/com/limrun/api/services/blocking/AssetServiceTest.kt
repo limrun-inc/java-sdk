@@ -27,6 +27,7 @@ internal class AssetServiceTest {
         val assets =
             assetService.list(
                 AssetListParams.builder()
+                    .includeAppStore(true)
                     .includeDownloadUrl(true)
                     .includeUploadUrl(true)
                     .limit(50L)

@@ -773,6 +773,7 @@ private constructor(
         private val inactivityTimeout: JsonField<String>,
         private val initialAssets: JsonField<List<InitialAsset>>,
         private val region: JsonField<String>,
+        private val sandbox: JsonField<Sandbox>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -789,7 +790,16 @@ private constructor(
             @ExcludeMissing
             initialAssets: JsonField<List<InitialAsset>> = JsonMissing.of(),
             @JsonProperty("region") @ExcludeMissing region: JsonField<String> = JsonMissing.of(),
-        ) : this(clues, hardTimeout, inactivityTimeout, initialAssets, region, mutableMapOf())
+            @JsonProperty("sandbox") @ExcludeMissing sandbox: JsonField<Sandbox> = JsonMissing.of(),
+        ) : this(
+            clues,
+            hardTimeout,
+            inactivityTimeout,
+            initialAssets,
+            region,
+            sandbox,
+            mutableMapOf(),
+        )
 
         /**
          * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -831,6 +841,12 @@ private constructor(
          *   server responded with an unexpected value).
          */
         fun region(): Optional<String> = region.getOptional("region")
+
+        /**
+         * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun sandbox(): Optional<Sandbox> = sandbox.getOptional("sandbox")
 
         /**
          * Returns the raw JSON value of [clues].
@@ -875,6 +891,13 @@ private constructor(
          */
         @JsonProperty("region") @ExcludeMissing fun _region(): JsonField<String> = region
 
+        /**
+         * Returns the raw JSON value of [sandbox].
+         *
+         * Unlike [sandbox], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("sandbox") @ExcludeMissing fun _sandbox(): JsonField<Sandbox> = sandbox
+
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
             additionalProperties.put(key, value)
@@ -901,6 +924,7 @@ private constructor(
             private var inactivityTimeout: JsonField<String> = JsonMissing.of()
             private var initialAssets: JsonField<MutableList<InitialAsset>>? = null
             private var region: JsonField<String> = JsonMissing.of()
+            private var sandbox: JsonField<Sandbox> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
@@ -910,6 +934,7 @@ private constructor(
                 inactivityTimeout = spec.inactivityTimeout
                 initialAssets = spec.initialAssets.map { it.toMutableList() }
                 region = spec.region
+                sandbox = spec.sandbox
                 additionalProperties = spec.additionalProperties.toMutableMap()
             }
 
@@ -1015,6 +1040,17 @@ private constructor(
              */
             fun region(region: JsonField<String>) = apply { this.region = region }
 
+            fun sandbox(sandbox: Sandbox) = sandbox(JsonField.of(sandbox))
+
+            /**
+             * Sets [Builder.sandbox] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.sandbox] with a well-typed [Sandbox] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun sandbox(sandbox: JsonField<Sandbox>) = apply { this.sandbox = sandbox }
+
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
                 putAllAdditionalProperties(additionalProperties)
@@ -1046,6 +1082,7 @@ private constructor(
                     inactivityTimeout,
                     (initialAssets ?: JsonMissing.of()).map { it.toImmutable() },
                     region,
+                    sandbox,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -1062,6 +1099,7 @@ private constructor(
             inactivityTimeout()
             initialAssets().ifPresent { it.forEach { it.validate() } }
             region()
+            sandbox().ifPresent { it.validate() }
             validated = true
         }
 
@@ -1085,7 +1123,8 @@ private constructor(
                 (if (hardTimeout.asKnown().isPresent) 1 else 0) +
                 (if (inactivityTimeout.asKnown().isPresent) 1 else 0) +
                 (initialAssets.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
-                (if (region.asKnown().isPresent) 1 else 0)
+                (if (region.asKnown().isPresent) 1 else 0) +
+                (sandbox.asKnown().getOrNull()?.validity() ?: 0)
 
         class Clue
         @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -2165,6 +2204,295 @@ private constructor(
                 "InitialAsset{kind=$kind, source=$source, assetId=$assetId, assetName=$assetName, launchMode=$launchMode, url=$url, additionalProperties=$additionalProperties}"
         }
 
+        class Sandbox
+        @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+        private constructor(
+            private val xcode: JsonField<Xcode>,
+            private val additionalProperties: MutableMap<String, JsonValue>,
+        ) {
+
+            @JsonCreator
+            private constructor(
+                @JsonProperty("xcode") @ExcludeMissing xcode: JsonField<Xcode> = JsonMissing.of()
+            ) : this(xcode, mutableMapOf())
+
+            /**
+             * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if
+             *   the server responded with an unexpected value).
+             */
+            fun xcode(): Optional<Xcode> = xcode.getOptional("xcode")
+
+            /**
+             * Returns the raw JSON value of [xcode].
+             *
+             * Unlike [xcode], this method doesn't throw if the JSON field has an unexpected type.
+             */
+            @JsonProperty("xcode") @ExcludeMissing fun _xcode(): JsonField<Xcode> = xcode
+
+            @JsonAnySetter
+            private fun putAdditionalProperty(key: String, value: JsonValue) {
+                additionalProperties.put(key, value)
+            }
+
+            @JsonAnyGetter
+            @ExcludeMissing
+            fun _additionalProperties(): Map<String, JsonValue> =
+                Collections.unmodifiableMap(additionalProperties)
+
+            fun toBuilder() = Builder().from(this)
+
+            companion object {
+
+                /** Returns a mutable builder for constructing an instance of [Sandbox]. */
+                @JvmStatic fun builder() = Builder()
+            }
+
+            /** A builder for [Sandbox]. */
+            class Builder internal constructor() {
+
+                private var xcode: JsonField<Xcode> = JsonMissing.of()
+                private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+                @JvmSynthetic
+                internal fun from(sandbox: Sandbox) = apply {
+                    xcode = sandbox.xcode
+                    additionalProperties = sandbox.additionalProperties.toMutableMap()
+                }
+
+                fun xcode(xcode: Xcode) = xcode(JsonField.of(xcode))
+
+                /**
+                 * Sets [Builder.xcode] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.xcode] with a well-typed [Xcode] value instead.
+                 * This method is primarily for setting the field to an undocumented or not yet
+                 * supported value.
+                 */
+                fun xcode(xcode: JsonField<Xcode>) = apply { this.xcode = xcode }
+
+                fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
+
+                fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                    additionalProperties.put(key, value)
+                }
+
+                fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                    apply {
+                        this.additionalProperties.putAll(additionalProperties)
+                    }
+
+                fun removeAdditionalProperty(key: String) = apply {
+                    additionalProperties.remove(key)
+                }
+
+                fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
+
+                /**
+                 * Returns an immutable instance of [Sandbox].
+                 *
+                 * Further updates to this [Builder] will not mutate the returned instance.
+                 */
+                fun build(): Sandbox = Sandbox(xcode, additionalProperties.toMutableMap())
+            }
+
+            private var validated: Boolean = false
+
+            fun validate(): Sandbox = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                xcode().ifPresent { it.validate() }
+                validated = true
+            }
+
+            fun isValid(): Boolean =
+                try {
+                    validate()
+                    true
+                } catch (e: LimrunInvalidDataException) {
+                    false
+                }
+
+            /**
+             * Returns a score indicating how many valid values are contained in this object
+             * recursively.
+             *
+             * Used for best match union deserialization.
+             */
+            @JvmSynthetic
+            internal fun validity(): Int = (xcode.asKnown().getOrNull()?.validity() ?: 0)
+
+            class Xcode
+            @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+            private constructor(
+                private val enabled: JsonField<Boolean>,
+                private val additionalProperties: MutableMap<String, JsonValue>,
+            ) {
+
+                @JsonCreator
+                private constructor(
+                    @JsonProperty("enabled")
+                    @ExcludeMissing
+                    enabled: JsonField<Boolean> = JsonMissing.of()
+                ) : this(enabled, mutableMapOf())
+
+                /**
+                 * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g.
+                 *   if the server responded with an unexpected value).
+                 */
+                fun enabled(): Optional<Boolean> = enabled.getOptional("enabled")
+
+                /**
+                 * Returns the raw JSON value of [enabled].
+                 *
+                 * Unlike [enabled], this method doesn't throw if the JSON field has an unexpected
+                 * type.
+                 */
+                @JsonProperty("enabled")
+                @ExcludeMissing
+                fun _enabled(): JsonField<Boolean> = enabled
+
+                @JsonAnySetter
+                private fun putAdditionalProperty(key: String, value: JsonValue) {
+                    additionalProperties.put(key, value)
+                }
+
+                @JsonAnyGetter
+                @ExcludeMissing
+                fun _additionalProperties(): Map<String, JsonValue> =
+                    Collections.unmodifiableMap(additionalProperties)
+
+                fun toBuilder() = Builder().from(this)
+
+                companion object {
+
+                    /** Returns a mutable builder for constructing an instance of [Xcode]. */
+                    @JvmStatic fun builder() = Builder()
+                }
+
+                /** A builder for [Xcode]. */
+                class Builder internal constructor() {
+
+                    private var enabled: JsonField<Boolean> = JsonMissing.of()
+                    private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+                    @JvmSynthetic
+                    internal fun from(xcode: Xcode) = apply {
+                        enabled = xcode.enabled
+                        additionalProperties = xcode.additionalProperties.toMutableMap()
+                    }
+
+                    fun enabled(enabled: Boolean) = enabled(JsonField.of(enabled))
+
+                    /**
+                     * Sets [Builder.enabled] to an arbitrary JSON value.
+                     *
+                     * You should usually call [Builder.enabled] with a well-typed [Boolean] value
+                     * instead. This method is primarily for setting the field to an undocumented or
+                     * not yet supported value.
+                     */
+                    fun enabled(enabled: JsonField<Boolean>) = apply { this.enabled = enabled }
+
+                    fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                        this.additionalProperties.clear()
+                        putAllAdditionalProperties(additionalProperties)
+                    }
+
+                    fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                        additionalProperties.put(key, value)
+                    }
+
+                    fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                        apply {
+                            this.additionalProperties.putAll(additionalProperties)
+                        }
+
+                    fun removeAdditionalProperty(key: String) = apply {
+                        additionalProperties.remove(key)
+                    }
+
+                    fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                        keys.forEach(::removeAdditionalProperty)
+                    }
+
+                    /**
+                     * Returns an immutable instance of [Xcode].
+                     *
+                     * Further updates to this [Builder] will not mutate the returned instance.
+                     */
+                    fun build(): Xcode = Xcode(enabled, additionalProperties.toMutableMap())
+                }
+
+                private var validated: Boolean = false
+
+                fun validate(): Xcode = apply {
+                    if (validated) {
+                        return@apply
+                    }
+
+                    enabled()
+                    validated = true
+                }
+
+                fun isValid(): Boolean =
+                    try {
+                        validate()
+                        true
+                    } catch (e: LimrunInvalidDataException) {
+                        false
+                    }
+
+                /**
+                 * Returns a score indicating how many valid values are contained in this object
+                 * recursively.
+                 *
+                 * Used for best match union deserialization.
+                 */
+                @JvmSynthetic
+                internal fun validity(): Int = (if (enabled.asKnown().isPresent) 1 else 0)
+
+                override fun equals(other: Any?): Boolean {
+                    if (this === other) {
+                        return true
+                    }
+
+                    return other is Xcode &&
+                        enabled == other.enabled &&
+                        additionalProperties == other.additionalProperties
+                }
+
+                private val hashCode: Int by lazy { Objects.hash(enabled, additionalProperties) }
+
+                override fun hashCode(): Int = hashCode
+
+                override fun toString() =
+                    "Xcode{enabled=$enabled, additionalProperties=$additionalProperties}"
+            }
+
+            override fun equals(other: Any?): Boolean {
+                if (this === other) {
+                    return true
+                }
+
+                return other is Sandbox &&
+                    xcode == other.xcode &&
+                    additionalProperties == other.additionalProperties
+            }
+
+            private val hashCode: Int by lazy { Objects.hash(xcode, additionalProperties) }
+
+            override fun hashCode(): Int = hashCode
+
+            override fun toString() =
+                "Sandbox{xcode=$xcode, additionalProperties=$additionalProperties}"
+        }
+
         override fun equals(other: Any?): Boolean {
             if (this === other) {
                 return true
@@ -2176,6 +2504,7 @@ private constructor(
                 inactivityTimeout == other.inactivityTimeout &&
                 initialAssets == other.initialAssets &&
                 region == other.region &&
+                sandbox == other.sandbox &&
                 additionalProperties == other.additionalProperties
         }
 
@@ -2186,6 +2515,7 @@ private constructor(
                 inactivityTimeout,
                 initialAssets,
                 region,
+                sandbox,
                 additionalProperties,
             )
         }
@@ -2193,7 +2523,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Spec{clues=$clues, hardTimeout=$hardTimeout, inactivityTimeout=$inactivityTimeout, initialAssets=$initialAssets, region=$region, additionalProperties=$additionalProperties}"
+            "Spec{clues=$clues, hardTimeout=$hardTimeout, inactivityTimeout=$inactivityTimeout, initialAssets=$initialAssets, region=$region, sandbox=$sandbox, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {
