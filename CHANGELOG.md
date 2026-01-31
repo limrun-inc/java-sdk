@@ -1,5 +1,49 @@
 # Changelog
 
+## 0.2.0 (2026-01-31)
+
+Full Changelog: [v0.1.0...v0.2.0](https://github.com/limrun-inc/java-sdk/compare/v0.1.0...v0.2.0)
+
+### Features
+
+* **api:** add displayName to asset ([5bc3543](https://github.com/limrun-inc/java-sdk/commit/5bc3543916894173c3ebc2cfd833b4f2bc5fcd57))
+* **api:** add ios sandbox properties and app store for assets ([6d57611](https://github.com/limrun-inc/java-sdk/commit/6d57611a3b60439c214bf37155af31ee61c4b815))
+* **api:** add optional os field to assets ([498ef02](https://github.com/limrun-inc/java-sdk/commit/498ef0209db5a80cf29e798c24b19f92d8f74ce6))
+* **api:** add status.mcpUrl for ios ([f428625](https://github.com/limrun-inc/java-sdk/commit/f4286251ffab4d972d42b34eefc93e4715a4c7bf))
+* **api:** increase timeout to 5 minutes since big app installations may take longer than a minute ([b14dd27](https://github.com/limrun-inc/java-sdk/commit/b14dd27d6452eb3b6abb60a134e0244c3de674a9))
+* **client:** add `HttpRequest#url()` method ([ed55316](https://github.com/limrun-inc/java-sdk/commit/ed55316ee4e61a234a5b2b7a94cb6feccca1ae5d))
+* **client:** allow configuring dispatcher executor service ([494257b](https://github.com/limrun-inc/java-sdk/commit/494257b745805402e87e7fd96745455e2d052952))
+* **client:** send `X-Stainless-Kotlin-Version` header ([d6e480e](https://github.com/limrun-inc/java-sdk/commit/d6e480ed810a48f2ca6dc5867aab1f12f589449c))
+
+
+### Bug Fixes
+
+* **client:** disallow coercion from float to int ([d69101d](https://github.com/limrun-inc/java-sdk/commit/d69101d246d82fbf243d009c0fdf03a0e5cdd5c9))
+* **client:** fully respect max retries ([a4c51e6](https://github.com/limrun-inc/java-sdk/commit/a4c51e68f3b6424ba263fd2a3e439dd336c6dc14))
+* **client:** preserve time zone in lenient date-time parsing ([a4ce447](https://github.com/limrun-inc/java-sdk/commit/a4ce4474019c9d74abc34bef4fe1d038fbe2cd3a))
+* **client:** send retry count header for max retries 0 ([a4c51e6](https://github.com/limrun-inc/java-sdk/commit/a4c51e68f3b6424ba263fd2a3e439dd336c6dc14))
+* date time deserialization leniency ([7210b00](https://github.com/limrun-inc/java-sdk/commit/7210b00aef62163c1153b3185cced46e266c2b3d))
+
+
+### Chores
+
+* **ci:** upgrade `actions/github-script` ([bfd4ab7](https://github.com/limrun-inc/java-sdk/commit/bfd4ab7ebf5e2d2f10bf3697409816bef44a0b50))
+* **ci:** upgrade `actions/setup-java` ([06e3dd3](https://github.com/limrun-inc/java-sdk/commit/06e3dd3a92b845232a2ef5d55709925e400d56b5))
+* **internal:** allow passing args to `./scripts/test` ([5c266ea](https://github.com/limrun-inc/java-sdk/commit/5c266ea49d7834380859c2adce1f522b9ba12f98))
+* **internal:** clean up maven repo artifact script and add html documentation to repo root ([de97a18](https://github.com/limrun-inc/java-sdk/commit/de97a186e1bc5d684d96a657f71818a45ef0ec3f))
+* **internal:** correct cache invalidation for `SKIP_MOCK_TESTS` ([daaf28c](https://github.com/limrun-inc/java-sdk/commit/daaf28c480c5eac553c7952272f65d3cbb679835))
+* **internal:** depend on packages directly in example ([a4c51e6](https://github.com/limrun-inc/java-sdk/commit/a4c51e68f3b6424ba263fd2a3e439dd336c6dc14))
+* **internal:** improve maven repo docs ([febe2a5](https://github.com/limrun-inc/java-sdk/commit/febe2a5e40bd15a6173db2512c2472f0b718a438))
+* **internal:** support uploading Maven repo artifacts to stainless package server ([5b56984](https://github.com/limrun-inc/java-sdk/commit/5b569846d14fed990a3c9a97648c14af5dace205))
+* **internal:** update `actions/checkout` version ([912a4ea](https://github.com/limrun-inc/java-sdk/commit/912a4ea62f24ff40f44b9651614d3eb319a4f9d4))
+* **internal:** update maven repo doc to include authentication ([608554c](https://github.com/limrun-inc/java-sdk/commit/608554c87c6c7f45124118862830f054dca52ae9))
+* test on Jackson 2.14.0 to avoid encountering FasterXML/jackson-databind[#3240](https://github.com/limrun-inc/java-sdk/issues/3240) in tests ([7210b00](https://github.com/limrun-inc/java-sdk/commit/7210b00aef62163c1153b3185cced46e266c2b3d))
+
+
+### Documentation
+
+* add more examples ([b67df38](https://github.com/limrun-inc/java-sdk/commit/b67df3863715632d578cf104dbb99d023bcadf81))
+
 ## 0.1.0 (2025-12-15)
 
 Full Changelog: [v0.0.1...v0.1.0](https://github.com/limrun-inc/java-sdk/compare/v0.0.1...v0.1.0)
