@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test
 
 internal class IosInstanceServiceTest {
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun create() {
         val client = LimrunOkHttpClient.builder().apiKey("My API Key").build()
@@ -72,7 +72,7 @@ internal class IosInstanceServiceTest {
         iosInstance.validate()
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun list() {
         val client = LimrunOkHttpClient.builder().apiKey("My API Key").build()
@@ -83,7 +83,7 @@ internal class IosInstanceServiceTest {
         page.items().forEach { it.validate() }
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun delete() {
         val client = LimrunOkHttpClient.builder().apiKey("My API Key").build()
@@ -92,7 +92,7 @@ internal class IosInstanceServiceTest {
         iosInstanceService.delete("id")
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun get() {
         val client = LimrunOkHttpClient.builder().apiKey("My API Key").build()

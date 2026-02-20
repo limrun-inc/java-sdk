@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test
 
 internal class AssetServiceAsyncTest {
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun list() {
         val client = LimrunOkHttpClientAsync.builder().apiKey("My API Key").build()
@@ -32,7 +32,7 @@ internal class AssetServiceAsyncTest {
         assets.forEach { it.validate() }
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun delete() {
         val client = LimrunOkHttpClientAsync.builder().apiKey("My API Key").build()
@@ -43,7 +43,7 @@ internal class AssetServiceAsyncTest {
         val response = future.get()
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun get() {
         val client = LimrunOkHttpClientAsync.builder().apiKey("My API Key").build()
@@ -62,7 +62,7 @@ internal class AssetServiceAsyncTest {
         asset.validate()
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun getOrCreate() {
         val client = LimrunOkHttpClientAsync.builder().apiKey("My API Key").build()
