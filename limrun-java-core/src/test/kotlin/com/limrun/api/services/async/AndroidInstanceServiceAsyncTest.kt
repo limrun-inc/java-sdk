@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test
 
 internal class AndroidInstanceServiceAsyncTest {
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun create() {
         val client = LimrunOkHttpClientAsync.builder().apiKey("My API Key").build()
@@ -92,7 +92,7 @@ internal class AndroidInstanceServiceAsyncTest {
         androidInstance.validate()
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun list() {
         val client = LimrunOkHttpClientAsync.builder().apiKey("My API Key").build()
@@ -104,7 +104,7 @@ internal class AndroidInstanceServiceAsyncTest {
         page.items().forEach { it.validate() }
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun delete() {
         val client = LimrunOkHttpClientAsync.builder().apiKey("My API Key").build()
@@ -115,7 +115,7 @@ internal class AndroidInstanceServiceAsyncTest {
         val response = future.get()
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun get() {
         val client = LimrunOkHttpClientAsync.builder().apiKey("My API Key").build()
