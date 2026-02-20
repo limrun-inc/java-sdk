@@ -2,25 +2,18 @@
 
 package com.limrun.api.services.async
 
-import com.limrun.api.TestServerExtension
 import com.limrun.api.client.okhttp.LimrunOkHttpClientAsync
 import com.limrun.api.core.JsonValue
 import com.limrun.api.models.iosinstances.IosInstanceCreateParams
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 
-@ExtendWith(TestServerExtension::class)
 internal class IosInstanceServiceAsyncTest {
 
     @Disabled("Prism tests are disabled")
     @Test
     fun create() {
-        val client =
-            LimrunOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
-                .build()
+        val client = LimrunOkHttpClientAsync.builder().apiKey("My API Key").build()
         val iosInstanceServiceAsync = client.iosInstances()
 
         val iosInstanceFuture =
@@ -83,11 +76,7 @@ internal class IosInstanceServiceAsyncTest {
     @Disabled("Prism tests are disabled")
     @Test
     fun list() {
-        val client =
-            LimrunOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
-                .build()
+        val client = LimrunOkHttpClientAsync.builder().apiKey("My API Key").build()
         val iosInstanceServiceAsync = client.iosInstances()
 
         val pageFuture = iosInstanceServiceAsync.list()
@@ -99,11 +88,7 @@ internal class IosInstanceServiceAsyncTest {
     @Disabled("Prism tests are disabled")
     @Test
     fun delete() {
-        val client =
-            LimrunOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
-                .build()
+        val client = LimrunOkHttpClientAsync.builder().apiKey("My API Key").build()
         val iosInstanceServiceAsync = client.iosInstances()
 
         val future = iosInstanceServiceAsync.delete("id")
@@ -114,11 +99,7 @@ internal class IosInstanceServiceAsyncTest {
     @Disabled("Prism tests are disabled")
     @Test
     fun get() {
-        val client =
-            LimrunOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
-                .build()
+        val client = LimrunOkHttpClientAsync.builder().apiKey("My API Key").build()
         val iosInstanceServiceAsync = client.iosInstances()
 
         val iosInstanceFuture = iosInstanceServiceAsync.get("id")

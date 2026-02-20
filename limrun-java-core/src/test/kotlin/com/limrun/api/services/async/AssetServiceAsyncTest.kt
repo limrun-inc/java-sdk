@@ -2,26 +2,19 @@
 
 package com.limrun.api.services.async
 
-import com.limrun.api.TestServerExtension
 import com.limrun.api.client.okhttp.LimrunOkHttpClientAsync
 import com.limrun.api.models.assets.AssetGetOrCreateParams
 import com.limrun.api.models.assets.AssetGetParams
 import com.limrun.api.models.assets.AssetListParams
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 
-@ExtendWith(TestServerExtension::class)
 internal class AssetServiceAsyncTest {
 
     @Disabled("Prism tests are disabled")
     @Test
     fun list() {
-        val client =
-            LimrunOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
-                .build()
+        val client = LimrunOkHttpClientAsync.builder().apiKey("My API Key").build()
         val assetServiceAsync = client.assets()
 
         val assetsFuture =
@@ -42,11 +35,7 @@ internal class AssetServiceAsyncTest {
     @Disabled("Prism tests are disabled")
     @Test
     fun delete() {
-        val client =
-            LimrunOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
-                .build()
+        val client = LimrunOkHttpClientAsync.builder().apiKey("My API Key").build()
         val assetServiceAsync = client.assets()
 
         val future = assetServiceAsync.delete("assetId")
@@ -57,11 +46,7 @@ internal class AssetServiceAsyncTest {
     @Disabled("Prism tests are disabled")
     @Test
     fun get() {
-        val client =
-            LimrunOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
-                .build()
+        val client = LimrunOkHttpClientAsync.builder().apiKey("My API Key").build()
         val assetServiceAsync = client.assets()
 
         val assetFuture =
@@ -80,11 +65,7 @@ internal class AssetServiceAsyncTest {
     @Disabled("Prism tests are disabled")
     @Test
     fun getOrCreate() {
-        val client =
-            LimrunOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
-                .build()
+        val client = LimrunOkHttpClientAsync.builder().apiKey("My API Key").build()
         val assetServiceAsync = client.assets()
 
         val responseFuture =

@@ -2,25 +2,18 @@
 
 package com.limrun.api.services.blocking
 
-import com.limrun.api.TestServerExtension
 import com.limrun.api.client.okhttp.LimrunOkHttpClient
 import com.limrun.api.core.JsonValue
 import com.limrun.api.models.androidinstances.AndroidInstanceCreateParams
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 
-@ExtendWith(TestServerExtension::class)
 internal class AndroidInstanceServiceTest {
 
     @Disabled("Prism tests are disabled")
     @Test
     fun create() {
-        val client =
-            LimrunOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
-                .build()
+        val client = LimrunOkHttpClient.builder().apiKey("My API Key").build()
         val androidInstanceService = client.androidInstances()
 
         val androidInstance =
@@ -101,11 +94,7 @@ internal class AndroidInstanceServiceTest {
     @Disabled("Prism tests are disabled")
     @Test
     fun list() {
-        val client =
-            LimrunOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
-                .build()
+        val client = LimrunOkHttpClient.builder().apiKey("My API Key").build()
         val androidInstanceService = client.androidInstances()
 
         val page = androidInstanceService.list()
@@ -116,11 +105,7 @@ internal class AndroidInstanceServiceTest {
     @Disabled("Prism tests are disabled")
     @Test
     fun delete() {
-        val client =
-            LimrunOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
-                .build()
+        val client = LimrunOkHttpClient.builder().apiKey("My API Key").build()
         val androidInstanceService = client.androidInstances()
 
         androidInstanceService.delete("id")
@@ -129,11 +114,7 @@ internal class AndroidInstanceServiceTest {
     @Disabled("Prism tests are disabled")
     @Test
     fun get() {
-        val client =
-            LimrunOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
-                .build()
+        val client = LimrunOkHttpClient.builder().apiKey("My API Key").build()
         val androidInstanceService = client.androidInstances()
 
         val androidInstance = androidInstanceService.get("id")
