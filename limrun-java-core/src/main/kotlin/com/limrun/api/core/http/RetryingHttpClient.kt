@@ -1,3 +1,5 @@
+// File generated from our OpenAPI spec by Stainless.
+
 package com.limrun.api.core.http
 
 import com.limrun.api.core.DefaultSleeper
