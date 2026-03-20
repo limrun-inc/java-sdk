@@ -955,6 +955,7 @@ private constructor(
         private val adbWebSocketUrl: JsonField<String>,
         private val endpointWebSocketUrl: JsonField<String>,
         private val errorMessage: JsonField<String>,
+        private val mcpUrl: JsonField<String>,
         private val sandbox: JsonField<Sandbox>,
         private val targetHttpPortUrlPrefix: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
@@ -973,6 +974,7 @@ private constructor(
             @JsonProperty("errorMessage")
             @ExcludeMissing
             errorMessage: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("mcpUrl") @ExcludeMissing mcpUrl: JsonField<String> = JsonMissing.of(),
             @JsonProperty("sandbox") @ExcludeMissing sandbox: JsonField<Sandbox> = JsonMissing.of(),
             @JsonProperty("targetHttpPortUrlPrefix")
             @ExcludeMissing
@@ -983,6 +985,7 @@ private constructor(
             adbWebSocketUrl,
             endpointWebSocketUrl,
             errorMessage,
+            mcpUrl,
             sandbox,
             targetHttpPortUrlPrefix,
             mutableMapOf(),
@@ -1018,6 +1021,12 @@ private constructor(
          *   server responded with an unexpected value).
          */
         fun errorMessage(): Optional<String> = errorMessage.getOptional("errorMessage")
+
+        /**
+         * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun mcpUrl(): Optional<String> = mcpUrl.getOptional("mcpUrl")
 
         /**
          * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -1077,6 +1086,13 @@ private constructor(
         fun _errorMessage(): JsonField<String> = errorMessage
 
         /**
+         * Returns the raw JSON value of [mcpUrl].
+         *
+         * Unlike [mcpUrl], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("mcpUrl") @ExcludeMissing fun _mcpUrl(): JsonField<String> = mcpUrl
+
+        /**
          * Returns the raw JSON value of [sandbox].
          *
          * Unlike [sandbox], this method doesn't throw if the JSON field has an unexpected type.
@@ -1127,6 +1143,7 @@ private constructor(
             private var adbWebSocketUrl: JsonField<String> = JsonMissing.of()
             private var endpointWebSocketUrl: JsonField<String> = JsonMissing.of()
             private var errorMessage: JsonField<String> = JsonMissing.of()
+            private var mcpUrl: JsonField<String> = JsonMissing.of()
             private var sandbox: JsonField<Sandbox> = JsonMissing.of()
             private var targetHttpPortUrlPrefix: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -1138,6 +1155,7 @@ private constructor(
                 adbWebSocketUrl = status.adbWebSocketUrl
                 endpointWebSocketUrl = status.endpointWebSocketUrl
                 errorMessage = status.errorMessage
+                mcpUrl = status.mcpUrl
                 sandbox = status.sandbox
                 targetHttpPortUrlPrefix = status.targetHttpPortUrlPrefix
                 additionalProperties = status.additionalProperties.toMutableMap()
@@ -1206,6 +1224,17 @@ private constructor(
                 this.errorMessage = errorMessage
             }
 
+            fun mcpUrl(mcpUrl: String) = mcpUrl(JsonField.of(mcpUrl))
+
+            /**
+             * Sets [Builder.mcpUrl] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.mcpUrl] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun mcpUrl(mcpUrl: JsonField<String>) = apply { this.mcpUrl = mcpUrl }
+
             fun sandbox(sandbox: Sandbox) = sandbox(JsonField.of(sandbox))
 
             /**
@@ -1270,6 +1299,7 @@ private constructor(
                     adbWebSocketUrl,
                     endpointWebSocketUrl,
                     errorMessage,
+                    mcpUrl,
                     sandbox,
                     targetHttpPortUrlPrefix,
                     additionalProperties.toMutableMap(),
@@ -1288,6 +1318,7 @@ private constructor(
             adbWebSocketUrl()
             endpointWebSocketUrl()
             errorMessage()
+            mcpUrl()
             sandbox().ifPresent { it.validate() }
             targetHttpPortUrlPrefix()
             validated = true
@@ -1314,6 +1345,7 @@ private constructor(
                 (if (adbWebSocketUrl.asKnown().isPresent) 1 else 0) +
                 (if (endpointWebSocketUrl.asKnown().isPresent) 1 else 0) +
                 (if (errorMessage.asKnown().isPresent) 1 else 0) +
+                (if (mcpUrl.asKnown().isPresent) 1 else 0) +
                 (sandbox.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (targetHttpPortUrlPrefix.asKnown().isPresent) 1 else 0)
 
@@ -1775,6 +1807,7 @@ private constructor(
                 adbWebSocketUrl == other.adbWebSocketUrl &&
                 endpointWebSocketUrl == other.endpointWebSocketUrl &&
                 errorMessage == other.errorMessage &&
+                mcpUrl == other.mcpUrl &&
                 sandbox == other.sandbox &&
                 targetHttpPortUrlPrefix == other.targetHttpPortUrlPrefix &&
                 additionalProperties == other.additionalProperties
@@ -1787,6 +1820,7 @@ private constructor(
                 adbWebSocketUrl,
                 endpointWebSocketUrl,
                 errorMessage,
+                mcpUrl,
                 sandbox,
                 targetHttpPortUrlPrefix,
                 additionalProperties,
@@ -1796,7 +1830,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Status{token=$token, state=$state, adbWebSocketUrl=$adbWebSocketUrl, endpointWebSocketUrl=$endpointWebSocketUrl, errorMessage=$errorMessage, sandbox=$sandbox, targetHttpPortUrlPrefix=$targetHttpPortUrlPrefix, additionalProperties=$additionalProperties}"
+            "Status{token=$token, state=$state, adbWebSocketUrl=$adbWebSocketUrl, endpointWebSocketUrl=$endpointWebSocketUrl, errorMessage=$errorMessage, mcpUrl=$mcpUrl, sandbox=$sandbox, targetHttpPortUrlPrefix=$targetHttpPortUrlPrefix, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {
