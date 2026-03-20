@@ -87,6 +87,7 @@ internal class ProGuardCompatibilityTest {
                         .adbWebSocketUrl("adbWebSocketUrl")
                         .endpointWebSocketUrl("endpointWebSocketUrl")
                         .errorMessage("errorMessage")
+                        .mcpUrl("mcpUrl")
                         .sandbox(
                             AndroidInstance.Status.Sandbox.builder()
                                 .playwrightAndroid(
