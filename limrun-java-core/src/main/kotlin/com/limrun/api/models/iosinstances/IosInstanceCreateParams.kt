@@ -772,6 +772,7 @@ private constructor(
         private val hardTimeout: JsonField<String>,
         private val inactivityTimeout: JsonField<String>,
         private val initialAssets: JsonField<List<InitialAsset>>,
+        private val model: JsonField<Model>,
         private val region: JsonField<String>,
         private val sandbox: JsonField<Sandbox>,
         private val additionalProperties: MutableMap<String, JsonValue>,
@@ -789,6 +790,7 @@ private constructor(
             @JsonProperty("initialAssets")
             @ExcludeMissing
             initialAssets: JsonField<List<InitialAsset>> = JsonMissing.of(),
+            @JsonProperty("model") @ExcludeMissing model: JsonField<Model> = JsonMissing.of(),
             @JsonProperty("region") @ExcludeMissing region: JsonField<String> = JsonMissing.of(),
             @JsonProperty("sandbox") @ExcludeMissing sandbox: JsonField<Sandbox> = JsonMissing.of(),
         ) : this(
@@ -796,6 +798,7 @@ private constructor(
             hardTimeout,
             inactivityTimeout,
             initialAssets,
+            model,
             region,
             sandbox,
             mutableMapOf(),
@@ -832,6 +835,14 @@ private constructor(
          */
         fun initialAssets(): Optional<List<InitialAsset>> =
             initialAssets.getOptional("initialAssets")
+
+        /**
+         * The model for the Apple Simulator. Default is iphone.
+         *
+         * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun model(): Optional<Model> = model.getOptional("model")
 
         /**
          * The region where the instance will be created. If not given, will be decided based on
@@ -885,6 +896,13 @@ private constructor(
         fun _initialAssets(): JsonField<List<InitialAsset>> = initialAssets
 
         /**
+         * Returns the raw JSON value of [model].
+         *
+         * Unlike [model], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("model") @ExcludeMissing fun _model(): JsonField<Model> = model
+
+        /**
          * Returns the raw JSON value of [region].
          *
          * Unlike [region], this method doesn't throw if the JSON field has an unexpected type.
@@ -923,6 +941,7 @@ private constructor(
             private var hardTimeout: JsonField<String> = JsonMissing.of()
             private var inactivityTimeout: JsonField<String> = JsonMissing.of()
             private var initialAssets: JsonField<MutableList<InitialAsset>>? = null
+            private var model: JsonField<Model> = JsonMissing.of()
             private var region: JsonField<String> = JsonMissing.of()
             private var sandbox: JsonField<Sandbox> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -933,6 +952,7 @@ private constructor(
                 hardTimeout = spec.hardTimeout
                 inactivityTimeout = spec.inactivityTimeout
                 initialAssets = spec.initialAssets.map { it.toMutableList() }
+                model = spec.model
                 region = spec.region
                 sandbox = spec.sandbox
                 additionalProperties = spec.additionalProperties.toMutableMap()
@@ -1025,6 +1045,18 @@ private constructor(
                     }
             }
 
+            /** The model for the Apple Simulator. Default is iphone. */
+            fun model(model: Model) = model(JsonField.of(model))
+
+            /**
+             * Sets [Builder.model] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.model] with a well-typed [Model] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
+             */
+            fun model(model: JsonField<Model>) = apply { this.model = model }
+
             /**
              * The region where the instance will be created. If not given, will be decided based on
              * scheduling clues and availability.
@@ -1081,6 +1113,7 @@ private constructor(
                     hardTimeout,
                     inactivityTimeout,
                     (initialAssets ?: JsonMissing.of()).map { it.toImmutable() },
+                    model,
                     region,
                     sandbox,
                     additionalProperties.toMutableMap(),
@@ -1098,6 +1131,7 @@ private constructor(
             hardTimeout()
             inactivityTimeout()
             initialAssets().ifPresent { it.forEach { it.validate() } }
+            model().ifPresent { it.validate() }
             region()
             sandbox().ifPresent { it.validate() }
             validated = true
@@ -1123,6 +1157,7 @@ private constructor(
                 (if (hardTimeout.asKnown().isPresent) 1 else 0) +
                 (if (inactivityTimeout.asKnown().isPresent) 1 else 0) +
                 (initialAssets.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+                (model.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (region.asKnown().isPresent) 1 else 0) +
                 (sandbox.asKnown().getOrNull()?.validity() ?: 0)
 
@@ -2204,6 +2239,142 @@ private constructor(
                 "InitialAsset{kind=$kind, source=$source, assetId=$assetId, assetName=$assetName, launchMode=$launchMode, url=$url, additionalProperties=$additionalProperties}"
         }
 
+        /** The model for the Apple Simulator. Default is iphone. */
+        class Model @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+
+            /**
+             * Returns this class instance's raw value.
+             *
+             * This is usually only useful if this instance was deserialized from data that doesn't
+             * match any known member, and you want to know that value. For example, if the SDK is
+             * on an older version than the API, then the API may respond with new members that the
+             * SDK is unaware of.
+             */
+            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+            companion object {
+
+                @JvmField val IPHONE = of("iphone")
+
+                @JvmField val IPAD = of("ipad")
+
+                @JvmField val WATCH = of("watch")
+
+                @JvmStatic fun of(value: String) = Model(JsonField.of(value))
+            }
+
+            /** An enum containing [Model]'s known values. */
+            enum class Known {
+                IPHONE,
+                IPAD,
+                WATCH,
+            }
+
+            /**
+             * An enum containing [Model]'s known values, as well as an [_UNKNOWN] member.
+             *
+             * An instance of [Model] can contain an unknown value in a couple of cases:
+             * - It was deserialized from data that doesn't match any known member. For example, if
+             *   the SDK is on an older version than the API, then the API may respond with new
+             *   members that the SDK is unaware of.
+             * - It was constructed with an arbitrary value using the [of] method.
+             */
+            enum class Value {
+                IPHONE,
+                IPAD,
+                WATCH,
+                /**
+                 * An enum member indicating that [Model] was instantiated with an unknown value.
+                 */
+                _UNKNOWN,
+            }
+
+            /**
+             * Returns an enum member corresponding to this class instance's value, or
+             * [Value._UNKNOWN] if the class was instantiated with an unknown value.
+             *
+             * Use the [known] method instead if you're certain the value is always known or if you
+             * want to throw for the unknown case.
+             */
+            fun value(): Value =
+                when (this) {
+                    IPHONE -> Value.IPHONE
+                    IPAD -> Value.IPAD
+                    WATCH -> Value.WATCH
+                    else -> Value._UNKNOWN
+                }
+
+            /**
+             * Returns an enum member corresponding to this class instance's value.
+             *
+             * Use the [value] method instead if you're uncertain the value is always known and
+             * don't want to throw for the unknown case.
+             *
+             * @throws LimrunInvalidDataException if this class instance's value is a not a known
+             *   member.
+             */
+            fun known(): Known =
+                when (this) {
+                    IPHONE -> Known.IPHONE
+                    IPAD -> Known.IPAD
+                    WATCH -> Known.WATCH
+                    else -> throw LimrunInvalidDataException("Unknown Model: $value")
+                }
+
+            /**
+             * Returns this class instance's primitive wire representation.
+             *
+             * This differs from the [toString] method because that method is primarily for
+             * debugging and generally doesn't throw.
+             *
+             * @throws LimrunInvalidDataException if this class instance's value does not have the
+             *   expected primitive type.
+             */
+            fun asString(): String =
+                _value().asString().orElseThrow {
+                    LimrunInvalidDataException("Value is not a String")
+                }
+
+            private var validated: Boolean = false
+
+            fun validate(): Model = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                known()
+                validated = true
+            }
+
+            fun isValid(): Boolean =
+                try {
+                    validate()
+                    true
+                } catch (e: LimrunInvalidDataException) {
+                    false
+                }
+
+            /**
+             * Returns a score indicating how many valid values are contained in this object
+             * recursively.
+             *
+             * Used for best match union deserialization.
+             */
+            @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+            override fun equals(other: Any?): Boolean {
+                if (this === other) {
+                    return true
+                }
+
+                return other is Model && value == other.value
+            }
+
+            override fun hashCode() = value.hashCode()
+
+            override fun toString() = value.toString()
+        }
+
         class Sandbox
         @JsonCreator(mode = JsonCreator.Mode.DISABLED)
         private constructor(
@@ -2503,6 +2674,7 @@ private constructor(
                 hardTimeout == other.hardTimeout &&
                 inactivityTimeout == other.inactivityTimeout &&
                 initialAssets == other.initialAssets &&
+                model == other.model &&
                 region == other.region &&
                 sandbox == other.sandbox &&
                 additionalProperties == other.additionalProperties
@@ -2514,6 +2686,7 @@ private constructor(
                 hardTimeout,
                 inactivityTimeout,
                 initialAssets,
+                model,
                 region,
                 sandbox,
                 additionalProperties,
@@ -2523,7 +2696,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Spec{clues=$clues, hardTimeout=$hardTimeout, inactivityTimeout=$inactivityTimeout, initialAssets=$initialAssets, region=$region, sandbox=$sandbox, additionalProperties=$additionalProperties}"
+            "Spec{clues=$clues, hardTimeout=$hardTimeout, inactivityTimeout=$inactivityTimeout, initialAssets=$initialAssets, model=$model, region=$region, sandbox=$sandbox, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {
