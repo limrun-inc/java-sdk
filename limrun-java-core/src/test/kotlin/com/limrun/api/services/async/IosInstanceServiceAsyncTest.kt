@@ -54,6 +54,7 @@ internal class IosInstanceServiceAsyncTest {
                                     .url("url")
                                     .build()
                             )
+                            .model(IosInstanceCreateParams.Spec.Model.IPHONE)
                             .region("region")
                             .sandbox(
                                 IosInstanceCreateParams.Spec.Sandbox.builder()

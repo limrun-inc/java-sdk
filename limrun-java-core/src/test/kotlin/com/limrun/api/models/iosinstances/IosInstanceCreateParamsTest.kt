@@ -47,6 +47,7 @@ internal class IosInstanceCreateParamsTest {
                             .url("url")
                             .build()
                     )
+                    .model(IosInstanceCreateParams.Spec.Model.IPHONE)
                     .region("region")
                     .sandbox(
                         IosInstanceCreateParams.Spec.Sandbox.builder()
@@ -101,6 +102,7 @@ internal class IosInstanceCreateParamsTest {
                                 .url("url")
                                 .build()
                         )
+                        .model(IosInstanceCreateParams.Spec.Model.IPHONE)
                         .region("region")
                         .sandbox(
                             IosInstanceCreateParams.Spec.Sandbox.builder()
@@ -171,6 +173,7 @@ internal class IosInstanceCreateParamsTest {
                                 .url("url")
                                 .build()
                         )
+                        .model(IosInstanceCreateParams.Spec.Model.IPHONE)
                         .region("region")
                         .sandbox(
                             IosInstanceCreateParams.Spec.Sandbox.builder()
@@ -222,6 +225,7 @@ internal class IosInstanceCreateParamsTest {
                             .url("url")
                             .build()
                     )
+                    .model(IosInstanceCreateParams.Spec.Model.IPHONE)
                     .region("region")
                     .sandbox(
                         IosInstanceCreateParams.Spec.Sandbox.builder()
