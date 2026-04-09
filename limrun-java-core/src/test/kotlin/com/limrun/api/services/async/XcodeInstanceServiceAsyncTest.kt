@@ -16,7 +16,7 @@ internal class XcodeInstanceServiceAsyncTest {
         val client = LimrunOkHttpClientAsync.builder().apiKey("My API Key").build()
         val xcodeInstanceServiceAsync = client.xcodeInstances()
 
-        val xcodeInstancesFuture =
+        val xcodeInstanceFuture =
             xcodeInstanceServiceAsync.create(
                 XcodeInstanceCreateParams.builder()
                     .reuseIfExists(true)
@@ -47,8 +47,8 @@ internal class XcodeInstanceServiceAsyncTest {
                     .build()
             )
 
-        val xcodeInstances = xcodeInstancesFuture.get()
-        xcodeInstances.validate()
+        val xcodeInstance = xcodeInstanceFuture.get()
+        xcodeInstance.validate()
     }
 
     @Disabled("Mock server tests are disabled")
@@ -80,9 +80,9 @@ internal class XcodeInstanceServiceAsyncTest {
         val client = LimrunOkHttpClientAsync.builder().apiKey("My API Key").build()
         val xcodeInstanceServiceAsync = client.xcodeInstances()
 
-        val xcodeInstancesFuture = xcodeInstanceServiceAsync.get("id")
+        val xcodeInstanceFuture = xcodeInstanceServiceAsync.get("id")
 
-        val xcodeInstances = xcodeInstancesFuture.get()
-        xcodeInstances.validate()
+        val xcodeInstance = xcodeInstanceFuture.get()
+        xcodeInstance.validate()
     }
 }

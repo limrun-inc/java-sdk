@@ -6,12 +6,12 @@ import com.limrun.api.core.ClientOptions
 import com.limrun.api.core.RequestOptions
 import com.limrun.api.core.http.HttpResponse
 import com.limrun.api.core.http.HttpResponseFor
+import com.limrun.api.models.xcodeinstances.XcodeInstance
 import com.limrun.api.models.xcodeinstances.XcodeInstanceCreateParams
 import com.limrun.api.models.xcodeinstances.XcodeInstanceDeleteParams
 import com.limrun.api.models.xcodeinstances.XcodeInstanceGetParams
 import com.limrun.api.models.xcodeinstances.XcodeInstanceListPageAsync
 import com.limrun.api.models.xcodeinstances.XcodeInstanceListParams
-import com.limrun.api.models.xcodeinstances.XcodeInstances
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
@@ -30,21 +30,21 @@ interface XcodeInstanceServiceAsync {
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): XcodeInstanceServiceAsync
 
     /** Create an Xcode instance */
-    fun create(): CompletableFuture<XcodeInstances> = create(XcodeInstanceCreateParams.none())
+    fun create(): CompletableFuture<XcodeInstance> = create(XcodeInstanceCreateParams.none())
 
     /** @see create */
     fun create(
         params: XcodeInstanceCreateParams = XcodeInstanceCreateParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<XcodeInstances>
+    ): CompletableFuture<XcodeInstance>
 
     /** @see create */
     fun create(
         params: XcodeInstanceCreateParams = XcodeInstanceCreateParams.none()
-    ): CompletableFuture<XcodeInstances> = create(params, RequestOptions.none())
+    ): CompletableFuture<XcodeInstance> = create(params, RequestOptions.none())
 
     /** @see create */
-    fun create(requestOptions: RequestOptions): CompletableFuture<XcodeInstances> =
+    fun create(requestOptions: RequestOptions): CompletableFuture<XcodeInstance> =
         create(XcodeInstanceCreateParams.none(), requestOptions)
 
     /** List Xcode instances */
@@ -96,33 +96,33 @@ interface XcodeInstanceServiceAsync {
         delete(id, XcodeInstanceDeleteParams.none(), requestOptions)
 
     /** Get Xcode instance with given ID */
-    fun get(id: String): CompletableFuture<XcodeInstances> = get(id, XcodeInstanceGetParams.none())
+    fun get(id: String): CompletableFuture<XcodeInstance> = get(id, XcodeInstanceGetParams.none())
 
     /** @see get */
     fun get(
         id: String,
         params: XcodeInstanceGetParams = XcodeInstanceGetParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<XcodeInstances> = get(params.toBuilder().id(id).build(), requestOptions)
+    ): CompletableFuture<XcodeInstance> = get(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see get */
     fun get(
         id: String,
         params: XcodeInstanceGetParams = XcodeInstanceGetParams.none(),
-    ): CompletableFuture<XcodeInstances> = get(id, params, RequestOptions.none())
+    ): CompletableFuture<XcodeInstance> = get(id, params, RequestOptions.none())
 
     /** @see get */
     fun get(
         params: XcodeInstanceGetParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<XcodeInstances>
+    ): CompletableFuture<XcodeInstance>
 
     /** @see get */
-    fun get(params: XcodeInstanceGetParams): CompletableFuture<XcodeInstances> =
+    fun get(params: XcodeInstanceGetParams): CompletableFuture<XcodeInstance> =
         get(params, RequestOptions.none())
 
     /** @see get */
-    fun get(id: String, requestOptions: RequestOptions): CompletableFuture<XcodeInstances> =
+    fun get(id: String, requestOptions: RequestOptions): CompletableFuture<XcodeInstance> =
         get(id, XcodeInstanceGetParams.none(), requestOptions)
 
     /**
@@ -144,25 +144,24 @@ interface XcodeInstanceServiceAsync {
          * Returns a raw HTTP response for `post /v1/xcode_instances`, but is otherwise the same as
          * [XcodeInstanceServiceAsync.create].
          */
-        fun create(): CompletableFuture<HttpResponseFor<XcodeInstances>> =
+        fun create(): CompletableFuture<HttpResponseFor<XcodeInstance>> =
             create(XcodeInstanceCreateParams.none())
 
         /** @see create */
         fun create(
             params: XcodeInstanceCreateParams = XcodeInstanceCreateParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<XcodeInstances>>
+        ): CompletableFuture<HttpResponseFor<XcodeInstance>>
 
         /** @see create */
         fun create(
             params: XcodeInstanceCreateParams = XcodeInstanceCreateParams.none()
-        ): CompletableFuture<HttpResponseFor<XcodeInstances>> =
-            create(params, RequestOptions.none())
+        ): CompletableFuture<HttpResponseFor<XcodeInstance>> = create(params, RequestOptions.none())
 
         /** @see create */
         fun create(
             requestOptions: RequestOptions
-        ): CompletableFuture<HttpResponseFor<XcodeInstances>> =
+        ): CompletableFuture<HttpResponseFor<XcodeInstance>> =
             create(XcodeInstanceCreateParams.none(), requestOptions)
 
         /**
@@ -229,7 +228,7 @@ interface XcodeInstanceServiceAsync {
          * Returns a raw HTTP response for `get /v1/xcode_instances/{id}`, but is otherwise the same
          * as [XcodeInstanceServiceAsync.get].
          */
-        fun get(id: String): CompletableFuture<HttpResponseFor<XcodeInstances>> =
+        fun get(id: String): CompletableFuture<HttpResponseFor<XcodeInstance>> =
             get(id, XcodeInstanceGetParams.none())
 
         /** @see get */
@@ -237,32 +236,31 @@ interface XcodeInstanceServiceAsync {
             id: String,
             params: XcodeInstanceGetParams = XcodeInstanceGetParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<XcodeInstances>> =
+        ): CompletableFuture<HttpResponseFor<XcodeInstance>> =
             get(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see get */
         fun get(
             id: String,
             params: XcodeInstanceGetParams = XcodeInstanceGetParams.none(),
-        ): CompletableFuture<HttpResponseFor<XcodeInstances>> =
+        ): CompletableFuture<HttpResponseFor<XcodeInstance>> =
             get(id, params, RequestOptions.none())
 
         /** @see get */
         fun get(
             params: XcodeInstanceGetParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<XcodeInstances>>
+        ): CompletableFuture<HttpResponseFor<XcodeInstance>>
 
         /** @see get */
-        fun get(
-            params: XcodeInstanceGetParams
-        ): CompletableFuture<HttpResponseFor<XcodeInstances>> = get(params, RequestOptions.none())
+        fun get(params: XcodeInstanceGetParams): CompletableFuture<HttpResponseFor<XcodeInstance>> =
+            get(params, RequestOptions.none())
 
         /** @see get */
         fun get(
             id: String,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<XcodeInstances>> =
+        ): CompletableFuture<HttpResponseFor<XcodeInstance>> =
             get(id, XcodeInstanceGetParams.none(), requestOptions)
     }
 }

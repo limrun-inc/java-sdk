@@ -13,8 +13,8 @@ class XcodeInstanceListPage
 private constructor(
     private val service: XcodeInstanceService,
     private val params: XcodeInstanceListParams,
-    private val items: List<XcodeInstances>,
-) : Page<XcodeInstances> {
+    private val items: List<XcodeInstance>,
+) : Page<XcodeInstance> {
 
     override fun hasNextPage(): Boolean = items().isNotEmpty()
 
@@ -23,13 +23,13 @@ private constructor(
 
     override fun nextPage(): XcodeInstanceListPage = service.list(nextPageParams())
 
-    fun autoPager(): AutoPager<XcodeInstances> = AutoPager.from(this)
+    fun autoPager(): AutoPager<XcodeInstance> = AutoPager.from(this)
 
     /** The parameters that were used to request this page. */
     fun params(): XcodeInstanceListParams = params
 
     /** The response that this page was parsed from. */
-    override fun items(): List<XcodeInstances> = items
+    override fun items(): List<XcodeInstance> = items
 
     fun toBuilder() = Builder().from(this)
 
@@ -53,7 +53,7 @@ private constructor(
 
         private var service: XcodeInstanceService? = null
         private var params: XcodeInstanceListParams? = null
-        private var items: List<XcodeInstances>? = null
+        private var items: List<XcodeInstance>? = null
 
         @JvmSynthetic
         internal fun from(xcodeInstanceListPage: XcodeInstanceListPage) = apply {
@@ -68,7 +68,7 @@ private constructor(
         fun params(params: XcodeInstanceListParams) = apply { this.params = params }
 
         /** The response that this page was parsed from. */
-        fun items(items: List<XcodeInstances>) = apply { this.items = items }
+        fun items(items: List<XcodeInstance>) = apply { this.items = items }
 
         /**
          * Returns an immutable instance of [XcodeInstanceListPage].

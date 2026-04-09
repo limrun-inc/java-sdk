@@ -9,20 +9,20 @@ import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-internal class XcodeInstancesTest {
+internal class XcodeInstanceTest {
 
     @Test
     fun create() {
-        val xcodeInstances =
-            XcodeInstances.builder()
+        val xcodeInstance =
+            XcodeInstance.builder()
                 .metadata(
-                    XcodeInstances.Metadata.builder()
+                    XcodeInstance.Metadata.builder()
                         .id("id")
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .organizationId("organizationId")
                         .displayName("displayName")
                         .labels(
-                            XcodeInstances.Metadata.Labels.builder()
+                            XcodeInstance.Metadata.Labels.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("string"))
                                 .build()
                         )
@@ -30,50 +30,50 @@ internal class XcodeInstancesTest {
                         .build()
                 )
                 .spec(
-                    XcodeInstances.Spec.builder()
+                    XcodeInstance.Spec.builder()
                         .inactivityTimeout("inactivityTimeout")
                         .region("region")
                         .hardTimeout("hardTimeout")
                         .build()
                 )
                 .status(
-                    XcodeInstances.Status.builder()
+                    XcodeInstance.Status.builder()
                         .token("token")
-                        .state(XcodeInstances.Status.State.UNKNOWN)
+                        .state(XcodeInstance.Status.State.UNKNOWN)
                         .apiUrl("apiUrl")
                         .errorMessage("errorMessage")
                         .build()
                 )
                 .build()
 
-        assertThat(xcodeInstances.metadata())
+        assertThat(xcodeInstance.metadata())
             .isEqualTo(
-                XcodeInstances.Metadata.builder()
+                XcodeInstance.Metadata.builder()
                     .id("id")
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .organizationId("organizationId")
                     .displayName("displayName")
                     .labels(
-                        XcodeInstances.Metadata.Labels.builder()
+                        XcodeInstance.Metadata.Labels.builder()
                             .putAdditionalProperty("foo", JsonValue.from("string"))
                             .build()
                     )
                     .terminatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .build()
             )
-        assertThat(xcodeInstances.spec())
+        assertThat(xcodeInstance.spec())
             .isEqualTo(
-                XcodeInstances.Spec.builder()
+                XcodeInstance.Spec.builder()
                     .inactivityTimeout("inactivityTimeout")
                     .region("region")
                     .hardTimeout("hardTimeout")
                     .build()
             )
-        assertThat(xcodeInstances.status())
+        assertThat(xcodeInstance.status())
             .isEqualTo(
-                XcodeInstances.Status.builder()
+                XcodeInstance.Status.builder()
                     .token("token")
-                    .state(XcodeInstances.Status.State.UNKNOWN)
+                    .state(XcodeInstance.Status.State.UNKNOWN)
                     .apiUrl("apiUrl")
                     .errorMessage("errorMessage")
                     .build()
@@ -83,16 +83,16 @@ internal class XcodeInstancesTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val xcodeInstances =
-            XcodeInstances.builder()
+        val xcodeInstance =
+            XcodeInstance.builder()
                 .metadata(
-                    XcodeInstances.Metadata.builder()
+                    XcodeInstance.Metadata.builder()
                         .id("id")
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .organizationId("organizationId")
                         .displayName("displayName")
                         .labels(
-                            XcodeInstances.Metadata.Labels.builder()
+                            XcodeInstance.Metadata.Labels.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("string"))
                                 .build()
                         )
@@ -100,28 +100,28 @@ internal class XcodeInstancesTest {
                         .build()
                 )
                 .spec(
-                    XcodeInstances.Spec.builder()
+                    XcodeInstance.Spec.builder()
                         .inactivityTimeout("inactivityTimeout")
                         .region("region")
                         .hardTimeout("hardTimeout")
                         .build()
                 )
                 .status(
-                    XcodeInstances.Status.builder()
+                    XcodeInstance.Status.builder()
                         .token("token")
-                        .state(XcodeInstances.Status.State.UNKNOWN)
+                        .state(XcodeInstance.Status.State.UNKNOWN)
                         .apiUrl("apiUrl")
                         .errorMessage("errorMessage")
                         .build()
                 )
                 .build()
 
-        val roundtrippedXcodeInstances =
+        val roundtrippedXcodeInstance =
             jsonMapper.readValue(
-                jsonMapper.writeValueAsString(xcodeInstances),
-                jacksonTypeRef<XcodeInstances>(),
+                jsonMapper.writeValueAsString(xcodeInstance),
+                jacksonTypeRef<XcodeInstance>(),
             )
 
-        assertThat(roundtrippedXcodeInstances).isEqualTo(xcodeInstances)
+        assertThat(roundtrippedXcodeInstance).isEqualTo(xcodeInstance)
     }
 }

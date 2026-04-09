@@ -16,8 +16,8 @@ private constructor(
     private val service: XcodeInstanceServiceAsync,
     private val streamHandlerExecutor: Executor,
     private val params: XcodeInstanceListParams,
-    private val items: List<XcodeInstances>,
-) : PageAsync<XcodeInstances> {
+    private val items: List<XcodeInstance>,
+) : PageAsync<XcodeInstance> {
 
     override fun hasNextPage(): Boolean = items().isNotEmpty()
 
@@ -27,14 +27,14 @@ private constructor(
     override fun nextPage(): CompletableFuture<XcodeInstanceListPageAsync> =
         service.list(nextPageParams())
 
-    fun autoPager(): AutoPagerAsync<XcodeInstances> =
+    fun autoPager(): AutoPagerAsync<XcodeInstance> =
         AutoPagerAsync.from(this, streamHandlerExecutor)
 
     /** The parameters that were used to request this page. */
     fun params(): XcodeInstanceListParams = params
 
     /** The response that this page was parsed from. */
-    override fun items(): List<XcodeInstances> = items
+    override fun items(): List<XcodeInstance> = items
 
     fun toBuilder() = Builder().from(this)
 
@@ -60,7 +60,7 @@ private constructor(
         private var service: XcodeInstanceServiceAsync? = null
         private var streamHandlerExecutor: Executor? = null
         private var params: XcodeInstanceListParams? = null
-        private var items: List<XcodeInstances>? = null
+        private var items: List<XcodeInstance>? = null
 
         @JvmSynthetic
         internal fun from(xcodeInstanceListPageAsync: XcodeInstanceListPageAsync) = apply {
@@ -80,7 +80,7 @@ private constructor(
         fun params(params: XcodeInstanceListParams) = apply { this.params = params }
 
         /** The response that this page was parsed from. */
-        fun items(items: List<XcodeInstances>) = apply { this.items = items }
+        fun items(items: List<XcodeInstance>) = apply { this.items = items }
 
         /**
          * Returns an immutable instance of [XcodeInstanceListPageAsync].
