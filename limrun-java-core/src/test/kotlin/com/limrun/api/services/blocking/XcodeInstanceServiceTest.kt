@@ -16,7 +16,7 @@ internal class XcodeInstanceServiceTest {
         val client = LimrunOkHttpClient.builder().apiKey("My API Key").build()
         val xcodeInstanceService = client.xcodeInstances()
 
-        val xcodeInstances =
+        val xcodeInstance =
             xcodeInstanceService.create(
                 XcodeInstanceCreateParams.builder()
                     .reuseIfExists(true)
@@ -47,7 +47,7 @@ internal class XcodeInstanceServiceTest {
                     .build()
             )
 
-        xcodeInstances.validate()
+        xcodeInstance.validate()
     }
 
     @Disabled("Mock server tests are disabled")
@@ -76,8 +76,8 @@ internal class XcodeInstanceServiceTest {
         val client = LimrunOkHttpClient.builder().apiKey("My API Key").build()
         val xcodeInstanceService = client.xcodeInstances()
 
-        val xcodeInstances = xcodeInstanceService.get("id")
+        val xcodeInstance = xcodeInstanceService.get("id")
 
-        xcodeInstances.validate()
+        xcodeInstance.validate()
     }
 }

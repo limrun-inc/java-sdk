@@ -7,12 +7,12 @@ import com.limrun.api.core.ClientOptions
 import com.limrun.api.core.RequestOptions
 import com.limrun.api.core.http.HttpResponse
 import com.limrun.api.core.http.HttpResponseFor
+import com.limrun.api.models.xcodeinstances.XcodeInstance
 import com.limrun.api.models.xcodeinstances.XcodeInstanceCreateParams
 import com.limrun.api.models.xcodeinstances.XcodeInstanceDeleteParams
 import com.limrun.api.models.xcodeinstances.XcodeInstanceGetParams
 import com.limrun.api.models.xcodeinstances.XcodeInstanceListPage
 import com.limrun.api.models.xcodeinstances.XcodeInstanceListParams
-import com.limrun.api.models.xcodeinstances.XcodeInstances
 import java.util.function.Consumer
 
 interface XcodeInstanceService {
@@ -30,21 +30,21 @@ interface XcodeInstanceService {
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): XcodeInstanceService
 
     /** Create an Xcode instance */
-    fun create(): XcodeInstances = create(XcodeInstanceCreateParams.none())
+    fun create(): XcodeInstance = create(XcodeInstanceCreateParams.none())
 
     /** @see create */
     fun create(
         params: XcodeInstanceCreateParams = XcodeInstanceCreateParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): XcodeInstances
+    ): XcodeInstance
 
     /** @see create */
     fun create(
         params: XcodeInstanceCreateParams = XcodeInstanceCreateParams.none()
-    ): XcodeInstances = create(params, RequestOptions.none())
+    ): XcodeInstance = create(params, RequestOptions.none())
 
     /** @see create */
-    fun create(requestOptions: RequestOptions): XcodeInstances =
+    fun create(requestOptions: RequestOptions): XcodeInstance =
         create(XcodeInstanceCreateParams.none(), requestOptions)
 
     /** List Xcode instances */
@@ -93,32 +93,32 @@ interface XcodeInstanceService {
         delete(id, XcodeInstanceDeleteParams.none(), requestOptions)
 
     /** Get Xcode instance with given ID */
-    fun get(id: String): XcodeInstances = get(id, XcodeInstanceGetParams.none())
+    fun get(id: String): XcodeInstance = get(id, XcodeInstanceGetParams.none())
 
     /** @see get */
     fun get(
         id: String,
         params: XcodeInstanceGetParams = XcodeInstanceGetParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): XcodeInstances = get(params.toBuilder().id(id).build(), requestOptions)
+    ): XcodeInstance = get(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see get */
     fun get(
         id: String,
         params: XcodeInstanceGetParams = XcodeInstanceGetParams.none(),
-    ): XcodeInstances = get(id, params, RequestOptions.none())
+    ): XcodeInstance = get(id, params, RequestOptions.none())
 
     /** @see get */
     fun get(
         params: XcodeInstanceGetParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): XcodeInstances
+    ): XcodeInstance
 
     /** @see get */
-    fun get(params: XcodeInstanceGetParams): XcodeInstances = get(params, RequestOptions.none())
+    fun get(params: XcodeInstanceGetParams): XcodeInstance = get(params, RequestOptions.none())
 
     /** @see get */
-    fun get(id: String, requestOptions: RequestOptions): XcodeInstances =
+    fun get(id: String, requestOptions: RequestOptions): XcodeInstance =
         get(id, XcodeInstanceGetParams.none(), requestOptions)
 
     /**
@@ -140,24 +140,24 @@ interface XcodeInstanceService {
          * [XcodeInstanceService.create].
          */
         @MustBeClosed
-        fun create(): HttpResponseFor<XcodeInstances> = create(XcodeInstanceCreateParams.none())
+        fun create(): HttpResponseFor<XcodeInstance> = create(XcodeInstanceCreateParams.none())
 
         /** @see create */
         @MustBeClosed
         fun create(
             params: XcodeInstanceCreateParams = XcodeInstanceCreateParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<XcodeInstances>
+        ): HttpResponseFor<XcodeInstance>
 
         /** @see create */
         @MustBeClosed
         fun create(
             params: XcodeInstanceCreateParams = XcodeInstanceCreateParams.none()
-        ): HttpResponseFor<XcodeInstances> = create(params, RequestOptions.none())
+        ): HttpResponseFor<XcodeInstance> = create(params, RequestOptions.none())
 
         /** @see create */
         @MustBeClosed
-        fun create(requestOptions: RequestOptions): HttpResponseFor<XcodeInstances> =
+        fun create(requestOptions: RequestOptions): HttpResponseFor<XcodeInstance> =
             create(XcodeInstanceCreateParams.none(), requestOptions)
 
         /**
@@ -229,8 +229,7 @@ interface XcodeInstanceService {
          * as [XcodeInstanceService.get].
          */
         @MustBeClosed
-        fun get(id: String): HttpResponseFor<XcodeInstances> =
-            get(id, XcodeInstanceGetParams.none())
+        fun get(id: String): HttpResponseFor<XcodeInstance> = get(id, XcodeInstanceGetParams.none())
 
         /** @see get */
         @MustBeClosed
@@ -238,30 +237,30 @@ interface XcodeInstanceService {
             id: String,
             params: XcodeInstanceGetParams = XcodeInstanceGetParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<XcodeInstances> = get(params.toBuilder().id(id).build(), requestOptions)
+        ): HttpResponseFor<XcodeInstance> = get(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see get */
         @MustBeClosed
         fun get(
             id: String,
             params: XcodeInstanceGetParams = XcodeInstanceGetParams.none(),
-        ): HttpResponseFor<XcodeInstances> = get(id, params, RequestOptions.none())
+        ): HttpResponseFor<XcodeInstance> = get(id, params, RequestOptions.none())
 
         /** @see get */
         @MustBeClosed
         fun get(
             params: XcodeInstanceGetParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<XcodeInstances>
+        ): HttpResponseFor<XcodeInstance>
 
         /** @see get */
         @MustBeClosed
-        fun get(params: XcodeInstanceGetParams): HttpResponseFor<XcodeInstances> =
+        fun get(params: XcodeInstanceGetParams): HttpResponseFor<XcodeInstance> =
             get(params, RequestOptions.none())
 
         /** @see get */
         @MustBeClosed
-        fun get(id: String, requestOptions: RequestOptions): HttpResponseFor<XcodeInstances> =
+        fun get(id: String, requestOptions: RequestOptions): HttpResponseFor<XcodeInstance> =
             get(id, XcodeInstanceGetParams.none(), requestOptions)
     }
 }

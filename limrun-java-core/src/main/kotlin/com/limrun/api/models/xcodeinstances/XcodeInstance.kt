@@ -20,7 +20,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class XcodeInstances
+class XcodeInstance
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val metadata: JsonField<Metadata>,
@@ -90,7 +90,7 @@ private constructor(
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of [XcodeInstances].
+         * Returns a mutable builder for constructing an instance of [XcodeInstance].
          *
          * The following fields are required:
          * ```java
@@ -102,7 +102,7 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [XcodeInstances]. */
+    /** A builder for [XcodeInstance]. */
     class Builder internal constructor() {
 
         private var metadata: JsonField<Metadata>? = null
@@ -111,11 +111,11 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(xcodeInstances: XcodeInstances) = apply {
-            metadata = xcodeInstances.metadata
-            spec = xcodeInstances.spec
-            status = xcodeInstances.status
-            additionalProperties = xcodeInstances.additionalProperties.toMutableMap()
+        internal fun from(xcodeInstance: XcodeInstance) = apply {
+            metadata = xcodeInstance.metadata
+            spec = xcodeInstance.spec
+            status = xcodeInstance.status
+            additionalProperties = xcodeInstance.additionalProperties.toMutableMap()
         }
 
         fun metadata(metadata: Metadata) = metadata(JsonField.of(metadata))
@@ -169,7 +169,7 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [XcodeInstances].
+         * Returns an immutable instance of [XcodeInstance].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          *
@@ -182,8 +182,8 @@ private constructor(
          *
          * @throws IllegalStateException if any required field is unset.
          */
-        fun build(): XcodeInstances =
-            XcodeInstances(
+        fun build(): XcodeInstance =
+            XcodeInstance(
                 checkRequired("metadata", metadata),
                 checkRequired("spec", spec),
                 checkRequired("status", status),
@@ -193,7 +193,7 @@ private constructor(
 
     private var validated: Boolean = false
 
-    fun validate(): XcodeInstances = apply {
+    fun validate(): XcodeInstance = apply {
         if (validated) {
             return@apply
         }
@@ -1342,7 +1342,7 @@ private constructor(
             return true
         }
 
-        return other is XcodeInstances &&
+        return other is XcodeInstance &&
             metadata == other.metadata &&
             spec == other.spec &&
             status == other.status &&
@@ -1354,5 +1354,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "XcodeInstances{metadata=$metadata, spec=$spec, status=$status, additionalProperties=$additionalProperties}"
+        "XcodeInstance{metadata=$metadata, spec=$spec, status=$status, additionalProperties=$additionalProperties}"
 }

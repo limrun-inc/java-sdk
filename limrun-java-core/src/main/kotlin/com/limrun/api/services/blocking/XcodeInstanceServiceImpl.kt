@@ -17,12 +17,12 @@ import com.limrun.api.core.http.HttpResponseFor
 import com.limrun.api.core.http.json
 import com.limrun.api.core.http.parseable
 import com.limrun.api.core.prepare
+import com.limrun.api.models.xcodeinstances.XcodeInstance
 import com.limrun.api.models.xcodeinstances.XcodeInstanceCreateParams
 import com.limrun.api.models.xcodeinstances.XcodeInstanceDeleteParams
 import com.limrun.api.models.xcodeinstances.XcodeInstanceGetParams
 import com.limrun.api.models.xcodeinstances.XcodeInstanceListPage
 import com.limrun.api.models.xcodeinstances.XcodeInstanceListParams
-import com.limrun.api.models.xcodeinstances.XcodeInstances
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
@@ -41,7 +41,7 @@ class XcodeInstanceServiceImpl internal constructor(private val clientOptions: C
     override fun create(
         params: XcodeInstanceCreateParams,
         requestOptions: RequestOptions,
-    ): XcodeInstances =
+    ): XcodeInstance =
         // post /v1/xcode_instances
         withRawResponse().create(params, requestOptions).parse()
 
@@ -60,7 +60,7 @@ class XcodeInstanceServiceImpl internal constructor(private val clientOptions: C
     override fun get(
         params: XcodeInstanceGetParams,
         requestOptions: RequestOptions,
-    ): XcodeInstances =
+    ): XcodeInstance =
         // get /v1/xcode_instances/{id}
         withRawResponse().get(params, requestOptions).parse()
 
@@ -77,13 +77,13 @@ class XcodeInstanceServiceImpl internal constructor(private val clientOptions: C
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
 
-        private val createHandler: Handler<XcodeInstances> =
-            jsonHandler<XcodeInstances>(clientOptions.jsonMapper)
+        private val createHandler: Handler<XcodeInstance> =
+            jsonHandler<XcodeInstance>(clientOptions.jsonMapper)
 
         override fun create(
             params: XcodeInstanceCreateParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<XcodeInstances> {
+        ): HttpResponseFor<XcodeInstance> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
@@ -105,8 +105,8 @@ class XcodeInstanceServiceImpl internal constructor(private val clientOptions: C
             }
         }
 
-        private val listHandler: Handler<List<XcodeInstances>> =
-            jsonHandler<List<XcodeInstances>>(clientOptions.jsonMapper)
+        private val listHandler: Handler<List<XcodeInstance>> =
+            jsonHandler<List<XcodeInstance>>(clientOptions.jsonMapper)
 
         override fun list(
             params: XcodeInstanceListParams,
@@ -163,13 +163,13 @@ class XcodeInstanceServiceImpl internal constructor(private val clientOptions: C
             }
         }
 
-        private val getHandler: Handler<XcodeInstances> =
-            jsonHandler<XcodeInstances>(clientOptions.jsonMapper)
+        private val getHandler: Handler<XcodeInstance> =
+            jsonHandler<XcodeInstance>(clientOptions.jsonMapper)
 
         override fun get(
             params: XcodeInstanceGetParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<XcodeInstances> {
+        ): HttpResponseFor<XcodeInstance> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
