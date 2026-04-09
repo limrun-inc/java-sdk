@@ -1,0 +1,212 @@
+// File generated from our OpenAPI spec by Stainless.
+
+package com.limrun.api.services.async
+
+import com.limrun.api.core.ClientOptions
+import com.limrun.api.core.RequestOptions
+import com.limrun.api.core.checkRequired
+import com.limrun.api.core.handlers.emptyHandler
+import com.limrun.api.core.handlers.errorBodyHandler
+import com.limrun.api.core.handlers.errorHandler
+import com.limrun.api.core.handlers.jsonHandler
+import com.limrun.api.core.http.HttpMethod
+import com.limrun.api.core.http.HttpRequest
+import com.limrun.api.core.http.HttpResponse
+import com.limrun.api.core.http.HttpResponse.Handler
+import com.limrun.api.core.http.HttpResponseFor
+import com.limrun.api.core.http.json
+import com.limrun.api.core.http.parseable
+import com.limrun.api.core.prepareAsync
+import com.limrun.api.models.xcodeinstances.XcodeInstanceCreateParams
+import com.limrun.api.models.xcodeinstances.XcodeInstanceDeleteParams
+import com.limrun.api.models.xcodeinstances.XcodeInstanceGetParams
+import com.limrun.api.models.xcodeinstances.XcodeInstanceListPageAsync
+import com.limrun.api.models.xcodeinstances.XcodeInstanceListParams
+import com.limrun.api.models.xcodeinstances.XcodeInstances
+import java.util.concurrent.CompletableFuture
+import java.util.function.Consumer
+import kotlin.jvm.optionals.getOrNull
+
+class XcodeInstanceServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
+    XcodeInstanceServiceAsync {
+
+    private val withRawResponse: XcodeInstanceServiceAsync.WithRawResponse by lazy {
+        WithRawResponseImpl(clientOptions)
+    }
+
+    override fun withRawResponse(): XcodeInstanceServiceAsync.WithRawResponse = withRawResponse
+
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): XcodeInstanceServiceAsync =
+        XcodeInstanceServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
+    override fun create(
+        params: XcodeInstanceCreateParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<XcodeInstances> =
+        // post /v1/xcode_instances
+        withRawResponse().create(params, requestOptions).thenApply { it.parse() }
+
+    override fun list(
+        params: XcodeInstanceListParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<XcodeInstanceListPageAsync> =
+        // get /v1/xcode_instances
+        withRawResponse().list(params, requestOptions).thenApply { it.parse() }
+
+    override fun delete(
+        params: XcodeInstanceDeleteParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<Void?> =
+        // delete /v1/xcode_instances/{id}
+        withRawResponse().delete(params, requestOptions).thenAccept {}
+
+    override fun get(
+        params: XcodeInstanceGetParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<XcodeInstances> =
+        // get /v1/xcode_instances/{id}
+        withRawResponse().get(params, requestOptions).thenApply { it.parse() }
+
+    class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
+        XcodeInstanceServiceAsync.WithRawResponse {
+
+        private val errorHandler: Handler<HttpResponse> =
+            errorHandler(errorBodyHandler(clientOptions.jsonMapper))
+
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): XcodeInstanceServiceAsync.WithRawResponse =
+            XcodeInstanceServiceAsyncImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
+
+        private val createHandler: Handler<XcodeInstances> =
+            jsonHandler<XcodeInstances>(clientOptions.jsonMapper)
+
+        override fun create(
+            params: XcodeInstanceCreateParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<XcodeInstances>> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.POST)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("v1", "xcode_instances")
+                    .body(json(clientOptions.jsonMapper, params._body()))
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    errorHandler.handle(response).parseable {
+                        response
+                            .use { createHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
+                    }
+                }
+        }
+
+        private val listHandler: Handler<List<XcodeInstances>> =
+            jsonHandler<List<XcodeInstances>>(clientOptions.jsonMapper)
+
+        override fun list(
+            params: XcodeInstanceListParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<XcodeInstanceListPageAsync>> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("v1", "xcode_instances")
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    errorHandler.handle(response).parseable {
+                        response
+                            .use { listHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.forEach { it.validate() }
+                                }
+                            }
+                            .let {
+                                XcodeInstanceListPageAsync.builder()
+                                    .service(XcodeInstanceServiceAsyncImpl(clientOptions))
+                                    .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
+                                    .params(params)
+                                    .items(it)
+                                    .build()
+                            }
+                    }
+                }
+        }
+
+        private val deleteHandler: Handler<Void?> = emptyHandler()
+
+        override fun delete(
+            params: XcodeInstanceDeleteParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponse> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("id", params.id().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.DELETE)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("v1", "xcode_instances", params._pathParam(0))
+                    .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    errorHandler.handle(response).parseable {
+                        response.use { deleteHandler.handle(it) }
+                    }
+                }
+        }
+
+        private val getHandler: Handler<XcodeInstances> =
+            jsonHandler<XcodeInstances>(clientOptions.jsonMapper)
+
+        override fun get(
+            params: XcodeInstanceGetParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<XcodeInstances>> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("id", params.id().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("v1", "xcode_instances", params._pathParam(0))
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    errorHandler.handle(response).parseable {
+                        response
+                            .use { getHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
+                    }
+                }
+        }
+    }
+}

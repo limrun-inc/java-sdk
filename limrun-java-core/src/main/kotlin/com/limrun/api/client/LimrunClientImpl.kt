@@ -10,6 +10,8 @@ import com.limrun.api.services.blocking.AssetService
 import com.limrun.api.services.blocking.AssetServiceImpl
 import com.limrun.api.services.blocking.IosInstanceService
 import com.limrun.api.services.blocking.IosInstanceServiceImpl
+import com.limrun.api.services.blocking.XcodeInstanceService
+import com.limrun.api.services.blocking.XcodeInstanceServiceImpl
 import java.util.function.Consumer
 
 class LimrunClientImpl(private val clientOptions: ClientOptions) : LimrunClient {
@@ -39,6 +41,10 @@ class LimrunClientImpl(private val clientOptions: ClientOptions) : LimrunClient 
         IosInstanceServiceImpl(clientOptionsWithUserAgent)
     }
 
+    private val xcodeInstances: XcodeInstanceService by lazy {
+        XcodeInstanceServiceImpl(clientOptionsWithUserAgent)
+    }
+
     override fun async(): LimrunClientAsync = async
 
     override fun withRawResponse(): LimrunClient.WithRawResponse = withRawResponse
@@ -51,6 +57,8 @@ class LimrunClientImpl(private val clientOptions: ClientOptions) : LimrunClient 
     override fun assets(): AssetService = assets
 
     override fun iosInstances(): IosInstanceService = iosInstances
+
+    override fun xcodeInstances(): XcodeInstanceService = xcodeInstances
 
     override fun close() = clientOptions.close()
 
@@ -69,6 +77,10 @@ class LimrunClientImpl(private val clientOptions: ClientOptions) : LimrunClient 
             IosInstanceServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val xcodeInstances: XcodeInstanceService.WithRawResponse by lazy {
+            XcodeInstanceServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): LimrunClient.WithRawResponse =
@@ -81,5 +93,7 @@ class LimrunClientImpl(private val clientOptions: ClientOptions) : LimrunClient 
         override fun assets(): AssetService.WithRawResponse = assets
 
         override fun iosInstances(): IosInstanceService.WithRawResponse = iosInstances
+
+        override fun xcodeInstances(): XcodeInstanceService.WithRawResponse = xcodeInstances
     }
 }

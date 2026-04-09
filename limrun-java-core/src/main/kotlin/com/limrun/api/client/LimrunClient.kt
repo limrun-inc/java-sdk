@@ -6,6 +6,7 @@ import com.limrun.api.core.ClientOptions
 import com.limrun.api.services.blocking.AndroidInstanceService
 import com.limrun.api.services.blocking.AssetService
 import com.limrun.api.services.blocking.IosInstanceService
+import com.limrun.api.services.blocking.XcodeInstanceService
 import java.util.function.Consumer
 
 /**
@@ -50,6 +51,8 @@ interface LimrunClient {
 
     fun iosInstances(): IosInstanceService
 
+    fun xcodeInstances(): XcodeInstanceService
+
     /**
      * Closes this client, relinquishing any underlying resources.
      *
@@ -78,5 +81,7 @@ interface LimrunClient {
         fun assets(): AssetService.WithRawResponse
 
         fun iosInstances(): IosInstanceService.WithRawResponse
+
+        fun xcodeInstances(): XcodeInstanceService.WithRawResponse
     }
 }
