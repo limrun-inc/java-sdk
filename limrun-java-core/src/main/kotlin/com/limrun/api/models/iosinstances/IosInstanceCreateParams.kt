@@ -821,7 +821,8 @@ private constructor(
 
         /**
          * After how many minutes of inactivity should the instance be terminated. Example values
-         * 1m, 10m, 3h. Default is 3m. Providing "0" disables inactivity checks altogether.
+         * 1m, 10m, 3h. Default is 3m. Providing "0" uses the organization's default inactivity
+         * timeout.
          *
          * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
          *   server responded with an unexpected value).
@@ -1002,8 +1003,8 @@ private constructor(
 
             /**
              * After how many minutes of inactivity should the instance be terminated. Example
-             * values 1m, 10m, 3h. Default is 3m. Providing "0" disables inactivity checks
-             * altogether.
+             * values 1m, 10m, 3h. Default is 3m. Providing "0" uses the organization's default
+             * inactivity timeout.
              */
             fun inactivityTimeout(inactivityTimeout: String) =
                 inactivityTimeout(JsonField.of(inactivityTimeout))
