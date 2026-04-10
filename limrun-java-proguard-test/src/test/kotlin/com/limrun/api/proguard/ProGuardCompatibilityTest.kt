@@ -86,6 +86,7 @@ internal class ProGuardCompatibilityTest {
                         .token("token")
                         .state(AndroidInstance.Status.State.UNKNOWN)
                         .adbWebSocketUrl("adbWebSocketUrl")
+                        .apiUrl("apiUrl")
                         .endpointWebSocketUrl("endpointWebSocketUrl")
                         .errorMessage("errorMessage")
                         .mcpUrl("mcpUrl")

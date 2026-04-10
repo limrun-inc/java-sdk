@@ -954,6 +954,7 @@ private constructor(
         private val token: JsonField<String>,
         private val state: JsonField<State>,
         private val adbWebSocketUrl: JsonField<String>,
+        private val apiUrl: JsonField<String>,
         private val endpointWebSocketUrl: JsonField<String>,
         private val errorMessage: JsonField<String>,
         private val mcpUrl: JsonField<String>,
@@ -969,6 +970,7 @@ private constructor(
             @JsonProperty("adbWebSocketUrl")
             @ExcludeMissing
             adbWebSocketUrl: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("apiUrl") @ExcludeMissing apiUrl: JsonField<String> = JsonMissing.of(),
             @JsonProperty("endpointWebSocketUrl")
             @ExcludeMissing
             endpointWebSocketUrl: JsonField<String> = JsonMissing.of(),
@@ -984,6 +986,7 @@ private constructor(
             token,
             state,
             adbWebSocketUrl,
+            apiUrl,
             endpointWebSocketUrl,
             errorMessage,
             mcpUrl,
@@ -1009,6 +1012,12 @@ private constructor(
          *   server responded with an unexpected value).
          */
         fun adbWebSocketUrl(): Optional<String> = adbWebSocketUrl.getOptional("adbWebSocketUrl")
+
+        /**
+         * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun apiUrl(): Optional<String> = apiUrl.getOptional("apiUrl")
 
         /**
          * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -1065,6 +1074,13 @@ private constructor(
         @JsonProperty("adbWebSocketUrl")
         @ExcludeMissing
         fun _adbWebSocketUrl(): JsonField<String> = adbWebSocketUrl
+
+        /**
+         * Returns the raw JSON value of [apiUrl].
+         *
+         * Unlike [apiUrl], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("apiUrl") @ExcludeMissing fun _apiUrl(): JsonField<String> = apiUrl
 
         /**
          * Returns the raw JSON value of [endpointWebSocketUrl].
@@ -1142,6 +1158,7 @@ private constructor(
             private var token: JsonField<String>? = null
             private var state: JsonField<State>? = null
             private var adbWebSocketUrl: JsonField<String> = JsonMissing.of()
+            private var apiUrl: JsonField<String> = JsonMissing.of()
             private var endpointWebSocketUrl: JsonField<String> = JsonMissing.of()
             private var errorMessage: JsonField<String> = JsonMissing.of()
             private var mcpUrl: JsonField<String> = JsonMissing.of()
@@ -1154,6 +1171,7 @@ private constructor(
                 token = status.token
                 state = status.state
                 adbWebSocketUrl = status.adbWebSocketUrl
+                apiUrl = status.apiUrl
                 endpointWebSocketUrl = status.endpointWebSocketUrl
                 errorMessage = status.errorMessage
                 mcpUrl = status.mcpUrl
@@ -1197,6 +1215,17 @@ private constructor(
             fun adbWebSocketUrl(adbWebSocketUrl: JsonField<String>) = apply {
                 this.adbWebSocketUrl = adbWebSocketUrl
             }
+
+            fun apiUrl(apiUrl: String) = apiUrl(JsonField.of(apiUrl))
+
+            /**
+             * Sets [Builder.apiUrl] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.apiUrl] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun apiUrl(apiUrl: JsonField<String>) = apply { this.apiUrl = apiUrl }
 
             fun endpointWebSocketUrl(endpointWebSocketUrl: String) =
                 endpointWebSocketUrl(JsonField.of(endpointWebSocketUrl))
@@ -1298,6 +1327,7 @@ private constructor(
                     checkRequired("token", token),
                     checkRequired("state", state),
                     adbWebSocketUrl,
+                    apiUrl,
                     endpointWebSocketUrl,
                     errorMessage,
                     mcpUrl,
@@ -1317,6 +1347,7 @@ private constructor(
             token()
             state().validate()
             adbWebSocketUrl()
+            apiUrl()
             endpointWebSocketUrl()
             errorMessage()
             mcpUrl()
@@ -1344,6 +1375,7 @@ private constructor(
             (if (token.asKnown().isPresent) 1 else 0) +
                 (state.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (adbWebSocketUrl.asKnown().isPresent) 1 else 0) +
+                (if (apiUrl.asKnown().isPresent) 1 else 0) +
                 (if (endpointWebSocketUrl.asKnown().isPresent) 1 else 0) +
                 (if (errorMessage.asKnown().isPresent) 1 else 0) +
                 (if (mcpUrl.asKnown().isPresent) 1 else 0) +
@@ -1806,6 +1838,7 @@ private constructor(
                 token == other.token &&
                 state == other.state &&
                 adbWebSocketUrl == other.adbWebSocketUrl &&
+                apiUrl == other.apiUrl &&
                 endpointWebSocketUrl == other.endpointWebSocketUrl &&
                 errorMessage == other.errorMessage &&
                 mcpUrl == other.mcpUrl &&
@@ -1819,6 +1852,7 @@ private constructor(
                 token,
                 state,
                 adbWebSocketUrl,
+                apiUrl,
                 endpointWebSocketUrl,
                 errorMessage,
                 mcpUrl,
@@ -1831,7 +1865,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Status{token=$token, state=$state, adbWebSocketUrl=$adbWebSocketUrl, endpointWebSocketUrl=$endpointWebSocketUrl, errorMessage=$errorMessage, mcpUrl=$mcpUrl, sandbox=$sandbox, targetHttpPortUrlPrefix=$targetHttpPortUrlPrefix, additionalProperties=$additionalProperties}"
+            "Status{token=$token, state=$state, adbWebSocketUrl=$adbWebSocketUrl, apiUrl=$apiUrl, endpointWebSocketUrl=$endpointWebSocketUrl, errorMessage=$errorMessage, mcpUrl=$mcpUrl, sandbox=$sandbox, targetHttpPortUrlPrefix=$targetHttpPortUrlPrefix, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {
