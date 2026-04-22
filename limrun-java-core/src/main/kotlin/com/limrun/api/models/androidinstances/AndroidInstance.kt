@@ -959,6 +959,7 @@ private constructor(
         private val errorMessage: JsonField<String>,
         private val mcpUrl: JsonField<String>,
         private val sandbox: JsonField<Sandbox>,
+        private val signedStreamUrl: JsonField<String>,
         private val targetHttpPortUrlPrefix: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
@@ -979,6 +980,9 @@ private constructor(
             errorMessage: JsonField<String> = JsonMissing.of(),
             @JsonProperty("mcpUrl") @ExcludeMissing mcpUrl: JsonField<String> = JsonMissing.of(),
             @JsonProperty("sandbox") @ExcludeMissing sandbox: JsonField<Sandbox> = JsonMissing.of(),
+            @JsonProperty("signedStreamUrl")
+            @ExcludeMissing
+            signedStreamUrl: JsonField<String> = JsonMissing.of(),
             @JsonProperty("targetHttpPortUrlPrefix")
             @ExcludeMissing
             targetHttpPortUrlPrefix: JsonField<String> = JsonMissing.of(),
@@ -991,6 +995,7 @@ private constructor(
             errorMessage,
             mcpUrl,
             sandbox,
+            signedStreamUrl,
             targetHttpPortUrlPrefix,
             mutableMapOf(),
         )
@@ -1043,6 +1048,12 @@ private constructor(
          *   server responded with an unexpected value).
          */
         fun sandbox(): Optional<Sandbox> = sandbox.getOptional("sandbox")
+
+        /**
+         * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun signedStreamUrl(): Optional<String> = signedStreamUrl.getOptional("signedStreamUrl")
 
         /**
          * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -1117,6 +1128,16 @@ private constructor(
         @JsonProperty("sandbox") @ExcludeMissing fun _sandbox(): JsonField<Sandbox> = sandbox
 
         /**
+         * Returns the raw JSON value of [signedStreamUrl].
+         *
+         * Unlike [signedStreamUrl], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("signedStreamUrl")
+        @ExcludeMissing
+        fun _signedStreamUrl(): JsonField<String> = signedStreamUrl
+
+        /**
          * Returns the raw JSON value of [targetHttpPortUrlPrefix].
          *
          * Unlike [targetHttpPortUrlPrefix], this method doesn't throw if the JSON field has an
@@ -1163,6 +1184,7 @@ private constructor(
             private var errorMessage: JsonField<String> = JsonMissing.of()
             private var mcpUrl: JsonField<String> = JsonMissing.of()
             private var sandbox: JsonField<Sandbox> = JsonMissing.of()
+            private var signedStreamUrl: JsonField<String> = JsonMissing.of()
             private var targetHttpPortUrlPrefix: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -1176,6 +1198,7 @@ private constructor(
                 errorMessage = status.errorMessage
                 mcpUrl = status.mcpUrl
                 sandbox = status.sandbox
+                signedStreamUrl = status.signedStreamUrl
                 targetHttpPortUrlPrefix = status.targetHttpPortUrlPrefix
                 additionalProperties = status.additionalProperties.toMutableMap()
             }
@@ -1276,6 +1299,20 @@ private constructor(
              */
             fun sandbox(sandbox: JsonField<Sandbox>) = apply { this.sandbox = sandbox }
 
+            fun signedStreamUrl(signedStreamUrl: String) =
+                signedStreamUrl(JsonField.of(signedStreamUrl))
+
+            /**
+             * Sets [Builder.signedStreamUrl] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.signedStreamUrl] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun signedStreamUrl(signedStreamUrl: JsonField<String>) = apply {
+                this.signedStreamUrl = signedStreamUrl
+            }
+
             fun targetHttpPortUrlPrefix(targetHttpPortUrlPrefix: String) =
                 targetHttpPortUrlPrefix(JsonField.of(targetHttpPortUrlPrefix))
 
@@ -1332,6 +1369,7 @@ private constructor(
                     errorMessage,
                     mcpUrl,
                     sandbox,
+                    signedStreamUrl,
                     targetHttpPortUrlPrefix,
                     additionalProperties.toMutableMap(),
                 )
@@ -1352,6 +1390,7 @@ private constructor(
             errorMessage()
             mcpUrl()
             sandbox().ifPresent { it.validate() }
+            signedStreamUrl()
             targetHttpPortUrlPrefix()
             validated = true
         }
@@ -1380,6 +1419,7 @@ private constructor(
                 (if (errorMessage.asKnown().isPresent) 1 else 0) +
                 (if (mcpUrl.asKnown().isPresent) 1 else 0) +
                 (sandbox.asKnown().getOrNull()?.validity() ?: 0) +
+                (if (signedStreamUrl.asKnown().isPresent) 1 else 0) +
                 (if (targetHttpPortUrlPrefix.asKnown().isPresent) 1 else 0)
 
         class State @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
@@ -1843,6 +1883,7 @@ private constructor(
                 errorMessage == other.errorMessage &&
                 mcpUrl == other.mcpUrl &&
                 sandbox == other.sandbox &&
+                signedStreamUrl == other.signedStreamUrl &&
                 targetHttpPortUrlPrefix == other.targetHttpPortUrlPrefix &&
                 additionalProperties == other.additionalProperties
         }
@@ -1857,6 +1898,7 @@ private constructor(
                 errorMessage,
                 mcpUrl,
                 sandbox,
+                signedStreamUrl,
                 targetHttpPortUrlPrefix,
                 additionalProperties,
             )
@@ -1865,7 +1907,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Status{token=$token, state=$state, adbWebSocketUrl=$adbWebSocketUrl, apiUrl=$apiUrl, endpointWebSocketUrl=$endpointWebSocketUrl, errorMessage=$errorMessage, mcpUrl=$mcpUrl, sandbox=$sandbox, targetHttpPortUrlPrefix=$targetHttpPortUrlPrefix, additionalProperties=$additionalProperties}"
+            "Status{token=$token, state=$state, adbWebSocketUrl=$adbWebSocketUrl, apiUrl=$apiUrl, endpointWebSocketUrl=$endpointWebSocketUrl, errorMessage=$errorMessage, mcpUrl=$mcpUrl, sandbox=$sandbox, signedStreamUrl=$signedStreamUrl, targetHttpPortUrlPrefix=$targetHttpPortUrlPrefix, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {
