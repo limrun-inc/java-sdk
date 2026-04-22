@@ -99,6 +99,7 @@ internal class ProGuardCompatibilityTest {
                                 )
                                 .build()
                         )
+                        .signedStreamUrl("signedStreamUrl")
                         .targetHttpPortUrlPrefix("targetHttpPortUrlPrefix")
                         .build()
                 )
