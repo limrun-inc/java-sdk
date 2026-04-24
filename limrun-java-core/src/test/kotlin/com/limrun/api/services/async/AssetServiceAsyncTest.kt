@@ -25,6 +25,7 @@ internal class AssetServiceAsyncTest {
                     .includeUploadUrl(true)
                     .limit(50L)
                     .nameFilter("nameFilter")
+                    .namePrefixFilter("namePrefixFilter")
                     .build()
             )
 

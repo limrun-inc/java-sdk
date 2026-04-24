@@ -16,6 +16,7 @@ internal class AssetListParamsTest {
             .includeUploadUrl(true)
             .limit(50L)
             .nameFilter("nameFilter")
+            .namePrefixFilter("namePrefixFilter")
             .build()
     }
 
@@ -28,6 +29,7 @@ internal class AssetListParamsTest {
                 .includeUploadUrl(true)
                 .limit(50L)
                 .nameFilter("nameFilter")
+                .namePrefixFilter("namePrefixFilter")
                 .build()
 
         val queryParams = params._queryParams()
@@ -40,6 +42,7 @@ internal class AssetListParamsTest {
                     .put("includeUploadUrl", "true")
                     .put("limit", "50")
                     .put("nameFilter", "nameFilter")
+                    .put("namePrefixFilter", "namePrefixFilter")
                     .build()
             )
     }
