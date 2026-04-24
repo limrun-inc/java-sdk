@@ -17,6 +17,7 @@ private constructor(
     private val includeUploadUrl: Boolean?,
     private val limit: Long?,
     private val nameFilter: String?,
+    private val namePrefixFilter: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
@@ -36,8 +37,22 @@ private constructor(
     /** Maximum number of items to be returned. The default is 50. */
     fun limit(): Optional<Long> = Optional.ofNullable(limit)
 
-    /** Query by file name */
+    /**
+     * Case-sensitive exact match on the asset name. Cannot be combined with namePrefixFilter. When
+     * combined with includeAppStore=true, a leading "appstore/" is stripped before querying App
+     * Store assets (whose stored names never carry the prefix).
+     */
     fun nameFilter(): Optional<String> = Optional.ofNullable(nameFilter)
+
+    /**
+     * Case-sensitive prefix match on the asset name. LIKE wildcards ("%", "_") in the value are
+     * treated as literal characters, not wildcards. Empty string is rejected with 400; omit the
+     * parameter if no filtering is desired. Cannot be combined with nameFilter. When combined with
+     * includeAppStore=true, a leading "appstore/" is stripped before querying App Store assets
+     * (whose stored names never carry the prefix); a partial prefix like "appstor" will not match
+     * any App Store assets.
+     */
+    fun namePrefixFilter(): Optional<String> = Optional.ofNullable(namePrefixFilter)
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -63,6 +78,7 @@ private constructor(
         private var includeUploadUrl: Boolean? = null
         private var limit: Long? = null
         private var nameFilter: String? = null
+        private var namePrefixFilter: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
@@ -73,6 +89,7 @@ private constructor(
             includeUploadUrl = assetListParams.includeUploadUrl
             limit = assetListParams.limit
             nameFilter = assetListParams.nameFilter
+            namePrefixFilter = assetListParams.namePrefixFilter
             additionalHeaders = assetListParams.additionalHeaders.toBuilder()
             additionalQueryParams = assetListParams.additionalQueryParams.toBuilder()
         }
@@ -145,11 +162,31 @@ private constructor(
         /** Alias for calling [Builder.limit] with `limit.orElse(null)`. */
         fun limit(limit: Optional<Long>) = limit(limit.getOrNull())
 
-        /** Query by file name */
+        /**
+         * Case-sensitive exact match on the asset name. Cannot be combined with namePrefixFilter.
+         * When combined with includeAppStore=true, a leading "appstore/" is stripped before
+         * querying App Store assets (whose stored names never carry the prefix).
+         */
         fun nameFilter(nameFilter: String?) = apply { this.nameFilter = nameFilter }
 
         /** Alias for calling [Builder.nameFilter] with `nameFilter.orElse(null)`. */
         fun nameFilter(nameFilter: Optional<String>) = nameFilter(nameFilter.getOrNull())
+
+        /**
+         * Case-sensitive prefix match on the asset name. LIKE wildcards ("%", "_") in the value are
+         * treated as literal characters, not wildcards. Empty string is rejected with 400; omit the
+         * parameter if no filtering is desired. Cannot be combined with nameFilter. When combined
+         * with includeAppStore=true, a leading "appstore/" is stripped before querying App Store
+         * assets (whose stored names never carry the prefix); a partial prefix like "appstor" will
+         * not match any App Store assets.
+         */
+        fun namePrefixFilter(namePrefixFilter: String?) = apply {
+            this.namePrefixFilter = namePrefixFilter
+        }
+
+        /** Alias for calling [Builder.namePrefixFilter] with `namePrefixFilter.orElse(null)`. */
+        fun namePrefixFilter(namePrefixFilter: Optional<String>) =
+            namePrefixFilter(namePrefixFilter.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -261,6 +298,7 @@ private constructor(
                 includeUploadUrl,
                 limit,
                 nameFilter,
+                namePrefixFilter,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
@@ -276,6 +314,7 @@ private constructor(
                 includeUploadUrl?.let { put("includeUploadUrl", it.toString()) }
                 limit?.let { put("limit", it.toString()) }
                 nameFilter?.let { put("nameFilter", it) }
+                namePrefixFilter?.let { put("namePrefixFilter", it) }
                 putAll(additionalQueryParams)
             }
             .build()
@@ -291,6 +330,7 @@ private constructor(
             includeUploadUrl == other.includeUploadUrl &&
             limit == other.limit &&
             nameFilter == other.nameFilter &&
+            namePrefixFilter == other.namePrefixFilter &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
@@ -302,10 +342,11 @@ private constructor(
             includeUploadUrl,
             limit,
             nameFilter,
+            namePrefixFilter,
             additionalHeaders,
             additionalQueryParams,
         )
 
     override fun toString() =
-        "AssetListParams{includeAppStore=$includeAppStore, includeDownloadUrl=$includeDownloadUrl, includeUploadUrl=$includeUploadUrl, limit=$limit, nameFilter=$nameFilter, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "AssetListParams{includeAppStore=$includeAppStore, includeDownloadUrl=$includeDownloadUrl, includeUploadUrl=$includeUploadUrl, limit=$limit, nameFilter=$nameFilter, namePrefixFilter=$namePrefixFilter, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }
