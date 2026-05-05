@@ -5,12 +5,16 @@ package com.limrun.api.errors
 import com.limrun.api.core.JsonValue
 import com.limrun.api.core.checkRequired
 import com.limrun.api.core.http.Headers
+import com.limrun.api.core.jsonMapper
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class RateLimitException
 private constructor(private val headers: Headers, private val body: JsonValue, cause: Throwable?) :
-    LimrunServiceException("429: $body", cause) {
+    LimrunServiceException(
+        "429: ${if (body.isMissing()) "Unknown" else jsonMapper().writeValueAsString(body)}",
+        cause,
+    ) {
 
     override fun statusCode(): Int = 429
 

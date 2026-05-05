@@ -437,6 +437,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws LimrunInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): Body = apply {
             if (validated) {
                 return@apply
@@ -615,6 +624,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws LimrunInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): Metadata = apply {
             if (validated) {
                 return@apply
@@ -705,6 +723,16 @@ private constructor(
 
             private var validated: Boolean = false
 
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws LimrunInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
+             */
             fun validate(): Labels = apply {
                 if (validated) {
                     return@apply
@@ -1092,6 +1120,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws LimrunInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): Spec = apply {
             if (validated) {
                 return@apply
@@ -1315,6 +1352,16 @@ private constructor(
 
             private var validated: Boolean = false
 
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws LimrunInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
+             */
             fun validate(): Clue = apply {
                 if (validated) {
                     return@apply
@@ -1438,6 +1485,16 @@ private constructor(
 
                 private var validated: Boolean = false
 
+                /**
+                 * Validates that the types of all values in this object match their expected types
+                 * recursively.
+                 *
+                 * This method is _not_ forwards compatible with new types from the API for existing
+                 * fields.
+                 *
+                 * @throws LimrunInvalidDataException if any value type in this object doesn't match
+                 *   its expected type.
+                 */
                 fun validate(): Kind = apply {
                     if (validated) {
                         return@apply
@@ -1898,6 +1955,16 @@ private constructor(
 
             private var validated: Boolean = false
 
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws LimrunInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
+             */
             fun validate(): InitialAsset = apply {
                 if (validated) {
                     return@apply
@@ -2031,6 +2098,16 @@ private constructor(
 
                 private var validated: Boolean = false
 
+                /**
+                 * Validates that the types of all values in this object match their expected types
+                 * recursively.
+                 *
+                 * This method is _not_ forwards compatible with new types from the API for existing
+                 * fields.
+                 *
+                 * @throws LimrunInvalidDataException if any value type in this object doesn't match
+                 *   its expected type.
+                 */
                 fun validate(): Kind = apply {
                     if (validated) {
                         return@apply
@@ -2223,6 +2300,16 @@ private constructor(
 
                 private var validated: Boolean = false
 
+                /**
+                 * Validates that the types of all values in this object match their expected types
+                 * recursively.
+                 *
+                 * This method is _not_ forwards compatible with new types from the API for existing
+                 * fields.
+                 *
+                 * @throws LimrunInvalidDataException if any value type in this object doesn't match
+                 *   its expected type.
+                 */
                 fun validate(): Configuration = apply {
                     if (validated) {
                         return@apply
@@ -2340,6 +2427,16 @@ private constructor(
 
                     private var validated: Boolean = false
 
+                    /**
+                     * Validates that the types of all values in this object match their expected
+                     * types recursively.
+                     *
+                     * This method is _not_ forwards compatible with new types from the API for
+                     * existing fields.
+                     *
+                     * @throws LimrunInvalidDataException if any value type in this object doesn't
+                     *   match its expected type.
+                     */
                     fun validate(): Kind = apply {
                         if (validated) {
                             return@apply
@@ -2474,6 +2571,16 @@ private constructor(
 
                     private var validated: Boolean = false
 
+                    /**
+                     * Validates that the types of all values in this object match their expected
+                     * types recursively.
+                     *
+                     * This method is _not_ forwards compatible with new types from the API for
+                     * existing fields.
+                     *
+                     * @throws LimrunInvalidDataException if any value type in this object doesn't
+                     *   match its expected type.
+                     */
                     fun validate(): ChromeFlag = apply {
                         if (validated) {
                             return@apply
@@ -2645,6 +2752,16 @@ private constructor(
 
                 private var validated: Boolean = false
 
+                /**
+                 * Validates that the types of all values in this object match their expected types
+                 * recursively.
+                 *
+                 * This method is _not_ forwards compatible with new types from the API for existing
+                 * fields.
+                 *
+                 * @throws LimrunInvalidDataException if any value type in this object doesn't match
+                 *   its expected type.
+                 */
                 fun validate(): Source = apply {
                     if (validated) {
                         return@apply
@@ -2828,6 +2945,16 @@ private constructor(
 
             private var validated: Boolean = false
 
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws LimrunInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
+             */
             fun validate(): Sandbox = apply {
                 if (validated) {
                     return@apply
@@ -2962,6 +3089,16 @@ private constructor(
 
                 private var validated: Boolean = false
 
+                /**
+                 * Validates that the types of all values in this object match their expected types
+                 * recursively.
+                 *
+                 * This method is _not_ forwards compatible with new types from the API for existing
+                 * fields.
+                 *
+                 * @throws LimrunInvalidDataException if any value type in this object doesn't match
+                 *   its expected type.
+                 */
                 fun validate(): PlaywrightAndroid = apply {
                     if (validated) {
                         return@apply
