@@ -5,6 +5,7 @@ package com.limrun.api.errors
 import com.limrun.api.core.JsonValue
 import com.limrun.api.core.checkRequired
 import com.limrun.api.core.http.Headers
+import com.limrun.api.core.jsonMapper
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -14,7 +15,11 @@ private constructor(
     private val headers: Headers,
     private val body: JsonValue,
     cause: Throwable?,
-) : LimrunServiceException("$statusCode: $body", cause) {
+) :
+    LimrunServiceException(
+        "$statusCode: ${if (body.isMissing()) "Unknown" else jsonMapper().writeValueAsString(body)}",
+        cause,
+    ) {
 
     override fun statusCode(): Int = statusCode
 
