@@ -136,6 +136,12 @@ internal class ErrorHandlingTest {
                                                 .PlaywrightAndroid
                                                 .builder()
                                                 .enabled(true)
+                                                .version(
+                                                    AndroidInstanceCreateParams.Spec.Sandbox
+                                                        .PlaywrightAndroid
+                                                        .Version
+                                                        ._1_56_1_LIM_1
+                                                )
                                                 .build()
                                         )
                                         .build()
@@ -229,6 +235,12 @@ internal class ErrorHandlingTest {
                                                 .PlaywrightAndroid
                                                 .builder()
                                                 .enabled(true)
+                                                .version(
+                                                    AndroidInstanceCreateParams.Spec.Sandbox
+                                                        .PlaywrightAndroid
+                                                        .Version
+                                                        ._1_56_1_LIM_1
+                                                )
                                                 .build()
                                         )
                                         .build()
@@ -322,6 +334,12 @@ internal class ErrorHandlingTest {
                                                 .PlaywrightAndroid
                                                 .builder()
                                                 .enabled(true)
+                                                .version(
+                                                    AndroidInstanceCreateParams.Spec.Sandbox
+                                                        .PlaywrightAndroid
+                                                        .Version
+                                                        ._1_56_1_LIM_1
+                                                )
                                                 .build()
                                         )
                                         .build()
@@ -415,6 +433,12 @@ internal class ErrorHandlingTest {
                                                 .PlaywrightAndroid
                                                 .builder()
                                                 .enabled(true)
+                                                .version(
+                                                    AndroidInstanceCreateParams.Spec.Sandbox
+                                                        .PlaywrightAndroid
+                                                        .Version
+                                                        ._1_56_1_LIM_1
+                                                )
                                                 .build()
                                         )
                                         .build()
@@ -508,6 +532,12 @@ internal class ErrorHandlingTest {
                                                 .PlaywrightAndroid
                                                 .builder()
                                                 .enabled(true)
+                                                .version(
+                                                    AndroidInstanceCreateParams.Spec.Sandbox
+                                                        .PlaywrightAndroid
+                                                        .Version
+                                                        ._1_56_1_LIM_1
+                                                )
                                                 .build()
                                         )
                                         .build()
@@ -601,6 +631,12 @@ internal class ErrorHandlingTest {
                                                 .PlaywrightAndroid
                                                 .builder()
                                                 .enabled(true)
+                                                .version(
+                                                    AndroidInstanceCreateParams.Spec.Sandbox
+                                                        .PlaywrightAndroid
+                                                        .Version
+                                                        ._1_56_1_LIM_1
+                                                )
                                                 .build()
                                         )
                                         .build()
@@ -694,6 +730,12 @@ internal class ErrorHandlingTest {
                                                 .PlaywrightAndroid
                                                 .builder()
                                                 .enabled(true)
+                                                .version(
+                                                    AndroidInstanceCreateParams.Spec.Sandbox
+                                                        .PlaywrightAndroid
+                                                        .Version
+                                                        ._1_56_1_LIM_1
+                                                )
                                                 .build()
                                         )
                                         .build()
@@ -787,6 +829,12 @@ internal class ErrorHandlingTest {
                                                 .PlaywrightAndroid
                                                 .builder()
                                                 .enabled(true)
+                                                .version(
+                                                    AndroidInstanceCreateParams.Spec.Sandbox
+                                                        .PlaywrightAndroid
+                                                        .Version
+                                                        ._1_56_1_LIM_1
+                                                )
                                                 .build()
                                         )
                                         .build()
@@ -880,6 +928,12 @@ internal class ErrorHandlingTest {
                                                 .PlaywrightAndroid
                                                 .builder()
                                                 .enabled(true)
+                                                .version(
+                                                    AndroidInstanceCreateParams.Spec.Sandbox
+                                                        .PlaywrightAndroid
+                                                        .Version
+                                                        ._1_56_1_LIM_1
+                                                )
                                                 .build()
                                         )
                                         .build()
@@ -973,6 +1027,12 @@ internal class ErrorHandlingTest {
                                                 .PlaywrightAndroid
                                                 .builder()
                                                 .enabled(true)
+                                                .version(
+                                                    AndroidInstanceCreateParams.Spec.Sandbox
+                                                        .PlaywrightAndroid
+                                                        .Version
+                                                        ._1_56_1_LIM_1
+                                                )
                                                 .build()
                                         )
                                         .build()
@@ -1066,6 +1126,12 @@ internal class ErrorHandlingTest {
                                                 .PlaywrightAndroid
                                                 .builder()
                                                 .enabled(true)
+                                                .version(
+                                                    AndroidInstanceCreateParams.Spec.Sandbox
+                                                        .PlaywrightAndroid
+                                                        .Version
+                                                        ._1_56_1_LIM_1
+                                                )
                                                 .build()
                                         )
                                         .build()
@@ -1159,6 +1225,12 @@ internal class ErrorHandlingTest {
                                                 .PlaywrightAndroid
                                                 .builder()
                                                 .enabled(true)
+                                                .version(
+                                                    AndroidInstanceCreateParams.Spec.Sandbox
+                                                        .PlaywrightAndroid
+                                                        .Version
+                                                        ._1_56_1_LIM_1
+                                                )
                                                 .build()
                                         )
                                         .build()
@@ -1252,6 +1324,12 @@ internal class ErrorHandlingTest {
                                                 .PlaywrightAndroid
                                                 .builder()
                                                 .enabled(true)
+                                                .version(
+                                                    AndroidInstanceCreateParams.Spec.Sandbox
+                                                        .PlaywrightAndroid
+                                                        .Version
+                                                        ._1_56_1_LIM_1
+                                                )
                                                 .build()
                                         )
                                         .build()
@@ -1345,6 +1423,12 @@ internal class ErrorHandlingTest {
                                                 .PlaywrightAndroid
                                                 .builder()
                                                 .enabled(true)
+                                                .version(
+                                                    AndroidInstanceCreateParams.Spec.Sandbox
+                                                        .PlaywrightAndroid
+                                                        .Version
+                                                        ._1_56_1_LIM_1
+                                                )
                                                 .build()
                                         )
                                         .build()
@@ -1438,6 +1522,12 @@ internal class ErrorHandlingTest {
                                                 .PlaywrightAndroid
                                                 .builder()
                                                 .enabled(true)
+                                                .version(
+                                                    AndroidInstanceCreateParams.Spec.Sandbox
+                                                        .PlaywrightAndroid
+                                                        .Version
+                                                        ._1_56_1_LIM_1
+                                                )
                                                 .build()
                                         )
                                         .build()
@@ -1531,6 +1621,12 @@ internal class ErrorHandlingTest {
                                                 .PlaywrightAndroid
                                                 .builder()
                                                 .enabled(true)
+                                                .version(
+                                                    AndroidInstanceCreateParams.Spec.Sandbox
+                                                        .PlaywrightAndroid
+                                                        .Version
+                                                        ._1_56_1_LIM_1
+                                                )
                                                 .build()
                                         )
                                         .build()
@@ -1622,6 +1718,12 @@ internal class ErrorHandlingTest {
                                                 .PlaywrightAndroid
                                                 .builder()
                                                 .enabled(true)
+                                                .version(
+                                                    AndroidInstanceCreateParams.Spec.Sandbox
+                                                        .PlaywrightAndroid
+                                                        .Version
+                                                        ._1_56_1_LIM_1
+                                                )
                                                 .build()
                                         )
                                         .build()

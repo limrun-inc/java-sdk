@@ -2986,6 +2986,7 @@ private constructor(
             @JsonCreator(mode = JsonCreator.Mode.DISABLED)
             private constructor(
                 private val enabled: JsonField<Boolean>,
+                private val version: JsonField<Version>,
                 private val additionalProperties: MutableMap<String, JsonValue>,
             ) {
 
@@ -2993,14 +2994,23 @@ private constructor(
                 private constructor(
                     @JsonProperty("enabled")
                     @ExcludeMissing
-                    enabled: JsonField<Boolean> = JsonMissing.of()
-                ) : this(enabled, mutableMapOf())
+                    enabled: JsonField<Boolean> = JsonMissing.of(),
+                    @JsonProperty("version")
+                    @ExcludeMissing
+                    version: JsonField<Version> = JsonMissing.of(),
+                ) : this(enabled, version, mutableMapOf())
 
                 /**
                  * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g.
                  *   if the server responded with an unexpected value).
                  */
                 fun enabled(): Optional<Boolean> = enabled.getOptional("enabled")
+
+                /**
+                 * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g.
+                 *   if the server responded with an unexpected value).
+                 */
+                fun version(): Optional<Version> = version.getOptional("version")
 
                 /**
                  * Returns the raw JSON value of [enabled].
@@ -3011,6 +3021,16 @@ private constructor(
                 @JsonProperty("enabled")
                 @ExcludeMissing
                 fun _enabled(): JsonField<Boolean> = enabled
+
+                /**
+                 * Returns the raw JSON value of [version].
+                 *
+                 * Unlike [version], this method doesn't throw if the JSON field has an unexpected
+                 * type.
+                 */
+                @JsonProperty("version")
+                @ExcludeMissing
+                fun _version(): JsonField<Version> = version
 
                 @JsonAnySetter
                 private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -3037,11 +3057,13 @@ private constructor(
                 class Builder internal constructor() {
 
                     private var enabled: JsonField<Boolean> = JsonMissing.of()
+                    private var version: JsonField<Version> = JsonMissing.of()
                     private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                     @JvmSynthetic
                     internal fun from(playwrightAndroid: PlaywrightAndroid) = apply {
                         enabled = playwrightAndroid.enabled
+                        version = playwrightAndroid.version
                         additionalProperties = playwrightAndroid.additionalProperties.toMutableMap()
                     }
 
@@ -3055,6 +3077,17 @@ private constructor(
                      * not yet supported value.
                      */
                     fun enabled(enabled: JsonField<Boolean>) = apply { this.enabled = enabled }
+
+                    fun version(version: Version) = version(JsonField.of(version))
+
+                    /**
+                     * Sets [Builder.version] to an arbitrary JSON value.
+                     *
+                     * You should usually call [Builder.version] with a well-typed [Version] value
+                     * instead. This method is primarily for setting the field to an undocumented or
+                     * not yet supported value.
+                     */
+                    fun version(version: JsonField<Version>) = apply { this.version = version }
 
                     fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                         this.additionalProperties.clear()
@@ -3084,7 +3117,7 @@ private constructor(
                      * Further updates to this [Builder] will not mutate the returned instance.
                      */
                     fun build(): PlaywrightAndroid =
-                        PlaywrightAndroid(enabled, additionalProperties.toMutableMap())
+                        PlaywrightAndroid(enabled, version, additionalProperties.toMutableMap())
                 }
 
                 private var validated: Boolean = false
@@ -3105,6 +3138,7 @@ private constructor(
                     }
 
                     enabled()
+                    version().ifPresent { it.validate() }
                     validated = true
                 }
 
@@ -3123,7 +3157,153 @@ private constructor(
                  * Used for best match union deserialization.
                  */
                 @JvmSynthetic
-                internal fun validity(): Int = (if (enabled.asKnown().isPresent) 1 else 0)
+                internal fun validity(): Int =
+                    (if (enabled.asKnown().isPresent) 1 else 0) +
+                        (version.asKnown().getOrNull()?.validity() ?: 0)
+
+                class Version
+                @JsonCreator
+                private constructor(private val value: JsonField<String>) : Enum {
+
+                    /**
+                     * Returns this class instance's raw value.
+                     *
+                     * This is usually only useful if this instance was deserialized from data that
+                     * doesn't match any known member, and you want to know that value. For example,
+                     * if the SDK is on an older version than the API, then the API may respond with
+                     * new members that the SDK is unaware of.
+                     */
+                    @com.fasterxml.jackson.annotation.JsonValue
+                    fun _value(): JsonField<String> = value
+
+                    companion object {
+
+                        @JvmField val _1_56_1_LIM_1 = of("1.56.1-lim.1")
+
+                        @JvmField val _1_60_0_LIM_1 = of("1.60.0-lim.1")
+
+                        @JvmStatic fun of(value: String) = Version(JsonField.of(value))
+                    }
+
+                    /** An enum containing [Version]'s known values. */
+                    enum class Known {
+                        _1_56_1_LIM_1,
+                        _1_60_0_LIM_1,
+                    }
+
+                    /**
+                     * An enum containing [Version]'s known values, as well as an [_UNKNOWN] member.
+                     *
+                     * An instance of [Version] can contain an unknown value in a couple of cases:
+                     * - It was deserialized from data that doesn't match any known member. For
+                     *   example, if the SDK is on an older version than the API, then the API may
+                     *   respond with new members that the SDK is unaware of.
+                     * - It was constructed with an arbitrary value using the [of] method.
+                     */
+                    enum class Value {
+                        _1_56_1_LIM_1,
+                        _1_60_0_LIM_1,
+                        /**
+                         * An enum member indicating that [Version] was instantiated with an unknown
+                         * value.
+                         */
+                        _UNKNOWN,
+                    }
+
+                    /**
+                     * Returns an enum member corresponding to this class instance's value, or
+                     * [Value._UNKNOWN] if the class was instantiated with an unknown value.
+                     *
+                     * Use the [known] method instead if you're certain the value is always known or
+                     * if you want to throw for the unknown case.
+                     */
+                    fun value(): Value =
+                        when (this) {
+                            _1_56_1_LIM_1 -> Value._1_56_1_LIM_1
+                            _1_60_0_LIM_1 -> Value._1_60_0_LIM_1
+                            else -> Value._UNKNOWN
+                        }
+
+                    /**
+                     * Returns an enum member corresponding to this class instance's value.
+                     *
+                     * Use the [value] method instead if you're uncertain the value is always known
+                     * and don't want to throw for the unknown case.
+                     *
+                     * @throws LimrunInvalidDataException if this class instance's value is a not a
+                     *   known member.
+                     */
+                    fun known(): Known =
+                        when (this) {
+                            _1_56_1_LIM_1 -> Known._1_56_1_LIM_1
+                            _1_60_0_LIM_1 -> Known._1_60_0_LIM_1
+                            else -> throw LimrunInvalidDataException("Unknown Version: $value")
+                        }
+
+                    /**
+                     * Returns this class instance's primitive wire representation.
+                     *
+                     * This differs from the [toString] method because that method is primarily for
+                     * debugging and generally doesn't throw.
+                     *
+                     * @throws LimrunInvalidDataException if this class instance's value does not
+                     *   have the expected primitive type.
+                     */
+                    fun asString(): String =
+                        _value().asString().orElseThrow {
+                            LimrunInvalidDataException("Value is not a String")
+                        }
+
+                    private var validated: Boolean = false
+
+                    /**
+                     * Validates that the types of all values in this object match their expected
+                     * types recursively.
+                     *
+                     * This method is _not_ forwards compatible with new types from the API for
+                     * existing fields.
+                     *
+                     * @throws LimrunInvalidDataException if any value type in this object doesn't
+                     *   match its expected type.
+                     */
+                    fun validate(): Version = apply {
+                        if (validated) {
+                            return@apply
+                        }
+
+                        known()
+                        validated = true
+                    }
+
+                    fun isValid(): Boolean =
+                        try {
+                            validate()
+                            true
+                        } catch (e: LimrunInvalidDataException) {
+                            false
+                        }
+
+                    /**
+                     * Returns a score indicating how many valid values are contained in this object
+                     * recursively.
+                     *
+                     * Used for best match union deserialization.
+                     */
+                    @JvmSynthetic
+                    internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+                    override fun equals(other: Any?): Boolean {
+                        if (this === other) {
+                            return true
+                        }
+
+                        return other is Version && value == other.value
+                    }
+
+                    override fun hashCode() = value.hashCode()
+
+                    override fun toString() = value.toString()
+                }
 
                 override fun equals(other: Any?): Boolean {
                     if (this === other) {
@@ -3132,15 +3312,18 @@ private constructor(
 
                     return other is PlaywrightAndroid &&
                         enabled == other.enabled &&
+                        version == other.version &&
                         additionalProperties == other.additionalProperties
                 }
 
-                private val hashCode: Int by lazy { Objects.hash(enabled, additionalProperties) }
+                private val hashCode: Int by lazy {
+                    Objects.hash(enabled, version, additionalProperties)
+                }
 
                 override fun hashCode(): Int = hashCode
 
                 override fun toString() =
-                    "PlaywrightAndroid{enabled=$enabled, additionalProperties=$additionalProperties}"
+                    "PlaywrightAndroid{enabled=$enabled, version=$version, additionalProperties=$additionalProperties}"
             }
 
             override fun equals(other: Any?): Boolean {
