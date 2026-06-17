@@ -102,6 +102,12 @@ internal class ServiceParamsTest {
                                     AndroidInstanceCreateParams.Spec.Sandbox.PlaywrightAndroid
                                         .builder()
                                         .enabled(true)
+                                        .version(
+                                            AndroidInstanceCreateParams.Spec.Sandbox
+                                                .PlaywrightAndroid
+                                                .Version
+                                                ._1_56_1_LIM_1
+                                        )
                                         .build()
                                 )
                                 .build()
