@@ -66,7 +66,9 @@ internal class AssetServiceTest {
         val assetService = client.assets()
 
         val response =
-            assetService.getOrCreate(AssetGetOrCreateParams.builder().name("name").build())
+            assetService.getOrCreate(
+                AssetGetOrCreateParams.builder().name("name").ttl("ttl").build()
+            )
 
         response.validate()
     }

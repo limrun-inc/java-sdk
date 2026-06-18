@@ -4,6 +4,7 @@ package com.limrun.api.models.assets
 
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.limrun.api.core.jsonMapper
+import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -16,6 +17,7 @@ internal class AssetTest {
                 .id("id")
                 .name("name")
                 .displayName("displayName")
+                .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .md5("md5")
                 .os(Asset.Os.IOS)
                 .signedDownloadUrl("signedDownloadUrl")
@@ -25,6 +27,7 @@ internal class AssetTest {
         assertThat(asset.id()).isEqualTo("id")
         assertThat(asset.name()).isEqualTo("name")
         assertThat(asset.displayName()).contains("displayName")
+        assertThat(asset.expiresAt()).contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(asset.md5()).contains("md5")
         assertThat(asset.os()).contains(Asset.Os.IOS)
         assertThat(asset.signedDownloadUrl()).contains("signedDownloadUrl")
@@ -39,6 +42,7 @@ internal class AssetTest {
                 .id("id")
                 .name("name")
                 .displayName("displayName")
+                .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .md5("md5")
                 .os(Asset.Os.IOS)
                 .signedDownloadUrl("signedDownloadUrl")

@@ -12,6 +12,7 @@ import com.limrun.api.core.JsonMissing
 import com.limrun.api.core.JsonValue
 import com.limrun.api.core.checkRequired
 import com.limrun.api.errors.LimrunInvalidDataException
+import java.time.OffsetDateTime
 import java.util.Collections
 import java.util.Objects
 import java.util.Optional
@@ -23,6 +24,7 @@ private constructor(
     private val name: JsonField<String>,
     private val signedDownloadUrl: JsonField<String>,
     private val signedUploadUrl: JsonField<String>,
+    private val expiresAt: JsonField<OffsetDateTime>,
     private val md5: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
@@ -37,8 +39,11 @@ private constructor(
         @JsonProperty("signedUploadUrl")
         @ExcludeMissing
         signedUploadUrl: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("expiresAt")
+        @ExcludeMissing
+        expiresAt: JsonField<OffsetDateTime> = JsonMissing.of(),
         @JsonProperty("md5") @ExcludeMissing md5: JsonField<String> = JsonMissing.of(),
-    ) : this(id, name, signedDownloadUrl, signedUploadUrl, md5, mutableMapOf())
+    ) : this(id, name, signedDownloadUrl, signedUploadUrl, expiresAt, md5, mutableMapOf())
 
     /**
      * @throws LimrunInvalidDataException if the JSON field has an unexpected type or is
@@ -63,6 +68,14 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun signedUploadUrl(): String = signedUploadUrl.getRequired("signedUploadUrl")
+
+    /**
+     * When set, the time after which the asset is automatically deleted.
+     *
+     * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun expiresAt(): Optional<OffsetDateTime> = expiresAt.getOptional("expiresAt")
 
     /**
      * Returned only if there is a corresponding file uploaded already.
@@ -106,6 +119,15 @@ private constructor(
     fun _signedUploadUrl(): JsonField<String> = signedUploadUrl
 
     /**
+     * Returns the raw JSON value of [expiresAt].
+     *
+     * Unlike [expiresAt], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("expiresAt")
+    @ExcludeMissing
+    fun _expiresAt(): JsonField<OffsetDateTime> = expiresAt
+
+    /**
      * Returns the raw JSON value of [md5].
      *
      * Unlike [md5], this method doesn't throw if the JSON field has an unexpected type.
@@ -147,6 +169,7 @@ private constructor(
         private var name: JsonField<String>? = null
         private var signedDownloadUrl: JsonField<String>? = null
         private var signedUploadUrl: JsonField<String>? = null
+        private var expiresAt: JsonField<OffsetDateTime> = JsonMissing.of()
         private var md5: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -156,6 +179,7 @@ private constructor(
             name = assetGetOrCreateResponse.name
             signedDownloadUrl = assetGetOrCreateResponse.signedDownloadUrl
             signedUploadUrl = assetGetOrCreateResponse.signedUploadUrl
+            expiresAt = assetGetOrCreateResponse.expiresAt
             md5 = assetGetOrCreateResponse.md5
             additionalProperties = assetGetOrCreateResponse.additionalProperties.toMutableMap()
         }
@@ -208,6 +232,18 @@ private constructor(
             this.signedUploadUrl = signedUploadUrl
         }
 
+        /** When set, the time after which the asset is automatically deleted. */
+        fun expiresAt(expiresAt: OffsetDateTime) = expiresAt(JsonField.of(expiresAt))
+
+        /**
+         * Sets [Builder.expiresAt] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.expiresAt] with a well-typed [OffsetDateTime] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun expiresAt(expiresAt: JsonField<OffsetDateTime>) = apply { this.expiresAt = expiresAt }
+
         /** Returned only if there is a corresponding file uploaded already. */
         fun md5(md5: String) = md5(JsonField.of(md5))
 
@@ -259,6 +295,7 @@ private constructor(
                 checkRequired("name", name),
                 checkRequired("signedDownloadUrl", signedDownloadUrl),
                 checkRequired("signedUploadUrl", signedUploadUrl),
+                expiresAt,
                 md5,
                 additionalProperties.toMutableMap(),
             )
@@ -283,6 +320,7 @@ private constructor(
         name()
         signedDownloadUrl()
         signedUploadUrl()
+        expiresAt()
         md5()
         validated = true
     }
@@ -306,6 +344,7 @@ private constructor(
             (if (name.asKnown().isPresent) 1 else 0) +
             (if (signedDownloadUrl.asKnown().isPresent) 1 else 0) +
             (if (signedUploadUrl.asKnown().isPresent) 1 else 0) +
+            (if (expiresAt.asKnown().isPresent) 1 else 0) +
             (if (md5.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
@@ -318,16 +357,25 @@ private constructor(
             name == other.name &&
             signedDownloadUrl == other.signedDownloadUrl &&
             signedUploadUrl == other.signedUploadUrl &&
+            expiresAt == other.expiresAt &&
             md5 == other.md5 &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(id, name, signedDownloadUrl, signedUploadUrl, md5, additionalProperties)
+        Objects.hash(
+            id,
+            name,
+            signedDownloadUrl,
+            signedUploadUrl,
+            expiresAt,
+            md5,
+            additionalProperties,
+        )
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "AssetGetOrCreateResponse{id=$id, name=$name, signedDownloadUrl=$signedDownloadUrl, signedUploadUrl=$signedUploadUrl, md5=$md5, additionalProperties=$additionalProperties}"
+        "AssetGetOrCreateResponse{id=$id, name=$name, signedDownloadUrl=$signedDownloadUrl, signedUploadUrl=$signedUploadUrl, expiresAt=$expiresAt, md5=$md5, additionalProperties=$additionalProperties}"
 }
