@@ -70,7 +70,9 @@ internal class AssetServiceAsyncTest {
         val assetServiceAsync = client.assets()
 
         val responseFuture =
-            assetServiceAsync.getOrCreate(AssetGetOrCreateParams.builder().name("name").build())
+            assetServiceAsync.getOrCreate(
+                AssetGetOrCreateParams.builder().name("name").ttl("ttl").build()
+            )
 
         val response = responseFuture.get()
         response.validate()

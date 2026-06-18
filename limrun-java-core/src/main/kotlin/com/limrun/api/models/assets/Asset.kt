@@ -13,6 +13,7 @@ import com.limrun.api.core.JsonMissing
 import com.limrun.api.core.JsonValue
 import com.limrun.api.core.checkRequired
 import com.limrun.api.errors.LimrunInvalidDataException
+import java.time.OffsetDateTime
 import java.util.Collections
 import java.util.Objects
 import java.util.Optional
@@ -24,6 +25,7 @@ private constructor(
     private val id: JsonField<String>,
     private val name: JsonField<String>,
     private val displayName: JsonField<String>,
+    private val expiresAt: JsonField<OffsetDateTime>,
     private val md5: JsonField<String>,
     private val os: JsonField<Os>,
     private val signedDownloadUrl: JsonField<String>,
@@ -38,6 +40,9 @@ private constructor(
         @JsonProperty("displayName")
         @ExcludeMissing
         displayName: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("expiresAt")
+        @ExcludeMissing
+        expiresAt: JsonField<OffsetDateTime> = JsonMissing.of(),
         @JsonProperty("md5") @ExcludeMissing md5: JsonField<String> = JsonMissing.of(),
         @JsonProperty("os") @ExcludeMissing os: JsonField<Os> = JsonMissing.of(),
         @JsonProperty("signedDownloadUrl")
@@ -46,7 +51,17 @@ private constructor(
         @JsonProperty("signedUploadUrl")
         @ExcludeMissing
         signedUploadUrl: JsonField<String> = JsonMissing.of(),
-    ) : this(id, name, displayName, md5, os, signedDownloadUrl, signedUploadUrl, mutableMapOf())
+    ) : this(
+        id,
+        name,
+        displayName,
+        expiresAt,
+        md5,
+        os,
+        signedDownloadUrl,
+        signedUploadUrl,
+        mutableMapOf(),
+    )
 
     /**
      * @throws LimrunInvalidDataException if the JSON field has an unexpected type or is
@@ -67,6 +82,14 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun displayName(): Optional<String> = displayName.getOptional("displayName")
+
+    /**
+     * When set, the time after which the asset is automatically deleted.
+     *
+     * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun expiresAt(): Optional<OffsetDateTime> = expiresAt.getOptional("expiresAt")
 
     /**
      * Returned only if there is a corresponding file uploaded already.
@@ -116,6 +139,15 @@ private constructor(
      * Unlike [displayName], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("displayName") @ExcludeMissing fun _displayName(): JsonField<String> = displayName
+
+    /**
+     * Returns the raw JSON value of [expiresAt].
+     *
+     * Unlike [expiresAt], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("expiresAt")
+    @ExcludeMissing
+    fun _expiresAt(): JsonField<OffsetDateTime> = expiresAt
 
     /**
      * Returns the raw JSON value of [md5].
@@ -182,6 +214,7 @@ private constructor(
         private var id: JsonField<String>? = null
         private var name: JsonField<String>? = null
         private var displayName: JsonField<String> = JsonMissing.of()
+        private var expiresAt: JsonField<OffsetDateTime> = JsonMissing.of()
         private var md5: JsonField<String> = JsonMissing.of()
         private var os: JsonField<Os> = JsonMissing.of()
         private var signedDownloadUrl: JsonField<String> = JsonMissing.of()
@@ -193,6 +226,7 @@ private constructor(
             id = asset.id
             name = asset.name
             displayName = asset.displayName
+            expiresAt = asset.expiresAt
             md5 = asset.md5
             os = asset.os
             signedDownloadUrl = asset.signedDownloadUrl
@@ -231,6 +265,18 @@ private constructor(
          * value.
          */
         fun displayName(displayName: JsonField<String>) = apply { this.displayName = displayName }
+
+        /** When set, the time after which the asset is automatically deleted. */
+        fun expiresAt(expiresAt: OffsetDateTime) = expiresAt(JsonField.of(expiresAt))
+
+        /**
+         * Sets [Builder.expiresAt] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.expiresAt] with a well-typed [OffsetDateTime] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun expiresAt(expiresAt: JsonField<OffsetDateTime>) = apply { this.expiresAt = expiresAt }
 
         /** Returned only if there is a corresponding file uploaded already. */
         fun md5(md5: String) = md5(JsonField.of(md5))
@@ -322,6 +368,7 @@ private constructor(
                 checkRequired("id", id),
                 checkRequired("name", name),
                 displayName,
+                expiresAt,
                 md5,
                 os,
                 signedDownloadUrl,
@@ -348,6 +395,7 @@ private constructor(
         id()
         name()
         displayName()
+        expiresAt()
         md5()
         os().ifPresent { it.validate() }
         signedDownloadUrl()
@@ -373,6 +421,7 @@ private constructor(
         (if (id.asKnown().isPresent) 1 else 0) +
             (if (name.asKnown().isPresent) 1 else 0) +
             (if (displayName.asKnown().isPresent) 1 else 0) +
+            (if (expiresAt.asKnown().isPresent) 1 else 0) +
             (if (md5.asKnown().isPresent) 1 else 0) +
             (os.asKnown().getOrNull()?.validity() ?: 0) +
             (if (signedDownloadUrl.asKnown().isPresent) 1 else 0) +
@@ -524,6 +573,7 @@ private constructor(
             id == other.id &&
             name == other.name &&
             displayName == other.displayName &&
+            expiresAt == other.expiresAt &&
             md5 == other.md5 &&
             os == other.os &&
             signedDownloadUrl == other.signedDownloadUrl &&
@@ -536,6 +586,7 @@ private constructor(
             id,
             name,
             displayName,
+            expiresAt,
             md5,
             os,
             signedDownloadUrl,
@@ -547,5 +598,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Asset{id=$id, name=$name, displayName=$displayName, md5=$md5, os=$os, signedDownloadUrl=$signedDownloadUrl, signedUploadUrl=$signedUploadUrl, additionalProperties=$additionalProperties}"
+        "Asset{id=$id, name=$name, displayName=$displayName, expiresAt=$expiresAt, md5=$md5, os=$os, signedDownloadUrl=$signedDownloadUrl, signedUploadUrl=$signedUploadUrl, additionalProperties=$additionalProperties}"
 }

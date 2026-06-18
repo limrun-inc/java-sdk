@@ -874,8 +874,20 @@ private constructor(
         fun model(): Optional<Model> = model.getOptional("model")
 
         /**
-         * The region where the instance will be created. If not given, will be decided based on
-         * scheduling clues and availability.
+         * Where the instance will be created. If not given, the region is decided based on
+         * scheduling clues (client IP) and availability.
+         *
+         * A region is a preference, not a hard pin: the request always overflows to every other
+         * available region, ordered by proximity, when the preferred ones are full.
+         *
+         * Accepted values:
+         * * A specific region name (e.g. "us-west1"). It is tried first, then the remaining regions
+         *   in order of proximity to it. Scheduling clues (client IP) are ignored when a region is
+         *   given.
+         * * A region group name (e.g. "us", "eu"). Its member regions are tried first in their
+         *   listed order, then the remaining regions by proximity to the first member.
+         * * A pipe-separated, ordered list of regions (e.g. "us-east1|us-west1"). Those are tried
+         *   first in the given order, then the remaining regions by proximity to the first.
          *
          * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
          *   server responded with an unexpected value).
@@ -1087,8 +1099,21 @@ private constructor(
             fun model(model: JsonField<Model>) = apply { this.model = model }
 
             /**
-             * The region where the instance will be created. If not given, will be decided based on
-             * scheduling clues and availability.
+             * Where the instance will be created. If not given, the region is decided based on
+             * scheduling clues (client IP) and availability.
+             *
+             * A region is a preference, not a hard pin: the request always overflows to every other
+             * available region, ordered by proximity, when the preferred ones are full.
+             *
+             * Accepted values:
+             * * A specific region name (e.g. "us-west1"). It is tried first, then the remaining
+             *   regions in order of proximity to it. Scheduling clues (client IP) are ignored when
+             *   a region is given.
+             * * A region group name (e.g. "us", "eu"). Its member regions are tried first in their
+             *   listed order, then the remaining regions by proximity to the first member.
+             * * A pipe-separated, ordered list of regions (e.g. "us-east1|us-west1"). Those are
+             *   tried first in the given order, then the remaining regions by proximity to the
+             *   first.
              */
             fun region(region: String) = region(JsonField.of(region))
 

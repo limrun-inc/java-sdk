@@ -17,6 +17,7 @@ import com.limrun.api.core.http.QueryParams
 import com.limrun.api.errors.LimrunInvalidDataException
 import java.util.Collections
 import java.util.Objects
+import java.util.Optional
 
 /**
  * Creates an asset and returns upload and download URLs. If there is a corresponding file uploaded
@@ -39,11 +40,28 @@ private constructor(
     fun name(): String = body.name()
 
     /**
+     * Optional time-to-live as a Go duration string (e.g. "24h"). When set, the asset is deleted
+     * this long after now; minimum is 1m. Omit for no expiry. On re-upload of an existing asset, a
+     * value updates the expiry while omitting it leaves the current expiry unchanged.
+     *
+     * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun ttl(): Optional<String> = body.ttl()
+
+    /**
      * Returns the raw JSON value of [name].
      *
      * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _name(): JsonField<String> = body._name()
+
+    /**
+     * Returns the raw JSON value of [ttl].
+     *
+     * Unlike [ttl], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _ttl(): JsonField<String> = body._ttl()
 
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
@@ -88,6 +106,7 @@ private constructor(
          * This is generally only useful if you are already constructing the body separately.
          * Otherwise, it's more convenient to use the top-level setters instead:
          * - [name]
+         * - [ttl]
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
@@ -100,6 +119,22 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun name(name: JsonField<String>) = apply { body.name(name) }
+
+        /**
+         * Optional time-to-live as a Go duration string (e.g. "24h"). When set, the asset is
+         * deleted this long after now; minimum is 1m. Omit for no expiry. On re-upload of an
+         * existing asset, a value updates the expiry while omitting it leaves the current expiry
+         * unchanged.
+         */
+        fun ttl(ttl: String) = apply { body.ttl(ttl) }
+
+        /**
+         * Sets [Builder.ttl] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.ttl] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun ttl(ttl: JsonField<String>) = apply { body.ttl(ttl) }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             body.additionalProperties(additionalBodyProperties)
@@ -248,13 +283,15 @@ private constructor(
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val name: JsonField<String>,
+        private val ttl: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
         @JsonCreator
         private constructor(
-            @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of()
-        ) : this(name, mutableMapOf())
+            @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("ttl") @ExcludeMissing ttl: JsonField<String> = JsonMissing.of(),
+        ) : this(name, ttl, mutableMapOf())
 
         /**
          * @throws LimrunInvalidDataException if the JSON field has an unexpected type or is
@@ -263,11 +300,29 @@ private constructor(
         fun name(): String = name.getRequired("name")
 
         /**
+         * Optional time-to-live as a Go duration string (e.g. "24h"). When set, the asset is
+         * deleted this long after now; minimum is 1m. Omit for no expiry. On re-upload of an
+         * existing asset, a value updates the expiry while omitting it leaves the current expiry
+         * unchanged.
+         *
+         * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun ttl(): Optional<String> = ttl.getOptional("ttl")
+
+        /**
          * Returns the raw JSON value of [name].
          *
          * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
+
+        /**
+         * Returns the raw JSON value of [ttl].
+         *
+         * Unlike [ttl], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("ttl") @ExcludeMissing fun _ttl(): JsonField<String> = ttl
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -298,11 +353,13 @@ private constructor(
         class Builder internal constructor() {
 
             private var name: JsonField<String>? = null
+            private var ttl: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
             internal fun from(body: Body) = apply {
                 name = body.name
+                ttl = body.ttl
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
@@ -316,6 +373,23 @@ private constructor(
              * value.
              */
             fun name(name: JsonField<String>) = apply { this.name = name }
+
+            /**
+             * Optional time-to-live as a Go duration string (e.g. "24h"). When set, the asset is
+             * deleted this long after now; minimum is 1m. Omit for no expiry. On re-upload of an
+             * existing asset, a value updates the expiry while omitting it leaves the current
+             * expiry unchanged.
+             */
+            fun ttl(ttl: String) = ttl(JsonField.of(ttl))
+
+            /**
+             * Sets [Builder.ttl] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.ttl] with a well-typed [String] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
+             */
+            fun ttl(ttl: JsonField<String>) = apply { this.ttl = ttl }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
@@ -349,7 +423,7 @@ private constructor(
              * @throws IllegalStateException if any required field is unset.
              */
             fun build(): Body =
-                Body(checkRequired("name", name), additionalProperties.toMutableMap())
+                Body(checkRequired("name", name), ttl, additionalProperties.toMutableMap())
         }
 
         private var validated: Boolean = false
@@ -369,6 +443,7 @@ private constructor(
             }
 
             name()
+            ttl()
             validated = true
         }
 
@@ -386,7 +461,9 @@ private constructor(
          *
          * Used for best match union deserialization.
          */
-        @JvmSynthetic internal fun validity(): Int = (if (name.asKnown().isPresent) 1 else 0)
+        @JvmSynthetic
+        internal fun validity(): Int =
+            (if (name.asKnown().isPresent) 1 else 0) + (if (ttl.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -395,14 +472,16 @@ private constructor(
 
             return other is Body &&
                 name == other.name &&
+                ttl == other.ttl &&
                 additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy { Objects.hash(name, additionalProperties) }
+        private val hashCode: Int by lazy { Objects.hash(name, ttl, additionalProperties) }
 
         override fun hashCode(): Int = hashCode
 
-        override fun toString() = "Body{name=$name, additionalProperties=$additionalProperties}"
+        override fun toString() =
+            "Body{name=$name, ttl=$ttl, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {
