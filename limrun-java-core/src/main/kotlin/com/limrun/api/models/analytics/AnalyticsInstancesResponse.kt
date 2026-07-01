@@ -606,7 +606,7 @@ private constructor(
             fun instanceTid(): String = instanceTid.getRequired("instanceTid")
 
             /**
-             * Platform name, such as android, ios, or sandbox
+             * Platform name, such as android, ios, or xcode
              *
              * @throws LimrunInvalidDataException if the JSON field has an unexpected type or is
              *   unexpectedly missing or null (e.g. if the server responded with an unexpected
@@ -831,7 +831,7 @@ private constructor(
                     this.instanceTid = instanceTid
                 }
 
-                /** Platform name, such as android, ios, or sandbox */
+                /** Platform name, such as android, ios, or xcode */
                 fun platform(platform: String) = platform(JsonField.of(platform))
 
                 /**

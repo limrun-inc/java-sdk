@@ -535,8 +535,8 @@ private constructor(
     private constructor(
         private val android: JsonField<Android>,
         private val ios: JsonField<Ios>,
-        private val sandbox: JsonField<Sandbox>,
         private val timestamp: JsonField<String>,
+        private val xcode: JsonField<Xcode>,
         private val instances: JsonField<List<Instance>>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
@@ -545,14 +545,14 @@ private constructor(
         private constructor(
             @JsonProperty("android") @ExcludeMissing android: JsonField<Android> = JsonMissing.of(),
             @JsonProperty("ios") @ExcludeMissing ios: JsonField<Ios> = JsonMissing.of(),
-            @JsonProperty("sandbox") @ExcludeMissing sandbox: JsonField<Sandbox> = JsonMissing.of(),
             @JsonProperty("timestamp")
             @ExcludeMissing
             timestamp: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("xcode") @ExcludeMissing xcode: JsonField<Xcode> = JsonMissing.of(),
             @JsonProperty("instances")
             @ExcludeMissing
             instances: JsonField<List<Instance>> = JsonMissing.of(),
-        ) : this(android, ios, sandbox, timestamp, instances, mutableMapOf())
+        ) : this(android, ios, timestamp, xcode, instances, mutableMapOf())
 
         /**
          * Map of region to analytics stats for Android
@@ -571,14 +571,6 @@ private constructor(
         fun ios(): Ios = ios.getRequired("ios")
 
         /**
-         * Map of region to analytics stats for Sandbox
-         *
-         * @throws LimrunInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun sandbox(): Sandbox = sandbox.getRequired("sandbox")
-
-        /**
          * RFC3339 timestamp for the start of the bucket in the requested timezone, including the
          * local offset
          *
@@ -586,6 +578,14 @@ private constructor(
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun timestamp(): String = timestamp.getRequired("timestamp")
+
+        /**
+         * Map of region to analytics stats for Xcode
+         *
+         * @throws LimrunInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun xcode(): Xcode = xcode.getRequired("xcode")
 
         /**
          * Individual instance details for this time bucket
@@ -610,18 +610,18 @@ private constructor(
         @JsonProperty("ios") @ExcludeMissing fun _ios(): JsonField<Ios> = ios
 
         /**
-         * Returns the raw JSON value of [sandbox].
-         *
-         * Unlike [sandbox], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("sandbox") @ExcludeMissing fun _sandbox(): JsonField<Sandbox> = sandbox
-
-        /**
          * Returns the raw JSON value of [timestamp].
          *
          * Unlike [timestamp], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("timestamp") @ExcludeMissing fun _timestamp(): JsonField<String> = timestamp
+
+        /**
+         * Returns the raw JSON value of [xcode].
+         *
+         * Unlike [xcode], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("xcode") @ExcludeMissing fun _xcode(): JsonField<Xcode> = xcode
 
         /**
          * Returns the raw JSON value of [instances].
@@ -653,8 +653,8 @@ private constructor(
              * ```java
              * .android()
              * .ios()
-             * .sandbox()
              * .timestamp()
+             * .xcode()
              * ```
              */
             @JvmStatic fun builder() = Builder()
@@ -665,8 +665,8 @@ private constructor(
 
             private var android: JsonField<Android>? = null
             private var ios: JsonField<Ios>? = null
-            private var sandbox: JsonField<Sandbox>? = null
             private var timestamp: JsonField<String>? = null
+            private var xcode: JsonField<Xcode>? = null
             private var instances: JsonField<MutableList<Instance>>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -674,8 +674,8 @@ private constructor(
             internal fun from(series: Series) = apply {
                 android = series.android
                 ios = series.ios
-                sandbox = series.sandbox
                 timestamp = series.timestamp
+                xcode = series.xcode
                 instances = series.instances.map { it.toMutableList() }
                 additionalProperties = series.additionalProperties.toMutableMap()
             }
@@ -704,18 +704,6 @@ private constructor(
              */
             fun ios(ios: JsonField<Ios>) = apply { this.ios = ios }
 
-            /** Map of region to analytics stats for Sandbox */
-            fun sandbox(sandbox: Sandbox) = sandbox(JsonField.of(sandbox))
-
-            /**
-             * Sets [Builder.sandbox] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.sandbox] with a well-typed [Sandbox] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
-            fun sandbox(sandbox: JsonField<Sandbox>) = apply { this.sandbox = sandbox }
-
             /**
              * RFC3339 timestamp for the start of the bucket in the requested timezone, including
              * the local offset
@@ -730,6 +718,18 @@ private constructor(
              * supported value.
              */
             fun timestamp(timestamp: JsonField<String>) = apply { this.timestamp = timestamp }
+
+            /** Map of region to analytics stats for Xcode */
+            fun xcode(xcode: Xcode) = xcode(JsonField.of(xcode))
+
+            /**
+             * Sets [Builder.xcode] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.xcode] with a well-typed [Xcode] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
+             */
+            fun xcode(xcode: JsonField<Xcode>) = apply { this.xcode = xcode }
 
             /** Individual instance details for this time bucket */
             fun instances(instances: List<Instance>) = instances(JsonField.of(instances))
@@ -785,8 +785,8 @@ private constructor(
              * ```java
              * .android()
              * .ios()
-             * .sandbox()
              * .timestamp()
+             * .xcode()
              * ```
              *
              * @throws IllegalStateException if any required field is unset.
@@ -795,8 +795,8 @@ private constructor(
                 Series(
                     checkRequired("android", android),
                     checkRequired("ios", ios),
-                    checkRequired("sandbox", sandbox),
                     checkRequired("timestamp", timestamp),
+                    checkRequired("xcode", xcode),
                     (instances ?: JsonMissing.of()).map { it.toImmutable() },
                     additionalProperties.toMutableMap(),
                 )
@@ -820,8 +820,8 @@ private constructor(
 
             android().validate()
             ios().validate()
-            sandbox().validate()
             timestamp()
+            xcode().validate()
             instances().ifPresent { it.forEach { it.validate() } }
             validated = true
         }
@@ -844,8 +844,8 @@ private constructor(
         internal fun validity(): Int =
             (android.asKnown().getOrNull()?.validity() ?: 0) +
                 (ios.asKnown().getOrNull()?.validity() ?: 0) +
-                (sandbox.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (timestamp.asKnown().isPresent) 1 else 0) +
+                (xcode.asKnown().getOrNull()?.validity() ?: 0) +
                 (instances.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0)
 
         /** Map of region to analytics stats for Android */
@@ -1074,8 +1074,8 @@ private constructor(
             override fun toString() = "Ios{additionalProperties=$additionalProperties}"
         }
 
-        /** Map of region to analytics stats for Sandbox */
-        class Sandbox
+        /** Map of region to analytics stats for Xcode */
+        class Xcode
         @JsonCreator
         private constructor(
             @com.fasterxml.jackson.annotation.JsonValue
@@ -1090,18 +1090,18 @@ private constructor(
 
             companion object {
 
-                /** Returns a mutable builder for constructing an instance of [Sandbox]. */
+                /** Returns a mutable builder for constructing an instance of [Xcode]. */
                 @JvmStatic fun builder() = Builder()
             }
 
-            /** A builder for [Sandbox]. */
+            /** A builder for [Xcode]. */
             class Builder internal constructor() {
 
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                 @JvmSynthetic
-                internal fun from(sandbox: Sandbox) = apply {
-                    additionalProperties = sandbox.additionalProperties.toMutableMap()
+                internal fun from(xcode: Xcode) = apply {
+                    additionalProperties = xcode.additionalProperties.toMutableMap()
                 }
 
                 fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -1127,11 +1127,11 @@ private constructor(
                 }
 
                 /**
-                 * Returns an immutable instance of [Sandbox].
+                 * Returns an immutable instance of [Xcode].
                  *
                  * Further updates to this [Builder] will not mutate the returned instance.
                  */
-                fun build(): Sandbox = Sandbox(additionalProperties.toImmutable())
+                fun build(): Xcode = Xcode(additionalProperties.toImmutable())
             }
 
             private var validated: Boolean = false
@@ -1146,7 +1146,7 @@ private constructor(
              * @throws LimrunInvalidDataException if any value type in this object doesn't match its
              *   expected type.
              */
-            fun validate(): Sandbox = apply {
+            fun validate(): Xcode = apply {
                 if (validated) {
                     return@apply
                 }
@@ -1177,14 +1177,14 @@ private constructor(
                     return true
                 }
 
-                return other is Sandbox && additionalProperties == other.additionalProperties
+                return other is Xcode && additionalProperties == other.additionalProperties
             }
 
             private val hashCode: Int by lazy { Objects.hash(additionalProperties) }
 
             override fun hashCode(): Int = hashCode
 
-            override fun toString() = "Sandbox{additionalProperties=$additionalProperties}"
+            override fun toString() = "Xcode{additionalProperties=$additionalProperties}"
         }
 
         /** Analytics details for a single instance within a time bucket */
@@ -1269,7 +1269,7 @@ private constructor(
             fun instanceTid(): String = instanceTid.getRequired("instanceTid")
 
             /**
-             * Platform name, such as android, ios, or sandbox
+             * Platform name, such as android, ios, or xcode
              *
              * @throws LimrunInvalidDataException if the JSON field has an unexpected type or is
              *   unexpectedly missing or null (e.g. if the server responded with an unexpected
@@ -1494,7 +1494,7 @@ private constructor(
                     this.instanceTid = instanceTid
                 }
 
-                /** Platform name, such as android, ios, or sandbox */
+                /** Platform name, such as android, ios, or xcode */
                 fun platform(platform: String) = platform(JsonField.of(platform))
 
                 /**
@@ -2983,20 +2983,20 @@ private constructor(
             return other is Series &&
                 android == other.android &&
                 ios == other.ios &&
-                sandbox == other.sandbox &&
                 timestamp == other.timestamp &&
+                xcode == other.xcode &&
                 instances == other.instances &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(android, ios, sandbox, timestamp, instances, additionalProperties)
+            Objects.hash(android, ios, timestamp, xcode, instances, additionalProperties)
         }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Series{android=$android, ios=$ios, sandbox=$sandbox, timestamp=$timestamp, instances=$instances, additionalProperties=$additionalProperties}"
+            "Series{android=$android, ios=$ios, timestamp=$timestamp, xcode=$xcode, instances=$instances, additionalProperties=$additionalProperties}"
     }
 
     /** Summary of analytics across all time buckets, broken down by platform and region */
@@ -3005,7 +3005,7 @@ private constructor(
     private constructor(
         private val android: JsonField<Android>,
         private val ios: JsonField<Ios>,
-        private val sandbox: JsonField<Sandbox>,
+        private val xcode: JsonField<Xcode>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -3013,8 +3013,8 @@ private constructor(
         private constructor(
             @JsonProperty("android") @ExcludeMissing android: JsonField<Android> = JsonMissing.of(),
             @JsonProperty("ios") @ExcludeMissing ios: JsonField<Ios> = JsonMissing.of(),
-            @JsonProperty("sandbox") @ExcludeMissing sandbox: JsonField<Sandbox> = JsonMissing.of(),
-        ) : this(android, ios, sandbox, mutableMapOf())
+            @JsonProperty("xcode") @ExcludeMissing xcode: JsonField<Xcode> = JsonMissing.of(),
+        ) : this(android, ios, xcode, mutableMapOf())
 
         /**
          * Map of region to analytics stats for Android
@@ -3033,12 +3033,12 @@ private constructor(
         fun ios(): Ios = ios.getRequired("ios")
 
         /**
-         * Map of region to analytics stats for Sandbox
+         * Map of region to analytics stats for Xcode
          *
          * @throws LimrunInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
-        fun sandbox(): Sandbox = sandbox.getRequired("sandbox")
+        fun xcode(): Xcode = xcode.getRequired("xcode")
 
         /**
          * Returns the raw JSON value of [android].
@@ -3055,11 +3055,11 @@ private constructor(
         @JsonProperty("ios") @ExcludeMissing fun _ios(): JsonField<Ios> = ios
 
         /**
-         * Returns the raw JSON value of [sandbox].
+         * Returns the raw JSON value of [xcode].
          *
-         * Unlike [sandbox], this method doesn't throw if the JSON field has an unexpected type.
+         * Unlike [xcode], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("sandbox") @ExcludeMissing fun _sandbox(): JsonField<Sandbox> = sandbox
+        @JsonProperty("xcode") @ExcludeMissing fun _xcode(): JsonField<Xcode> = xcode
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -3082,7 +3082,7 @@ private constructor(
              * ```java
              * .android()
              * .ios()
-             * .sandbox()
+             * .xcode()
              * ```
              */
             @JvmStatic fun builder() = Builder()
@@ -3093,14 +3093,14 @@ private constructor(
 
             private var android: JsonField<Android>? = null
             private var ios: JsonField<Ios>? = null
-            private var sandbox: JsonField<Sandbox>? = null
+            private var xcode: JsonField<Xcode>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
             internal fun from(summary: Summary) = apply {
                 android = summary.android
                 ios = summary.ios
-                sandbox = summary.sandbox
+                xcode = summary.xcode
                 additionalProperties = summary.additionalProperties.toMutableMap()
             }
 
@@ -3128,17 +3128,17 @@ private constructor(
              */
             fun ios(ios: JsonField<Ios>) = apply { this.ios = ios }
 
-            /** Map of region to analytics stats for Sandbox */
-            fun sandbox(sandbox: Sandbox) = sandbox(JsonField.of(sandbox))
+            /** Map of region to analytics stats for Xcode */
+            fun xcode(xcode: Xcode) = xcode(JsonField.of(xcode))
 
             /**
-             * Sets [Builder.sandbox] to an arbitrary JSON value.
+             * Sets [Builder.xcode] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.sandbox] with a well-typed [Sandbox] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
+             * You should usually call [Builder.xcode] with a well-typed [Xcode] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
              */
-            fun sandbox(sandbox: JsonField<Sandbox>) = apply { this.sandbox = sandbox }
+            fun xcode(xcode: JsonField<Xcode>) = apply { this.xcode = xcode }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
@@ -3168,7 +3168,7 @@ private constructor(
              * ```java
              * .android()
              * .ios()
-             * .sandbox()
+             * .xcode()
              * ```
              *
              * @throws IllegalStateException if any required field is unset.
@@ -3177,7 +3177,7 @@ private constructor(
                 Summary(
                     checkRequired("android", android),
                     checkRequired("ios", ios),
-                    checkRequired("sandbox", sandbox),
+                    checkRequired("xcode", xcode),
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -3200,7 +3200,7 @@ private constructor(
 
             android().validate()
             ios().validate()
-            sandbox().validate()
+            xcode().validate()
             validated = true
         }
 
@@ -3222,7 +3222,7 @@ private constructor(
         internal fun validity(): Int =
             (android.asKnown().getOrNull()?.validity() ?: 0) +
                 (ios.asKnown().getOrNull()?.validity() ?: 0) +
-                (sandbox.asKnown().getOrNull()?.validity() ?: 0)
+                (xcode.asKnown().getOrNull()?.validity() ?: 0)
 
         /** Map of region to analytics stats for Android */
         class Android
@@ -3450,8 +3450,8 @@ private constructor(
             override fun toString() = "Ios{additionalProperties=$additionalProperties}"
         }
 
-        /** Map of region to analytics stats for Sandbox */
-        class Sandbox
+        /** Map of region to analytics stats for Xcode */
+        class Xcode
         @JsonCreator
         private constructor(
             @com.fasterxml.jackson.annotation.JsonValue
@@ -3466,18 +3466,18 @@ private constructor(
 
             companion object {
 
-                /** Returns a mutable builder for constructing an instance of [Sandbox]. */
+                /** Returns a mutable builder for constructing an instance of [Xcode]. */
                 @JvmStatic fun builder() = Builder()
             }
 
-            /** A builder for [Sandbox]. */
+            /** A builder for [Xcode]. */
             class Builder internal constructor() {
 
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                 @JvmSynthetic
-                internal fun from(sandbox: Sandbox) = apply {
-                    additionalProperties = sandbox.additionalProperties.toMutableMap()
+                internal fun from(xcode: Xcode) = apply {
+                    additionalProperties = xcode.additionalProperties.toMutableMap()
                 }
 
                 fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -3503,11 +3503,11 @@ private constructor(
                 }
 
                 /**
-                 * Returns an immutable instance of [Sandbox].
+                 * Returns an immutable instance of [Xcode].
                  *
                  * Further updates to this [Builder] will not mutate the returned instance.
                  */
-                fun build(): Sandbox = Sandbox(additionalProperties.toImmutable())
+                fun build(): Xcode = Xcode(additionalProperties.toImmutable())
             }
 
             private var validated: Boolean = false
@@ -3522,7 +3522,7 @@ private constructor(
              * @throws LimrunInvalidDataException if any value type in this object doesn't match its
              *   expected type.
              */
-            fun validate(): Sandbox = apply {
+            fun validate(): Xcode = apply {
                 if (validated) {
                     return@apply
                 }
@@ -3553,14 +3553,14 @@ private constructor(
                     return true
                 }
 
-                return other is Sandbox && additionalProperties == other.additionalProperties
+                return other is Xcode && additionalProperties == other.additionalProperties
             }
 
             private val hashCode: Int by lazy { Objects.hash(additionalProperties) }
 
             override fun hashCode(): Int = hashCode
 
-            override fun toString() = "Sandbox{additionalProperties=$additionalProperties}"
+            override fun toString() = "Xcode{additionalProperties=$additionalProperties}"
         }
 
         override fun equals(other: Any?): Boolean {
@@ -3571,18 +3571,18 @@ private constructor(
             return other is Summary &&
                 android == other.android &&
                 ios == other.ios &&
-                sandbox == other.sandbox &&
+                xcode == other.xcode &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(android, ios, sandbox, additionalProperties)
+            Objects.hash(android, ios, xcode, additionalProperties)
         }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Summary{android=$android, ios=$ios, sandbox=$sandbox, additionalProperties=$additionalProperties}"
+            "Summary{android=$android, ios=$ios, xcode=$xcode, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

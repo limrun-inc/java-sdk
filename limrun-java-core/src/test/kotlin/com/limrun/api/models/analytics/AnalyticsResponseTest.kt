@@ -64,8 +64,9 @@ internal class AnalyticsResponseTest {
                                 )
                                 .build()
                         )
-                        .sandbox(
-                            AnalyticsResponse.Series.Sandbox.builder()
+                        .timestamp("timestamp")
+                        .xcode(
+                            AnalyticsResponse.Series.Xcode.builder()
                                 .putAdditionalProperty(
                                     "foo",
                                     JsonValue.from(
@@ -86,7 +87,6 @@ internal class AnalyticsResponseTest {
                                 )
                                 .build()
                         )
-                        .timestamp("timestamp")
                         .addInstance(
                             AnalyticsResponse.Series.Instance.builder()
                                 .billedMinutes(0L)
@@ -189,8 +189,8 @@ internal class AnalyticsResponseTest {
                                 )
                                 .build()
                         )
-                        .sandbox(
-                            AnalyticsResponse.Summary.Sandbox.builder()
+                        .xcode(
+                            AnalyticsResponse.Summary.Xcode.builder()
                                 .putAdditionalProperty(
                                     "foo",
                                     JsonValue.from(
@@ -269,8 +269,9 @@ internal class AnalyticsResponseTest {
                             )
                             .build()
                     )
-                    .sandbox(
-                        AnalyticsResponse.Series.Sandbox.builder()
+                    .timestamp("timestamp")
+                    .xcode(
+                        AnalyticsResponse.Series.Xcode.builder()
                             .putAdditionalProperty(
                                 "foo",
                                 JsonValue.from(
@@ -291,7 +292,6 @@ internal class AnalyticsResponseTest {
                             )
                             .build()
                     )
-                    .timestamp("timestamp")
                     .addInstance(
                         AnalyticsResponse.Series.Instance.builder()
                             .billedMinutes(0L)
@@ -395,8 +395,8 @@ internal class AnalyticsResponseTest {
                             )
                             .build()
                     )
-                    .sandbox(
-                        AnalyticsResponse.Summary.Sandbox.builder()
+                    .xcode(
+                        AnalyticsResponse.Summary.Xcode.builder()
                             .putAdditionalProperty(
                                 "foo",
                                 JsonValue.from(
@@ -478,8 +478,9 @@ internal class AnalyticsResponseTest {
                                 )
                                 .build()
                         )
-                        .sandbox(
-                            AnalyticsResponse.Series.Sandbox.builder()
+                        .timestamp("timestamp")
+                        .xcode(
+                            AnalyticsResponse.Series.Xcode.builder()
                                 .putAdditionalProperty(
                                     "foo",
                                     JsonValue.from(
@@ -500,7 +501,6 @@ internal class AnalyticsResponseTest {
                                 )
                                 .build()
                         )
-                        .timestamp("timestamp")
                         .addInstance(
                             AnalyticsResponse.Series.Instance.builder()
                                 .billedMinutes(0L)
@@ -603,8 +603,8 @@ internal class AnalyticsResponseTest {
                                 )
                                 .build()
                         )
-                        .sandbox(
-                            AnalyticsResponse.Summary.Sandbox.builder()
+                        .xcode(
+                            AnalyticsResponse.Summary.Xcode.builder()
                                 .putAdditionalProperty(
                                     "foo",
                                     JsonValue.from(
