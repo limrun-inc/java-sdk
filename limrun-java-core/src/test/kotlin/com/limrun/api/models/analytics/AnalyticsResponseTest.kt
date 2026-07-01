@@ -92,7 +92,7 @@ internal class AnalyticsResponseTest {
                                 .billedMinutes(0L)
                                 .cost(0.0)
                                 .instanceTid("instanceTid")
-                                .platform("platform")
+                                .platform(AnalyticsResponse.Series.Instance.Platform.ANDROID)
                                 .runtimeMinutes(0L)
                                 .billedBreakdown(
                                     AnalyticsResponse.Series.Instance.BilledBreakdown.builder()
@@ -297,7 +297,7 @@ internal class AnalyticsResponseTest {
                             .billedMinutes(0L)
                             .cost(0.0)
                             .instanceTid("instanceTid")
-                            .platform("platform")
+                            .platform(AnalyticsResponse.Series.Instance.Platform.ANDROID)
                             .runtimeMinutes(0L)
                             .billedBreakdown(
                                 AnalyticsResponse.Series.Instance.BilledBreakdown.builder()
@@ -506,7 +506,7 @@ internal class AnalyticsResponseTest {
                                 .billedMinutes(0L)
                                 .cost(0.0)
                                 .instanceTid("instanceTid")
-                                .platform("platform")
+                                .platform(AnalyticsResponse.Series.Instance.Platform.ANDROID)
                                 .runtimeMinutes(0L)
                                 .billedBreakdown(
                                     AnalyticsResponse.Series.Instance.BilledBreakdown.builder()
