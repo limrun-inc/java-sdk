@@ -18,48 +18,60 @@ internal class AnalyticsInstancesResponseTest {
                 .asOf(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .addSeries(
-                    AnalyticsInstanceEntry.builder()
+                    AnalyticsInstancesResponse.Series.builder()
                         .addInstance(
-                            AnalyticsInstance.builder()
+                            AnalyticsInstancesResponse.Series.Instance.builder()
                                 .billedMinutes(0L)
                                 .cost(0.0)
                                 .instanceTid("instanceTid")
                                 .platform("platform")
                                 .runtimeMinutes(0L)
                                 .billedBreakdown(
-                                    BilledBreakdown.builder()
+                                    AnalyticsInstancesResponse.Series.Instance.BilledBreakdown
+                                        .builder()
                                         .creditsBilledMinutes(0L)
                                         .onDemandBilledMinutes(0L)
                                         .planBilledMinutes(
-                                            BilledBreakdown.PlanBilledMinutes.builder()
+                                            AnalyticsInstancesResponse.Series.Instance
+                                                .BilledBreakdown
+                                                .PlanBilledMinutes
+                                                .builder()
                                                 .putAdditionalProperty("foo", JsonValue.from(0))
                                                 .build()
                                         )
                                         .subscriptionBilledMinutes(
-                                            BilledBreakdown.SubscriptionBilledMinutes.builder()
+                                            AnalyticsInstancesResponse.Series.Instance
+                                                .BilledBreakdown
+                                                .SubscriptionBilledMinutes
+                                                .builder()
                                                 .putAdditionalProperty("foo", JsonValue.from(0))
                                                 .build()
                                         )
                                         .build()
                                 )
                                 .costBreakdown(
-                                    CostBreakdown.builder()
+                                    AnalyticsInstancesResponse.Series.Instance.CostBreakdown
+                                        .builder()
                                         .creditsCost(0.0)
                                         .onDemandCost(0.0)
                                         .planCost(
-                                            CostBreakdown.PlanCost.builder()
+                                            AnalyticsInstancesResponse.Series.Instance.CostBreakdown
+                                                .PlanCost
+                                                .builder()
                                                 .putAdditionalProperty("foo", JsonValue.from(0))
                                                 .build()
                                         )
                                         .subscriptionCost(
-                                            CostBreakdown.SubscriptionCost.builder()
+                                            AnalyticsInstancesResponse.Series.Instance.CostBreakdown
+                                                .SubscriptionCost
+                                                .builder()
                                                 .putAdditionalProperty("foo", JsonValue.from(0))
                                                 .build()
                                         )
                                         .build()
                                 )
                                 .labels(
-                                    AnalyticsInstance.Labels.builder()
+                                    AnalyticsInstancesResponse.Series.Instance.Labels.builder()
                                         .putAdditionalProperty("foo", JsonValue.from("string"))
                                         .build()
                                 )
@@ -79,48 +91,56 @@ internal class AnalyticsInstancesResponseTest {
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(analyticsInstancesResponse.series())
             .containsExactly(
-                AnalyticsInstanceEntry.builder()
+                AnalyticsInstancesResponse.Series.builder()
                     .addInstance(
-                        AnalyticsInstance.builder()
+                        AnalyticsInstancesResponse.Series.Instance.builder()
                             .billedMinutes(0L)
                             .cost(0.0)
                             .instanceTid("instanceTid")
                             .platform("platform")
                             .runtimeMinutes(0L)
                             .billedBreakdown(
-                                BilledBreakdown.builder()
+                                AnalyticsInstancesResponse.Series.Instance.BilledBreakdown.builder()
                                     .creditsBilledMinutes(0L)
                                     .onDemandBilledMinutes(0L)
                                     .planBilledMinutes(
-                                        BilledBreakdown.PlanBilledMinutes.builder()
+                                        AnalyticsInstancesResponse.Series.Instance.BilledBreakdown
+                                            .PlanBilledMinutes
+                                            .builder()
                                             .putAdditionalProperty("foo", JsonValue.from(0))
                                             .build()
                                     )
                                     .subscriptionBilledMinutes(
-                                        BilledBreakdown.SubscriptionBilledMinutes.builder()
+                                        AnalyticsInstancesResponse.Series.Instance.BilledBreakdown
+                                            .SubscriptionBilledMinutes
+                                            .builder()
                                             .putAdditionalProperty("foo", JsonValue.from(0))
                                             .build()
                                     )
                                     .build()
                             )
                             .costBreakdown(
-                                CostBreakdown.builder()
+                                AnalyticsInstancesResponse.Series.Instance.CostBreakdown.builder()
                                     .creditsCost(0.0)
                                     .onDemandCost(0.0)
                                     .planCost(
-                                        CostBreakdown.PlanCost.builder()
+                                        AnalyticsInstancesResponse.Series.Instance.CostBreakdown
+                                            .PlanCost
+                                            .builder()
                                             .putAdditionalProperty("foo", JsonValue.from(0))
                                             .build()
                                     )
                                     .subscriptionCost(
-                                        CostBreakdown.SubscriptionCost.builder()
+                                        AnalyticsInstancesResponse.Series.Instance.CostBreakdown
+                                            .SubscriptionCost
+                                            .builder()
                                             .putAdditionalProperty("foo", JsonValue.from(0))
                                             .build()
                                     )
                                     .build()
                             )
                             .labels(
-                                AnalyticsInstance.Labels.builder()
+                                AnalyticsInstancesResponse.Series.Instance.Labels.builder()
                                     .putAdditionalProperty("foo", JsonValue.from("string"))
                                     .build()
                             )
@@ -143,48 +163,60 @@ internal class AnalyticsInstancesResponseTest {
                 .asOf(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .addSeries(
-                    AnalyticsInstanceEntry.builder()
+                    AnalyticsInstancesResponse.Series.builder()
                         .addInstance(
-                            AnalyticsInstance.builder()
+                            AnalyticsInstancesResponse.Series.Instance.builder()
                                 .billedMinutes(0L)
                                 .cost(0.0)
                                 .instanceTid("instanceTid")
                                 .platform("platform")
                                 .runtimeMinutes(0L)
                                 .billedBreakdown(
-                                    BilledBreakdown.builder()
+                                    AnalyticsInstancesResponse.Series.Instance.BilledBreakdown
+                                        .builder()
                                         .creditsBilledMinutes(0L)
                                         .onDemandBilledMinutes(0L)
                                         .planBilledMinutes(
-                                            BilledBreakdown.PlanBilledMinutes.builder()
+                                            AnalyticsInstancesResponse.Series.Instance
+                                                .BilledBreakdown
+                                                .PlanBilledMinutes
+                                                .builder()
                                                 .putAdditionalProperty("foo", JsonValue.from(0))
                                                 .build()
                                         )
                                         .subscriptionBilledMinutes(
-                                            BilledBreakdown.SubscriptionBilledMinutes.builder()
+                                            AnalyticsInstancesResponse.Series.Instance
+                                                .BilledBreakdown
+                                                .SubscriptionBilledMinutes
+                                                .builder()
                                                 .putAdditionalProperty("foo", JsonValue.from(0))
                                                 .build()
                                         )
                                         .build()
                                 )
                                 .costBreakdown(
-                                    CostBreakdown.builder()
+                                    AnalyticsInstancesResponse.Series.Instance.CostBreakdown
+                                        .builder()
                                         .creditsCost(0.0)
                                         .onDemandCost(0.0)
                                         .planCost(
-                                            CostBreakdown.PlanCost.builder()
+                                            AnalyticsInstancesResponse.Series.Instance.CostBreakdown
+                                                .PlanCost
+                                                .builder()
                                                 .putAdditionalProperty("foo", JsonValue.from(0))
                                                 .build()
                                         )
                                         .subscriptionCost(
-                                            CostBreakdown.SubscriptionCost.builder()
+                                            AnalyticsInstancesResponse.Series.Instance.CostBreakdown
+                                                .SubscriptionCost
+                                                .builder()
                                                 .putAdditionalProperty("foo", JsonValue.from(0))
                                                 .build()
                                         )
                                         .build()
                                 )
                                 .labels(
-                                    AnalyticsInstance.Labels.builder()
+                                    AnalyticsInstancesResponse.Series.Instance.Labels.builder()
                                         .putAdditionalProperty("foo", JsonValue.from("string"))
                                         .build()
                                 )
