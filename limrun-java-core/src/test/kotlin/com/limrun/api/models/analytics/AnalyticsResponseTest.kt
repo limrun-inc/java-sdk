@@ -19,9 +19,9 @@ internal class AnalyticsResponseTest {
                 .bucket(AnalyticsResponse.Bucket.HOUR)
                 .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .addSeries(
-                    AnalyticsEntry.builder()
+                    AnalyticsResponse.Series.builder()
                         .android(
-                            AnalyticsEntry.Android.builder()
+                            AnalyticsResponse.Series.Android.builder()
                                 .putAdditionalProperty(
                                     "foo",
                                     JsonValue.from(
@@ -43,7 +43,7 @@ internal class AnalyticsResponseTest {
                                 .build()
                         )
                         .ios(
-                            AnalyticsEntry.Ios.builder()
+                            AnalyticsResponse.Series.Ios.builder()
                                 .putAdditionalProperty(
                                     "foo",
                                     JsonValue.from(
@@ -65,7 +65,7 @@ internal class AnalyticsResponseTest {
                                 .build()
                         )
                         .sandbox(
-                            AnalyticsEntry.Sandbox.builder()
+                            AnalyticsResponse.Series.Sandbox.builder()
                                 .putAdditionalProperty(
                                     "foo",
                                     JsonValue.from(
@@ -88,46 +88,53 @@ internal class AnalyticsResponseTest {
                         )
                         .timestamp("timestamp")
                         .addInstance(
-                            AnalyticsInstance.builder()
+                            AnalyticsResponse.Series.Instance.builder()
                                 .billedMinutes(0L)
                                 .cost(0.0)
                                 .instanceTid("instanceTid")
                                 .platform("platform")
                                 .runtimeMinutes(0L)
                                 .billedBreakdown(
-                                    BilledBreakdown.builder()
+                                    AnalyticsResponse.Series.Instance.BilledBreakdown.builder()
                                         .creditsBilledMinutes(0L)
                                         .onDemandBilledMinutes(0L)
                                         .planBilledMinutes(
-                                            BilledBreakdown.PlanBilledMinutes.builder()
+                                            AnalyticsResponse.Series.Instance.BilledBreakdown
+                                                .PlanBilledMinutes
+                                                .builder()
                                                 .putAdditionalProperty("foo", JsonValue.from(0))
                                                 .build()
                                         )
                                         .subscriptionBilledMinutes(
-                                            BilledBreakdown.SubscriptionBilledMinutes.builder()
+                                            AnalyticsResponse.Series.Instance.BilledBreakdown
+                                                .SubscriptionBilledMinutes
+                                                .builder()
                                                 .putAdditionalProperty("foo", JsonValue.from(0))
                                                 .build()
                                         )
                                         .build()
                                 )
                                 .costBreakdown(
-                                    CostBreakdown.builder()
+                                    AnalyticsResponse.Series.Instance.CostBreakdown.builder()
                                         .creditsCost(0.0)
                                         .onDemandCost(0.0)
                                         .planCost(
-                                            CostBreakdown.PlanCost.builder()
+                                            AnalyticsResponse.Series.Instance.CostBreakdown.PlanCost
+                                                .builder()
                                                 .putAdditionalProperty("foo", JsonValue.from(0))
                                                 .build()
                                         )
                                         .subscriptionCost(
-                                            CostBreakdown.SubscriptionCost.builder()
+                                            AnalyticsResponse.Series.Instance.CostBreakdown
+                                                .SubscriptionCost
+                                                .builder()
                                                 .putAdditionalProperty("foo", JsonValue.from(0))
                                                 .build()
                                         )
                                         .build()
                                 )
                                 .labels(
-                                    AnalyticsInstance.Labels.builder()
+                                    AnalyticsResponse.Series.Instance.Labels.builder()
                                         .putAdditionalProperty("foo", JsonValue.from("string"))
                                         .build()
                                 )
@@ -137,9 +144,9 @@ internal class AnalyticsResponseTest {
                         .build()
                 )
                 .summary(
-                    AnalyticsSummary.builder()
+                    AnalyticsResponse.Summary.builder()
                         .android(
-                            AnalyticsSummary.Android.builder()
+                            AnalyticsResponse.Summary.Android.builder()
                                 .putAdditionalProperty(
                                     "foo",
                                     JsonValue.from(
@@ -161,7 +168,7 @@ internal class AnalyticsResponseTest {
                                 .build()
                         )
                         .ios(
-                            AnalyticsSummary.Ios.builder()
+                            AnalyticsResponse.Summary.Ios.builder()
                                 .putAdditionalProperty(
                                     "foo",
                                     JsonValue.from(
@@ -183,7 +190,7 @@ internal class AnalyticsResponseTest {
                                 .build()
                         )
                         .sandbox(
-                            AnalyticsSummary.Sandbox.builder()
+                            AnalyticsResponse.Summary.Sandbox.builder()
                                 .putAdditionalProperty(
                                     "foo",
                                     JsonValue.from(
@@ -217,9 +224,9 @@ internal class AnalyticsResponseTest {
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(analyticsResponse.series())
             .containsExactly(
-                AnalyticsEntry.builder()
+                AnalyticsResponse.Series.builder()
                     .android(
-                        AnalyticsEntry.Android.builder()
+                        AnalyticsResponse.Series.Android.builder()
                             .putAdditionalProperty(
                                 "foo",
                                 JsonValue.from(
@@ -241,7 +248,7 @@ internal class AnalyticsResponseTest {
                             .build()
                     )
                     .ios(
-                        AnalyticsEntry.Ios.builder()
+                        AnalyticsResponse.Series.Ios.builder()
                             .putAdditionalProperty(
                                 "foo",
                                 JsonValue.from(
@@ -263,7 +270,7 @@ internal class AnalyticsResponseTest {
                             .build()
                     )
                     .sandbox(
-                        AnalyticsEntry.Sandbox.builder()
+                        AnalyticsResponse.Series.Sandbox.builder()
                             .putAdditionalProperty(
                                 "foo",
                                 JsonValue.from(
@@ -286,46 +293,53 @@ internal class AnalyticsResponseTest {
                     )
                     .timestamp("timestamp")
                     .addInstance(
-                        AnalyticsInstance.builder()
+                        AnalyticsResponse.Series.Instance.builder()
                             .billedMinutes(0L)
                             .cost(0.0)
                             .instanceTid("instanceTid")
                             .platform("platform")
                             .runtimeMinutes(0L)
                             .billedBreakdown(
-                                BilledBreakdown.builder()
+                                AnalyticsResponse.Series.Instance.BilledBreakdown.builder()
                                     .creditsBilledMinutes(0L)
                                     .onDemandBilledMinutes(0L)
                                     .planBilledMinutes(
-                                        BilledBreakdown.PlanBilledMinutes.builder()
+                                        AnalyticsResponse.Series.Instance.BilledBreakdown
+                                            .PlanBilledMinutes
+                                            .builder()
                                             .putAdditionalProperty("foo", JsonValue.from(0))
                                             .build()
                                     )
                                     .subscriptionBilledMinutes(
-                                        BilledBreakdown.SubscriptionBilledMinutes.builder()
+                                        AnalyticsResponse.Series.Instance.BilledBreakdown
+                                            .SubscriptionBilledMinutes
+                                            .builder()
                                             .putAdditionalProperty("foo", JsonValue.from(0))
                                             .build()
                                     )
                                     .build()
                             )
                             .costBreakdown(
-                                CostBreakdown.builder()
+                                AnalyticsResponse.Series.Instance.CostBreakdown.builder()
                                     .creditsCost(0.0)
                                     .onDemandCost(0.0)
                                     .planCost(
-                                        CostBreakdown.PlanCost.builder()
+                                        AnalyticsResponse.Series.Instance.CostBreakdown.PlanCost
+                                            .builder()
                                             .putAdditionalProperty("foo", JsonValue.from(0))
                                             .build()
                                     )
                                     .subscriptionCost(
-                                        CostBreakdown.SubscriptionCost.builder()
+                                        AnalyticsResponse.Series.Instance.CostBreakdown
+                                            .SubscriptionCost
+                                            .builder()
                                             .putAdditionalProperty("foo", JsonValue.from(0))
                                             .build()
                                     )
                                     .build()
                             )
                             .labels(
-                                AnalyticsInstance.Labels.builder()
+                                AnalyticsResponse.Series.Instance.Labels.builder()
                                     .putAdditionalProperty("foo", JsonValue.from("string"))
                                     .build()
                             )
@@ -336,9 +350,9 @@ internal class AnalyticsResponseTest {
             )
         assertThat(analyticsResponse.summary())
             .isEqualTo(
-                AnalyticsSummary.builder()
+                AnalyticsResponse.Summary.builder()
                     .android(
-                        AnalyticsSummary.Android.builder()
+                        AnalyticsResponse.Summary.Android.builder()
                             .putAdditionalProperty(
                                 "foo",
                                 JsonValue.from(
@@ -360,7 +374,7 @@ internal class AnalyticsResponseTest {
                             .build()
                     )
                     .ios(
-                        AnalyticsSummary.Ios.builder()
+                        AnalyticsResponse.Summary.Ios.builder()
                             .putAdditionalProperty(
                                 "foo",
                                 JsonValue.from(
@@ -382,7 +396,7 @@ internal class AnalyticsResponseTest {
                             .build()
                     )
                     .sandbox(
-                        AnalyticsSummary.Sandbox.builder()
+                        AnalyticsResponse.Summary.Sandbox.builder()
                             .putAdditionalProperty(
                                 "foo",
                                 JsonValue.from(
@@ -419,9 +433,9 @@ internal class AnalyticsResponseTest {
                 .bucket(AnalyticsResponse.Bucket.HOUR)
                 .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .addSeries(
-                    AnalyticsEntry.builder()
+                    AnalyticsResponse.Series.builder()
                         .android(
-                            AnalyticsEntry.Android.builder()
+                            AnalyticsResponse.Series.Android.builder()
                                 .putAdditionalProperty(
                                     "foo",
                                     JsonValue.from(
@@ -443,7 +457,7 @@ internal class AnalyticsResponseTest {
                                 .build()
                         )
                         .ios(
-                            AnalyticsEntry.Ios.builder()
+                            AnalyticsResponse.Series.Ios.builder()
                                 .putAdditionalProperty(
                                     "foo",
                                     JsonValue.from(
@@ -465,7 +479,7 @@ internal class AnalyticsResponseTest {
                                 .build()
                         )
                         .sandbox(
-                            AnalyticsEntry.Sandbox.builder()
+                            AnalyticsResponse.Series.Sandbox.builder()
                                 .putAdditionalProperty(
                                     "foo",
                                     JsonValue.from(
@@ -488,46 +502,53 @@ internal class AnalyticsResponseTest {
                         )
                         .timestamp("timestamp")
                         .addInstance(
-                            AnalyticsInstance.builder()
+                            AnalyticsResponse.Series.Instance.builder()
                                 .billedMinutes(0L)
                                 .cost(0.0)
                                 .instanceTid("instanceTid")
                                 .platform("platform")
                                 .runtimeMinutes(0L)
                                 .billedBreakdown(
-                                    BilledBreakdown.builder()
+                                    AnalyticsResponse.Series.Instance.BilledBreakdown.builder()
                                         .creditsBilledMinutes(0L)
                                         .onDemandBilledMinutes(0L)
                                         .planBilledMinutes(
-                                            BilledBreakdown.PlanBilledMinutes.builder()
+                                            AnalyticsResponse.Series.Instance.BilledBreakdown
+                                                .PlanBilledMinutes
+                                                .builder()
                                                 .putAdditionalProperty("foo", JsonValue.from(0))
                                                 .build()
                                         )
                                         .subscriptionBilledMinutes(
-                                            BilledBreakdown.SubscriptionBilledMinutes.builder()
+                                            AnalyticsResponse.Series.Instance.BilledBreakdown
+                                                .SubscriptionBilledMinutes
+                                                .builder()
                                                 .putAdditionalProperty("foo", JsonValue.from(0))
                                                 .build()
                                         )
                                         .build()
                                 )
                                 .costBreakdown(
-                                    CostBreakdown.builder()
+                                    AnalyticsResponse.Series.Instance.CostBreakdown.builder()
                                         .creditsCost(0.0)
                                         .onDemandCost(0.0)
                                         .planCost(
-                                            CostBreakdown.PlanCost.builder()
+                                            AnalyticsResponse.Series.Instance.CostBreakdown.PlanCost
+                                                .builder()
                                                 .putAdditionalProperty("foo", JsonValue.from(0))
                                                 .build()
                                         )
                                         .subscriptionCost(
-                                            CostBreakdown.SubscriptionCost.builder()
+                                            AnalyticsResponse.Series.Instance.CostBreakdown
+                                                .SubscriptionCost
+                                                .builder()
                                                 .putAdditionalProperty("foo", JsonValue.from(0))
                                                 .build()
                                         )
                                         .build()
                                 )
                                 .labels(
-                                    AnalyticsInstance.Labels.builder()
+                                    AnalyticsResponse.Series.Instance.Labels.builder()
                                         .putAdditionalProperty("foo", JsonValue.from("string"))
                                         .build()
                                 )
@@ -537,9 +558,9 @@ internal class AnalyticsResponseTest {
                         .build()
                 )
                 .summary(
-                    AnalyticsSummary.builder()
+                    AnalyticsResponse.Summary.builder()
                         .android(
-                            AnalyticsSummary.Android.builder()
+                            AnalyticsResponse.Summary.Android.builder()
                                 .putAdditionalProperty(
                                     "foo",
                                     JsonValue.from(
@@ -561,7 +582,7 @@ internal class AnalyticsResponseTest {
                                 .build()
                         )
                         .ios(
-                            AnalyticsSummary.Ios.builder()
+                            AnalyticsResponse.Summary.Ios.builder()
                                 .putAdditionalProperty(
                                     "foo",
                                     JsonValue.from(
@@ -583,7 +604,7 @@ internal class AnalyticsResponseTest {
                                 .build()
                         )
                         .sandbox(
-                            AnalyticsSummary.Sandbox.builder()
+                            AnalyticsResponse.Summary.Sandbox.builder()
                                 .putAdditionalProperty(
                                     "foo",
                                     JsonValue.from(
