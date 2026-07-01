@@ -1194,7 +1194,7 @@ private constructor(
             private val billedMinutes: JsonField<Long>,
             private val cost: JsonField<Double>,
             private val instanceTid: JsonField<String>,
-            private val platform: JsonField<String>,
+            private val platform: JsonField<Platform>,
             private val runtimeMinutes: JsonField<Long>,
             private val billedBreakdown: JsonField<BilledBreakdown>,
             private val costBreakdown: JsonField<CostBreakdown>,
@@ -1214,7 +1214,7 @@ private constructor(
                 instanceTid: JsonField<String> = JsonMissing.of(),
                 @JsonProperty("platform")
                 @ExcludeMissing
-                platform: JsonField<String> = JsonMissing.of(),
+                platform: JsonField<Platform> = JsonMissing.of(),
                 @JsonProperty("runtimeMinutes")
                 @ExcludeMissing
                 runtimeMinutes: JsonField<Long> = JsonMissing.of(),
@@ -1269,13 +1269,13 @@ private constructor(
             fun instanceTid(): String = instanceTid.getRequired("instanceTid")
 
             /**
-             * Platform name, such as android, ios, or xcode
+             * Platform name.
              *
              * @throws LimrunInvalidDataException if the JSON field has an unexpected type or is
              *   unexpectedly missing or null (e.g. if the server responded with an unexpected
              *   value).
              */
-            fun platform(): String = platform.getRequired("platform")
+            fun platform(): Platform = platform.getRequired("platform")
 
             /**
              * Actual runtime minutes before platform multiplier
@@ -1351,7 +1351,9 @@ private constructor(
              * Unlike [platform], this method doesn't throw if the JSON field has an unexpected
              * type.
              */
-            @JsonProperty("platform") @ExcludeMissing fun _platform(): JsonField<String> = platform
+            @JsonProperty("platform")
+            @ExcludeMissing
+            fun _platform(): JsonField<Platform> = platform
 
             /**
              * Returns the raw JSON value of [runtimeMinutes].
@@ -1432,7 +1434,7 @@ private constructor(
                 private var billedMinutes: JsonField<Long>? = null
                 private var cost: JsonField<Double>? = null
                 private var instanceTid: JsonField<String>? = null
-                private var platform: JsonField<String>? = null
+                private var platform: JsonField<Platform>? = null
                 private var runtimeMinutes: JsonField<Long>? = null
                 private var billedBreakdown: JsonField<BilledBreakdown> = JsonMissing.of()
                 private var costBreakdown: JsonField<CostBreakdown> = JsonMissing.of()
@@ -1494,17 +1496,17 @@ private constructor(
                     this.instanceTid = instanceTid
                 }
 
-                /** Platform name, such as android, ios, or xcode */
-                fun platform(platform: String) = platform(JsonField.of(platform))
+                /** Platform name. */
+                fun platform(platform: Platform) = platform(JsonField.of(platform))
 
                 /**
                  * Sets [Builder.platform] to an arbitrary JSON value.
                  *
-                 * You should usually call [Builder.platform] with a well-typed [String] value
+                 * You should usually call [Builder.platform] with a well-typed [Platform] value
                  * instead. This method is primarily for setting the field to an undocumented or not
                  * yet supported value.
                  */
-                fun platform(platform: JsonField<String>) = apply { this.platform = platform }
+                fun platform(platform: JsonField<Platform>) = apply { this.platform = platform }
 
                 /** Actual runtime minutes before platform multiplier */
                 fun runtimeMinutes(runtimeMinutes: Long) =
@@ -1647,7 +1649,7 @@ private constructor(
                 billedMinutes()
                 cost()
                 instanceTid()
-                platform()
+                platform().validate()
                 runtimeMinutes()
                 billedBreakdown().ifPresent { it.validate() }
                 costBreakdown().ifPresent { it.validate() }
@@ -1675,12 +1677,160 @@ private constructor(
                 (if (billedMinutes.asKnown().isPresent) 1 else 0) +
                     (if (cost.asKnown().isPresent) 1 else 0) +
                     (if (instanceTid.asKnown().isPresent) 1 else 0) +
-                    (if (platform.asKnown().isPresent) 1 else 0) +
+                    (platform.asKnown().getOrNull()?.validity() ?: 0) +
                     (if (runtimeMinutes.asKnown().isPresent) 1 else 0) +
                     (billedBreakdown.asKnown().getOrNull()?.validity() ?: 0) +
                     (costBreakdown.asKnown().getOrNull()?.validity() ?: 0) +
                     (labels.asKnown().getOrNull()?.validity() ?: 0) +
                     (if (region.asKnown().isPresent) 1 else 0)
+
+            /** Platform name. */
+            class Platform @JsonCreator private constructor(private val value: JsonField<String>) :
+                Enum {
+
+                /**
+                 * Returns this class instance's raw value.
+                 *
+                 * This is usually only useful if this instance was deserialized from data that
+                 * doesn't match any known member, and you want to know that value. For example, if
+                 * the SDK is on an older version than the API, then the API may respond with new
+                 * members that the SDK is unaware of.
+                 */
+                @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+                companion object {
+
+                    @JvmField val ANDROID = of("android")
+
+                    @JvmField val IOS = of("ios")
+
+                    @JvmField val XCODE = of("xcode")
+
+                    @JvmStatic fun of(value: String) = Platform(JsonField.of(value))
+                }
+
+                /** An enum containing [Platform]'s known values. */
+                enum class Known {
+                    ANDROID,
+                    IOS,
+                    XCODE,
+                }
+
+                /**
+                 * An enum containing [Platform]'s known values, as well as an [_UNKNOWN] member.
+                 *
+                 * An instance of [Platform] can contain an unknown value in a couple of cases:
+                 * - It was deserialized from data that doesn't match any known member. For example,
+                 *   if the SDK is on an older version than the API, then the API may respond with
+                 *   new members that the SDK is unaware of.
+                 * - It was constructed with an arbitrary value using the [of] method.
+                 */
+                enum class Value {
+                    ANDROID,
+                    IOS,
+                    XCODE,
+                    /**
+                     * An enum member indicating that [Platform] was instantiated with an unknown
+                     * value.
+                     */
+                    _UNKNOWN,
+                }
+
+                /**
+                 * Returns an enum member corresponding to this class instance's value, or
+                 * [Value._UNKNOWN] if the class was instantiated with an unknown value.
+                 *
+                 * Use the [known] method instead if you're certain the value is always known or if
+                 * you want to throw for the unknown case.
+                 */
+                fun value(): Value =
+                    when (this) {
+                        ANDROID -> Value.ANDROID
+                        IOS -> Value.IOS
+                        XCODE -> Value.XCODE
+                        else -> Value._UNKNOWN
+                    }
+
+                /**
+                 * Returns an enum member corresponding to this class instance's value.
+                 *
+                 * Use the [value] method instead if you're uncertain the value is always known and
+                 * don't want to throw for the unknown case.
+                 *
+                 * @throws LimrunInvalidDataException if this class instance's value is a not a
+                 *   known member.
+                 */
+                fun known(): Known =
+                    when (this) {
+                        ANDROID -> Known.ANDROID
+                        IOS -> Known.IOS
+                        XCODE -> Known.XCODE
+                        else -> throw LimrunInvalidDataException("Unknown Platform: $value")
+                    }
+
+                /**
+                 * Returns this class instance's primitive wire representation.
+                 *
+                 * This differs from the [toString] method because that method is primarily for
+                 * debugging and generally doesn't throw.
+                 *
+                 * @throws LimrunInvalidDataException if this class instance's value does not have
+                 *   the expected primitive type.
+                 */
+                fun asString(): String =
+                    _value().asString().orElseThrow {
+                        LimrunInvalidDataException("Value is not a String")
+                    }
+
+                private var validated: Boolean = false
+
+                /**
+                 * Validates that the types of all values in this object match their expected types
+                 * recursively.
+                 *
+                 * This method is _not_ forwards compatible with new types from the API for existing
+                 * fields.
+                 *
+                 * @throws LimrunInvalidDataException if any value type in this object doesn't match
+                 *   its expected type.
+                 */
+                fun validate(): Platform = apply {
+                    if (validated) {
+                        return@apply
+                    }
+
+                    known()
+                    validated = true
+                }
+
+                fun isValid(): Boolean =
+                    try {
+                        validate()
+                        true
+                    } catch (e: LimrunInvalidDataException) {
+                        false
+                    }
+
+                /**
+                 * Returns a score indicating how many valid values are contained in this object
+                 * recursively.
+                 *
+                 * Used for best match union deserialization.
+                 */
+                @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+                override fun equals(other: Any?): Boolean {
+                    if (this === other) {
+                        return true
+                    }
+
+                    return other is Platform && value == other.value
+                }
+
+                override fun hashCode() = value.hashCode()
+
+                override fun toString() = value.toString()
+            }
 
             class BilledBreakdown
             @JsonCreator(mode = JsonCreator.Mode.DISABLED)
