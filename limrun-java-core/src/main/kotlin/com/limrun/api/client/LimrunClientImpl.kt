@@ -4,6 +4,8 @@ package com.limrun.api.client
 
 import com.limrun.api.core.ClientOptions
 import com.limrun.api.core.getPackageVersion
+import com.limrun.api.services.blocking.AnalyticsService
+import com.limrun.api.services.blocking.AnalyticsServiceImpl
 import com.limrun.api.services.blocking.AndroidInstanceService
 import com.limrun.api.services.blocking.AndroidInstanceServiceImpl
 import com.limrun.api.services.blocking.AssetService
@@ -45,6 +47,10 @@ class LimrunClientImpl(private val clientOptions: ClientOptions) : LimrunClient 
         XcodeInstanceServiceImpl(clientOptionsWithUserAgent)
     }
 
+    private val analytics: AnalyticsService by lazy {
+        AnalyticsServiceImpl(clientOptionsWithUserAgent)
+    }
+
     override fun async(): LimrunClientAsync = async
 
     override fun withRawResponse(): LimrunClient.WithRawResponse = withRawResponse
@@ -59,6 +65,8 @@ class LimrunClientImpl(private val clientOptions: ClientOptions) : LimrunClient 
     override fun iosInstances(): IosInstanceService = iosInstances
 
     override fun xcodeInstances(): XcodeInstanceService = xcodeInstances
+
+    override fun analytics(): AnalyticsService = analytics
 
     override fun close() = clientOptions.close()
 
@@ -81,6 +89,10 @@ class LimrunClientImpl(private val clientOptions: ClientOptions) : LimrunClient 
             XcodeInstanceServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val analytics: AnalyticsService.WithRawResponse by lazy {
+            AnalyticsServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): LimrunClient.WithRawResponse =
@@ -95,5 +107,7 @@ class LimrunClientImpl(private val clientOptions: ClientOptions) : LimrunClient 
         override fun iosInstances(): IosInstanceService.WithRawResponse = iosInstances
 
         override fun xcodeInstances(): XcodeInstanceService.WithRawResponse = xcodeInstances
+
+        override fun analytics(): AnalyticsService.WithRawResponse = analytics
     }
 }

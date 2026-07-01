@@ -3,6 +3,7 @@
 package com.limrun.api.client
 
 import com.limrun.api.core.ClientOptions
+import com.limrun.api.services.async.AnalyticsServiceAsync
 import com.limrun.api.services.async.AndroidInstanceServiceAsync
 import com.limrun.api.services.async.AssetServiceAsync
 import com.limrun.api.services.async.IosInstanceServiceAsync
@@ -53,6 +54,8 @@ interface LimrunClientAsync {
 
     fun xcodeInstances(): XcodeInstanceServiceAsync
 
+    fun analytics(): AnalyticsServiceAsync
+
     /**
      * Closes this client, relinquishing any underlying resources.
      *
@@ -85,5 +88,7 @@ interface LimrunClientAsync {
         fun iosInstances(): IosInstanceServiceAsync.WithRawResponse
 
         fun xcodeInstances(): XcodeInstanceServiceAsync.WithRawResponse
+
+        fun analytics(): AnalyticsServiceAsync.WithRawResponse
     }
 }

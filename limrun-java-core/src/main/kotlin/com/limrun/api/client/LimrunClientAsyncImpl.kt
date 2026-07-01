@@ -4,6 +4,8 @@ package com.limrun.api.client
 
 import com.limrun.api.core.ClientOptions
 import com.limrun.api.core.getPackageVersion
+import com.limrun.api.services.async.AnalyticsServiceAsync
+import com.limrun.api.services.async.AnalyticsServiceAsyncImpl
 import com.limrun.api.services.async.AndroidInstanceServiceAsync
 import com.limrun.api.services.async.AndroidInstanceServiceAsyncImpl
 import com.limrun.api.services.async.AssetServiceAsync
@@ -47,6 +49,10 @@ class LimrunClientAsyncImpl(private val clientOptions: ClientOptions) : LimrunCl
         XcodeInstanceServiceAsyncImpl(clientOptionsWithUserAgent)
     }
 
+    private val analytics: AnalyticsServiceAsync by lazy {
+        AnalyticsServiceAsyncImpl(clientOptionsWithUserAgent)
+    }
+
     override fun sync(): LimrunClient = sync
 
     override fun withRawResponse(): LimrunClientAsync.WithRawResponse = withRawResponse
@@ -61,6 +67,8 @@ class LimrunClientAsyncImpl(private val clientOptions: ClientOptions) : LimrunCl
     override fun iosInstances(): IosInstanceServiceAsync = iosInstances
 
     override fun xcodeInstances(): XcodeInstanceServiceAsync = xcodeInstances
+
+    override fun analytics(): AnalyticsServiceAsync = analytics
 
     override fun close() = clientOptions.close()
 
@@ -83,6 +91,10 @@ class LimrunClientAsyncImpl(private val clientOptions: ClientOptions) : LimrunCl
             XcodeInstanceServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val analytics: AnalyticsServiceAsync.WithRawResponse by lazy {
+            AnalyticsServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): LimrunClientAsync.WithRawResponse =
@@ -98,5 +110,7 @@ class LimrunClientAsyncImpl(private val clientOptions: ClientOptions) : LimrunCl
         override fun iosInstances(): IosInstanceServiceAsync.WithRawResponse = iosInstances
 
         override fun xcodeInstances(): XcodeInstanceServiceAsync.WithRawResponse = xcodeInstances
+
+        override fun analytics(): AnalyticsServiceAsync.WithRawResponse = analytics
     }
 }
