@@ -56,6 +56,7 @@ internal class AndroidInstanceTest {
                         )
                         .signedStreamUrl("signedStreamUrl")
                         .targetHttpPortUrlPrefix("targetHttpPortUrlPrefix")
+                        .terminationReason("InactivityTimeout")
                         .build()
                 )
                 .build()
@@ -104,6 +105,7 @@ internal class AndroidInstanceTest {
                     )
                     .signedStreamUrl("signedStreamUrl")
                     .targetHttpPortUrlPrefix("targetHttpPortUrlPrefix")
+                    .terminationReason("InactivityTimeout")
                     .build()
             )
     }
@@ -154,6 +156,7 @@ internal class AndroidInstanceTest {
                         )
                         .signedStreamUrl("signedStreamUrl")
                         .targetHttpPortUrlPrefix("targetHttpPortUrlPrefix")
+                        .terminationReason("InactivityTimeout")
                         .build()
                 )
                 .build()

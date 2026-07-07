@@ -996,6 +996,7 @@ private constructor(
         private val sandbox: JsonField<Sandbox>,
         private val signedStreamUrl: JsonField<String>,
         private val targetHttpPortUrlPrefix: JsonField<String>,
+        private val terminationReason: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -1018,6 +1019,9 @@ private constructor(
             @JsonProperty("targetHttpPortUrlPrefix")
             @ExcludeMissing
             targetHttpPortUrlPrefix: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("terminationReason")
+            @ExcludeMissing
+            terminationReason: JsonField<String> = JsonMissing.of(),
         ) : this(
             token,
             state,
@@ -1028,6 +1032,7 @@ private constructor(
             sandbox,
             signedStreamUrl,
             targetHttpPortUrlPrefix,
+            terminationReason,
             mutableMapOf(),
         )
 
@@ -1086,6 +1091,22 @@ private constructor(
          */
         fun targetHttpPortUrlPrefix(): Optional<String> =
             targetHttpPortUrlPrefix.getOptional("targetHttpPortUrlPrefix")
+
+        /**
+         * Machine-readable reason the instance was terminated. Always present once state is
+         * "terminated", never present before that. New values may be added over time, so treat any
+         * unrecognized value as "Unknown". Known values:
+         * - "UserRequested": terminated by a delete request to the API.
+         * - "InactivityTimeout": the timeout given in spec.inactivityTimeout elapsed.
+         * - "HardTimeout": the timeout given in spec.hardTimeout elapsed.
+         * - "Unknown": terminated for a cause the platform did not attribute, including instances
+         *   that failed to get ready during creation. See errorMessage for details when available.
+         *
+         * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun terminationReason(): Optional<String> =
+            terminationReason.getOptional("terminationReason")
 
         /**
          * Returns the raw JSON value of [token].
@@ -1162,6 +1183,16 @@ private constructor(
         @ExcludeMissing
         fun _targetHttpPortUrlPrefix(): JsonField<String> = targetHttpPortUrlPrefix
 
+        /**
+         * Returns the raw JSON value of [terminationReason].
+         *
+         * Unlike [terminationReason], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("terminationReason")
+        @ExcludeMissing
+        fun _terminationReason(): JsonField<String> = terminationReason
+
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
             additionalProperties.put(key, value)
@@ -1200,6 +1231,7 @@ private constructor(
             private var sandbox: JsonField<Sandbox> = JsonMissing.of()
             private var signedStreamUrl: JsonField<String> = JsonMissing.of()
             private var targetHttpPortUrlPrefix: JsonField<String> = JsonMissing.of()
+            private var terminationReason: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
@@ -1213,6 +1245,7 @@ private constructor(
                 sandbox = status.sandbox
                 signedStreamUrl = status.signedStreamUrl
                 targetHttpPortUrlPrefix = status.targetHttpPortUrlPrefix
+                terminationReason = status.terminationReason
                 additionalProperties = status.additionalProperties.toMutableMap()
             }
 
@@ -1326,6 +1359,31 @@ private constructor(
                 this.targetHttpPortUrlPrefix = targetHttpPortUrlPrefix
             }
 
+            /**
+             * Machine-readable reason the instance was terminated. Always present once state is
+             * "terminated", never present before that. New values may be added over time, so treat
+             * any unrecognized value as "Unknown". Known values:
+             * - "UserRequested": terminated by a delete request to the API.
+             * - "InactivityTimeout": the timeout given in spec.inactivityTimeout elapsed.
+             * - "HardTimeout": the timeout given in spec.hardTimeout elapsed.
+             * - "Unknown": terminated for a cause the platform did not attribute, including
+             *   instances that failed to get ready during creation. See errorMessage for details
+             *   when available.
+             */
+            fun terminationReason(terminationReason: String) =
+                terminationReason(JsonField.of(terminationReason))
+
+            /**
+             * Sets [Builder.terminationReason] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.terminationReason] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun terminationReason(terminationReason: JsonField<String>) = apply {
+                this.terminationReason = terminationReason
+            }
+
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
                 putAllAdditionalProperties(additionalProperties)
@@ -1369,6 +1427,7 @@ private constructor(
                     sandbox,
                     signedStreamUrl,
                     targetHttpPortUrlPrefix,
+                    terminationReason,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -1398,6 +1457,7 @@ private constructor(
             sandbox().ifPresent { it.validate() }
             signedStreamUrl()
             targetHttpPortUrlPrefix()
+            terminationReason()
             validated = true
         }
 
@@ -1425,7 +1485,8 @@ private constructor(
                 (if (mcpUrl.asKnown().isPresent) 1 else 0) +
                 (sandbox.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (signedStreamUrl.asKnown().isPresent) 1 else 0) +
-                (if (targetHttpPortUrlPrefix.asKnown().isPresent) 1 else 0)
+                (if (targetHttpPortUrlPrefix.asKnown().isPresent) 1 else 0) +
+                (if (terminationReason.asKnown().isPresent) 1 else 0)
 
         class State @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
@@ -1902,6 +1963,7 @@ private constructor(
                 sandbox == other.sandbox &&
                 signedStreamUrl == other.signedStreamUrl &&
                 targetHttpPortUrlPrefix == other.targetHttpPortUrlPrefix &&
+                terminationReason == other.terminationReason &&
                 additionalProperties == other.additionalProperties
         }
 
@@ -1916,6 +1978,7 @@ private constructor(
                 sandbox,
                 signedStreamUrl,
                 targetHttpPortUrlPrefix,
+                terminationReason,
                 additionalProperties,
             )
         }
@@ -1923,7 +1986,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Status{token=$token, state=$state, apiUrl=$apiUrl, endpointWebSocketUrl=$endpointWebSocketUrl, errorMessage=$errorMessage, mcpUrl=$mcpUrl, sandbox=$sandbox, signedStreamUrl=$signedStreamUrl, targetHttpPortUrlPrefix=$targetHttpPortUrlPrefix, additionalProperties=$additionalProperties}"
+            "Status{token=$token, state=$state, apiUrl=$apiUrl, endpointWebSocketUrl=$endpointWebSocketUrl, errorMessage=$errorMessage, mcpUrl=$mcpUrl, sandbox=$sandbox, signedStreamUrl=$signedStreamUrl, targetHttpPortUrlPrefix=$targetHttpPortUrlPrefix, terminationReason=$terminationReason, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

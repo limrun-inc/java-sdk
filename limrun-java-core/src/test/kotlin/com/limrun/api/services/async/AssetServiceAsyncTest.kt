@@ -23,6 +23,7 @@ internal class AssetServiceAsyncTest {
                     .includeAppStore(true)
                     .includeDownloadUrl(true)
                     .includeUploadUrl(true)
+                    .kindFilter(AssetListParams.KindFilter.APP)
                     .limit(50L)
                     .nameFilter("nameFilter")
                     .namePrefixFilter("namePrefixFilter")
@@ -71,7 +72,12 @@ internal class AssetServiceAsyncTest {
 
         val responseFuture =
             assetServiceAsync.getOrCreate(
-                AssetGetOrCreateParams.builder().name("name").ttl("ttl").build()
+                AssetGetOrCreateParams.builder()
+                    .name("name")
+                    .kind(AssetGetOrCreateParams.Kind.APP)
+                    .platform(AssetGetOrCreateParams.Platform.IOS)
+                    .ttl("ttl")
+                    .build()
             )
 
         val response = responseFuture.get()

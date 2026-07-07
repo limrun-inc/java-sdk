@@ -102,6 +102,7 @@ internal class ProGuardCompatibilityTest {
                         )
                         .signedStreamUrl("signedStreamUrl")
                         .targetHttpPortUrlPrefix("targetHttpPortUrlPrefix")
+                        .terminationReason("InactivityTimeout")
                         .build()
                 )
                 .build()

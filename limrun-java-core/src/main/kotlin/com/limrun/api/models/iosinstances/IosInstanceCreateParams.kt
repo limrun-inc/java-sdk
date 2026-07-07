@@ -1568,6 +1568,7 @@ private constructor(
             private val source: JsonField<Source>,
             private val assetId: JsonField<String>,
             private val assetName: JsonField<String>,
+            private val encryptionKey: JsonField<String>,
             private val launchMode: JsonField<LaunchMode>,
             private val url: JsonField<String>,
             private val additionalProperties: MutableMap<String, JsonValue>,
@@ -1585,11 +1586,23 @@ private constructor(
                 @JsonProperty("assetName")
                 @ExcludeMissing
                 assetName: JsonField<String> = JsonMissing.of(),
+                @JsonProperty("encryptionKey")
+                @ExcludeMissing
+                encryptionKey: JsonField<String> = JsonMissing.of(),
                 @JsonProperty("launchMode")
                 @ExcludeMissing
                 launchMode: JsonField<LaunchMode> = JsonMissing.of(),
                 @JsonProperty("url") @ExcludeMissing url: JsonField<String> = JsonMissing.of(),
-            ) : this(kind, source, assetId, assetName, launchMode, url, mutableMapOf())
+            ) : this(
+                kind,
+                source,
+                assetId,
+                assetName,
+                encryptionKey,
+                launchMode,
+                url,
+                mutableMapOf(),
+            )
 
             /**
              * @throws LimrunInvalidDataException if the JSON field has an unexpected type or is
@@ -1616,6 +1629,15 @@ private constructor(
              *   the server responded with an unexpected value).
              */
             fun assetName(): Optional<String> = assetName.getOptional("assetName")
+
+            /**
+             * Base64/base64url-encoded 32-byte key used to decrypt Keychain assets. Required when
+             * kind is Keychain.
+             *
+             * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if
+             *   the server responded with an unexpected value).
+             */
+            fun encryptionKey(): Optional<String> = encryptionKey.getOptional("encryptionKey")
 
             /**
              * Launch mode specifies how to launch the app after installation. If not given, the app
@@ -1662,6 +1684,16 @@ private constructor(
             @JsonProperty("assetName")
             @ExcludeMissing
             fun _assetName(): JsonField<String> = assetName
+
+            /**
+             * Returns the raw JSON value of [encryptionKey].
+             *
+             * Unlike [encryptionKey], this method doesn't throw if the JSON field has an unexpected
+             * type.
+             */
+            @JsonProperty("encryptionKey")
+            @ExcludeMissing
+            fun _encryptionKey(): JsonField<String> = encryptionKey
 
             /**
              * Returns the raw JSON value of [launchMode].
@@ -1713,6 +1745,7 @@ private constructor(
                 private var source: JsonField<Source>? = null
                 private var assetId: JsonField<String> = JsonMissing.of()
                 private var assetName: JsonField<String> = JsonMissing.of()
+                private var encryptionKey: JsonField<String> = JsonMissing.of()
                 private var launchMode: JsonField<LaunchMode> = JsonMissing.of()
                 private var url: JsonField<String> = JsonMissing.of()
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -1723,6 +1756,7 @@ private constructor(
                     source = initialAsset.source
                     assetId = initialAsset.assetId
                     assetName = initialAsset.assetName
+                    encryptionKey = initialAsset.encryptionKey
                     launchMode = initialAsset.launchMode
                     url = initialAsset.url
                     additionalProperties = initialAsset.additionalProperties.toMutableMap()
@@ -1771,6 +1805,24 @@ private constructor(
                  * yet supported value.
                  */
                 fun assetName(assetName: JsonField<String>) = apply { this.assetName = assetName }
+
+                /**
+                 * Base64/base64url-encoded 32-byte key used to decrypt Keychain assets. Required
+                 * when kind is Keychain.
+                 */
+                fun encryptionKey(encryptionKey: String) =
+                    encryptionKey(JsonField.of(encryptionKey))
+
+                /**
+                 * Sets [Builder.encryptionKey] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.encryptionKey] with a well-typed [String] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun encryptionKey(encryptionKey: JsonField<String>) = apply {
+                    this.encryptionKey = encryptionKey
+                }
 
                 /**
                  * Launch mode specifies how to launch the app after installation. If not given, the
@@ -1841,6 +1893,7 @@ private constructor(
                         checkRequired("source", source),
                         assetId,
                         assetName,
+                        encryptionKey,
                         launchMode,
                         url,
                         additionalProperties.toMutableMap(),
@@ -1868,6 +1921,7 @@ private constructor(
                 source().validate()
                 assetId()
                 assetName()
+                encryptionKey()
                 launchMode().ifPresent { it.validate() }
                 url()
                 validated = true
@@ -1893,6 +1947,7 @@ private constructor(
                     (source.asKnown().getOrNull()?.validity() ?: 0) +
                     (if (assetId.asKnown().isPresent) 1 else 0) +
                     (if (assetName.asKnown().isPresent) 1 else 0) +
+                    (if (encryptionKey.asKnown().isPresent) 1 else 0) +
                     (launchMode.asKnown().getOrNull()?.validity() ?: 0) +
                     (if (url.asKnown().isPresent) 1 else 0)
 
@@ -1913,12 +1968,15 @@ private constructor(
 
                     @JvmField val APP = of("App")
 
+                    @JvmField val KEYCHAIN = of("Keychain")
+
                     @JvmStatic fun of(value: String) = Kind(JsonField.of(value))
                 }
 
                 /** An enum containing [Kind]'s known values. */
                 enum class Known {
-                    APP
+                    APP,
+                    KEYCHAIN,
                 }
 
                 /**
@@ -1932,6 +1990,7 @@ private constructor(
                  */
                 enum class Value {
                     APP,
+                    KEYCHAIN,
                     /**
                      * An enum member indicating that [Kind] was instantiated with an unknown value.
                      */
@@ -1948,6 +2007,7 @@ private constructor(
                 fun value(): Value =
                     when (this) {
                         APP -> Value.APP
+                        KEYCHAIN -> Value.KEYCHAIN
                         else -> Value._UNKNOWN
                     }
 
@@ -1963,6 +2023,7 @@ private constructor(
                 fun known(): Known =
                     when (this) {
                         APP -> Known.APP
+                        KEYCHAIN -> Known.KEYCHAIN
                         else -> throw LimrunInvalidDataException("Unknown Kind: $value")
                     }
 
@@ -2339,6 +2400,7 @@ private constructor(
                     source == other.source &&
                     assetId == other.assetId &&
                     assetName == other.assetName &&
+                    encryptionKey == other.encryptionKey &&
                     launchMode == other.launchMode &&
                     url == other.url &&
                     additionalProperties == other.additionalProperties
@@ -2350,6 +2412,7 @@ private constructor(
                     source,
                     assetId,
                     assetName,
+                    encryptionKey,
                     launchMode,
                     url,
                     additionalProperties,
@@ -2359,7 +2422,7 @@ private constructor(
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "InitialAsset{kind=$kind, source=$source, assetId=$assetId, assetName=$assetName, launchMode=$launchMode, url=$url, additionalProperties=$additionalProperties}"
+                "InitialAsset{kind=$kind, source=$source, assetId=$assetId, assetName=$assetName, encryptionKey=$encryptionKey, launchMode=$launchMode, url=$url, additionalProperties=$additionalProperties}"
         }
 
         /** The model for the Apple Simulator. Default is iphone. */
