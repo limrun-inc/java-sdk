@@ -53,6 +53,7 @@ internal class IosInstanceTest {
                         )
                         .signedStreamUrl("signedStreamUrl")
                         .targetHttpPortUrlPrefix("targetHttpPortUrlPrefix")
+                        .terminationReason("InactivityTimeout")
                         .build()
                 )
                 .build()
@@ -96,6 +97,7 @@ internal class IosInstanceTest {
                     )
                     .signedStreamUrl("signedStreamUrl")
                     .targetHttpPortUrlPrefix("targetHttpPortUrlPrefix")
+                    .terminationReason("InactivityTimeout")
                     .build()
             )
     }
@@ -143,6 +145,7 @@ internal class IosInstanceTest {
                         )
                         .signedStreamUrl("signedStreamUrl")
                         .targetHttpPortUrlPrefix("targetHttpPortUrlPrefix")
+                        .terminationReason("InactivityTimeout")
                         .build()
                 )
                 .build()

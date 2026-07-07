@@ -47,6 +47,7 @@ internal class IosInstanceServiceTest {
                                     .source(IosInstanceCreateParams.Spec.InitialAsset.Source.URL)
                                     .assetId("assetId")
                                     .assetName("assetName")
+                                    .encryptionKey("encryptionKey")
                                     .launchMode(
                                         IosInstanceCreateParams.Spec.InitialAsset.LaunchMode
                                             .FOREGROUND_IF_RUNNING

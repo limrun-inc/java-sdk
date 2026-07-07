@@ -968,6 +968,7 @@ private constructor(
         private val state: JsonField<State>,
         private val apiUrl: JsonField<String>,
         private val errorMessage: JsonField<String>,
+        private val terminationReason: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -979,7 +980,10 @@ private constructor(
             @JsonProperty("errorMessage")
             @ExcludeMissing
             errorMessage: JsonField<String> = JsonMissing.of(),
-        ) : this(token, state, apiUrl, errorMessage, mutableMapOf())
+            @JsonProperty("terminationReason")
+            @ExcludeMissing
+            terminationReason: JsonField<String> = JsonMissing.of(),
+        ) : this(token, state, apiUrl, errorMessage, terminationReason, mutableMapOf())
 
         /**
          * @throws LimrunInvalidDataException if the JSON field has an unexpected type or is
@@ -1004,6 +1008,22 @@ private constructor(
          *   server responded with an unexpected value).
          */
         fun errorMessage(): Optional<String> = errorMessage.getOptional("errorMessage")
+
+        /**
+         * Machine-readable reason the instance was terminated. Always present once state is
+         * "terminated", never present before that. New values may be added over time, so treat any
+         * unrecognized value as "Unknown". Known values:
+         * - "UserRequested": terminated by a delete request to the API.
+         * - "InactivityTimeout": the timeout given in spec.inactivityTimeout elapsed.
+         * - "HardTimeout": the timeout given in spec.hardTimeout elapsed.
+         * - "Unknown": terminated for a cause the platform did not attribute, including instances
+         *   that failed to get ready during creation. See errorMessage for details when available.
+         *
+         * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun terminationReason(): Optional<String> =
+            terminationReason.getOptional("terminationReason")
 
         /**
          * Returns the raw JSON value of [token].
@@ -1035,6 +1055,16 @@ private constructor(
         @JsonProperty("errorMessage")
         @ExcludeMissing
         fun _errorMessage(): JsonField<String> = errorMessage
+
+        /**
+         * Returns the raw JSON value of [terminationReason].
+         *
+         * Unlike [terminationReason], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("terminationReason")
+        @ExcludeMissing
+        fun _terminationReason(): JsonField<String> = terminationReason
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -1069,6 +1099,7 @@ private constructor(
             private var state: JsonField<State>? = null
             private var apiUrl: JsonField<String> = JsonMissing.of()
             private var errorMessage: JsonField<String> = JsonMissing.of()
+            private var terminationReason: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
@@ -1077,6 +1108,7 @@ private constructor(
                 state = status.state
                 apiUrl = status.apiUrl
                 errorMessage = status.errorMessage
+                terminationReason = status.terminationReason
                 additionalProperties = status.additionalProperties.toMutableMap()
             }
 
@@ -1126,6 +1158,31 @@ private constructor(
                 this.errorMessage = errorMessage
             }
 
+            /**
+             * Machine-readable reason the instance was terminated. Always present once state is
+             * "terminated", never present before that. New values may be added over time, so treat
+             * any unrecognized value as "Unknown". Known values:
+             * - "UserRequested": terminated by a delete request to the API.
+             * - "InactivityTimeout": the timeout given in spec.inactivityTimeout elapsed.
+             * - "HardTimeout": the timeout given in spec.hardTimeout elapsed.
+             * - "Unknown": terminated for a cause the platform did not attribute, including
+             *   instances that failed to get ready during creation. See errorMessage for details
+             *   when available.
+             */
+            fun terminationReason(terminationReason: String) =
+                terminationReason(JsonField.of(terminationReason))
+
+            /**
+             * Sets [Builder.terminationReason] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.terminationReason] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun terminationReason(terminationReason: JsonField<String>) = apply {
+                this.terminationReason = terminationReason
+            }
+
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
                 putAllAdditionalProperties(additionalProperties)
@@ -1164,6 +1221,7 @@ private constructor(
                     checkRequired("state", state),
                     apiUrl,
                     errorMessage,
+                    terminationReason,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -1188,6 +1246,7 @@ private constructor(
             state().validate()
             apiUrl()
             errorMessage()
+            terminationReason()
             validated = true
         }
 
@@ -1210,7 +1269,8 @@ private constructor(
             (if (token.asKnown().isPresent) 1 else 0) +
                 (state.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (apiUrl.asKnown().isPresent) 1 else 0) +
-                (if (errorMessage.asKnown().isPresent) 1 else 0)
+                (if (errorMessage.asKnown().isPresent) 1 else 0) +
+                (if (terminationReason.asKnown().isPresent) 1 else 0)
 
         class State @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
@@ -1379,17 +1439,25 @@ private constructor(
                 state == other.state &&
                 apiUrl == other.apiUrl &&
                 errorMessage == other.errorMessage &&
+                terminationReason == other.terminationReason &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(token, state, apiUrl, errorMessage, additionalProperties)
+            Objects.hash(
+                token,
+                state,
+                apiUrl,
+                errorMessage,
+                terminationReason,
+                additionalProperties,
+            )
         }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Status{token=$token, state=$state, apiUrl=$apiUrl, errorMessage=$errorMessage, additionalProperties=$additionalProperties}"
+            "Status{token=$token, state=$state, apiUrl=$apiUrl, errorMessage=$errorMessage, terminationReason=$terminationReason, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

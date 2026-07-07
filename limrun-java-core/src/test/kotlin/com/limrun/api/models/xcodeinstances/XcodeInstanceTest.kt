@@ -42,6 +42,7 @@ internal class XcodeInstanceTest {
                         .state(XcodeInstance.Status.State.UNKNOWN)
                         .apiUrl("apiUrl")
                         .errorMessage("errorMessage")
+                        .terminationReason("InactivityTimeout")
                         .build()
                 )
                 .build()
@@ -76,6 +77,7 @@ internal class XcodeInstanceTest {
                     .state(XcodeInstance.Status.State.UNKNOWN)
                     .apiUrl("apiUrl")
                     .errorMessage("errorMessage")
+                    .terminationReason("InactivityTimeout")
                     .build()
             )
     }
@@ -112,6 +114,7 @@ internal class XcodeInstanceTest {
                         .state(XcodeInstance.Status.State.UNKNOWN)
                         .apiUrl("apiUrl")
                         .errorMessage("errorMessage")
+                        .terminationReason("InactivityTimeout")
                         .build()
                 )
                 .build()

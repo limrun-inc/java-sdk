@@ -23,6 +23,7 @@ internal class AssetServiceTest {
                     .includeAppStore(true)
                     .includeDownloadUrl(true)
                     .includeUploadUrl(true)
+                    .kindFilter(AssetListParams.KindFilter.APP)
                     .limit(50L)
                     .nameFilter("nameFilter")
                     .namePrefixFilter("namePrefixFilter")
@@ -67,7 +68,12 @@ internal class AssetServiceTest {
 
         val response =
             assetService.getOrCreate(
-                AssetGetOrCreateParams.builder().name("name").ttl("ttl").build()
+                AssetGetOrCreateParams.builder()
+                    .name("name")
+                    .kind(AssetGetOrCreateParams.Kind.APP)
+                    .platform(AssetGetOrCreateParams.Platform.IOS)
+                    .ttl("ttl")
+                    .build()
             )
 
         response.validate()
