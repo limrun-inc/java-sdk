@@ -797,6 +797,7 @@ private constructor(
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val clues: JsonField<List<Clue>>,
+        private val forceBundleId: JsonField<String>,
         private val hardTimeout: JsonField<String>,
         private val inactivityTimeout: JsonField<String>,
         private val initialAssets: JsonField<List<InitialAsset>>,
@@ -809,6 +810,9 @@ private constructor(
         @JsonCreator
         private constructor(
             @JsonProperty("clues") @ExcludeMissing clues: JsonField<List<Clue>> = JsonMissing.of(),
+            @JsonProperty("forceBundleId")
+            @ExcludeMissing
+            forceBundleId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("hardTimeout")
             @ExcludeMissing
             hardTimeout: JsonField<String> = JsonMissing.of(),
@@ -823,6 +827,7 @@ private constructor(
             @JsonProperty("sandbox") @ExcludeMissing sandbox: JsonField<Sandbox> = JsonMissing.of(),
         ) : this(
             clues,
+            forceBundleId,
             hardTimeout,
             inactivityTimeout,
             initialAssets,
@@ -837,6 +842,16 @@ private constructor(
          *   server responded with an unexpected value).
          */
         fun clues(): Optional<List<Clue>> = clues.getOptional("clues")
+
+        /**
+         * Keeps this app in the foreground after it is first observed there. This does not launch
+         * the app when the simulator starts. Once armed, closing or backgrounding the app causes it
+         * to be brought back to the foreground.
+         *
+         * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun forceBundleId(): Optional<String> = forceBundleId.getOptional("forceBundleId")
 
         /**
          * After how many minutes should the instance be terminated. Example values 1m, 10m, 3h.
@@ -906,6 +921,16 @@ private constructor(
          * Unlike [clues], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("clues") @ExcludeMissing fun _clues(): JsonField<List<Clue>> = clues
+
+        /**
+         * Returns the raw JSON value of [forceBundleId].
+         *
+         * Unlike [forceBundleId], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("forceBundleId")
+        @ExcludeMissing
+        fun _forceBundleId(): JsonField<String> = forceBundleId
 
         /**
          * Returns the raw JSON value of [hardTimeout].
@@ -979,6 +1004,7 @@ private constructor(
         class Builder internal constructor() {
 
             private var clues: JsonField<MutableList<Clue>>? = null
+            private var forceBundleId: JsonField<String> = JsonMissing.of()
             private var hardTimeout: JsonField<String> = JsonMissing.of()
             private var inactivityTimeout: JsonField<String> = JsonMissing.of()
             private var initialAssets: JsonField<MutableList<InitialAsset>>? = null
@@ -990,6 +1016,7 @@ private constructor(
             @JvmSynthetic
             internal fun from(spec: Spec) = apply {
                 clues = spec.clues.map { it.toMutableList() }
+                forceBundleId = spec.forceBundleId
                 hardTimeout = spec.hardTimeout
                 inactivityTimeout = spec.inactivityTimeout
                 initialAssets = spec.initialAssets.map { it.toMutableList() }
@@ -1022,6 +1049,24 @@ private constructor(
                     (clues ?: JsonField.of(mutableListOf())).also {
                         checkKnown("clues", it).add(clue)
                     }
+            }
+
+            /**
+             * Keeps this app in the foreground after it is first observed there. This does not
+             * launch the app when the simulator starts. Once armed, closing or backgrounding the
+             * app causes it to be brought back to the foreground.
+             */
+            fun forceBundleId(forceBundleId: String) = forceBundleId(JsonField.of(forceBundleId))
+
+            /**
+             * Sets [Builder.forceBundleId] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.forceBundleId] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun forceBundleId(forceBundleId: JsonField<String>) = apply {
+                this.forceBundleId = forceBundleId
             }
 
             /**
@@ -1164,6 +1209,7 @@ private constructor(
             fun build(): Spec =
                 Spec(
                     (clues ?: JsonMissing.of()).map { it.toImmutable() },
+                    forceBundleId,
                     hardTimeout,
                     inactivityTimeout,
                     (initialAssets ?: JsonMissing.of()).map { it.toImmutable() },
@@ -1191,6 +1237,7 @@ private constructor(
             }
 
             clues().ifPresent { it.forEach { it.validate() } }
+            forceBundleId()
             hardTimeout()
             inactivityTimeout()
             initialAssets().ifPresent { it.forEach { it.validate() } }
@@ -1217,6 +1264,7 @@ private constructor(
         @JvmSynthetic
         internal fun validity(): Int =
             (clues.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+                (if (forceBundleId.asKnown().isPresent) 1 else 0) +
                 (if (hardTimeout.asKnown().isPresent) 1 else 0) +
                 (if (inactivityTimeout.asKnown().isPresent) 1 else 0) +
                 (initialAssets.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
@@ -2887,6 +2935,7 @@ private constructor(
 
             return other is Spec &&
                 clues == other.clues &&
+                forceBundleId == other.forceBundleId &&
                 hardTimeout == other.hardTimeout &&
                 inactivityTimeout == other.inactivityTimeout &&
                 initialAssets == other.initialAssets &&
@@ -2899,6 +2948,7 @@ private constructor(
         private val hashCode: Int by lazy {
             Objects.hash(
                 clues,
+                forceBundleId,
                 hardTimeout,
                 inactivityTimeout,
                 initialAssets,
@@ -2912,7 +2962,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Spec{clues=$clues, hardTimeout=$hardTimeout, inactivityTimeout=$inactivityTimeout, initialAssets=$initialAssets, model=$model, region=$region, sandbox=$sandbox, additionalProperties=$additionalProperties}"
+            "Spec{clues=$clues, forceBundleId=$forceBundleId, hardTimeout=$hardTimeout, inactivityTimeout=$inactivityTimeout, initialAssets=$initialAssets, model=$model, region=$region, sandbox=$sandbox, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

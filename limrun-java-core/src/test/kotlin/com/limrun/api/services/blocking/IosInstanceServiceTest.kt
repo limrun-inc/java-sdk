@@ -39,6 +39,7 @@ internal class IosInstanceServiceTest {
                                     .clientIp("clientIp")
                                     .build()
                             )
+                            .forceBundleId("x")
                             .hardTimeout("hardTimeout")
                             .inactivityTimeout("inactivityTimeout")
                             .addInitialAsset(

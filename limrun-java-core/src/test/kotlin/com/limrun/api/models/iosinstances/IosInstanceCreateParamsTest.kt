@@ -32,6 +32,7 @@ internal class IosInstanceCreateParamsTest {
                             .clientIp("clientIp")
                             .build()
                     )
+                    .forceBundleId("x")
                     .hardTimeout("hardTimeout")
                     .inactivityTimeout("inactivityTimeout")
                     .addInitialAsset(
@@ -88,6 +89,7 @@ internal class IosInstanceCreateParamsTest {
                                 .clientIp("clientIp")
                                 .build()
                         )
+                        .forceBundleId("x")
                         .hardTimeout("hardTimeout")
                         .inactivityTimeout("inactivityTimeout")
                         .addInitialAsset(
@@ -160,6 +162,7 @@ internal class IosInstanceCreateParamsTest {
                                 .clientIp("clientIp")
                                 .build()
                         )
+                        .forceBundleId("x")
                         .hardTimeout("hardTimeout")
                         .inactivityTimeout("inactivityTimeout")
                         .addInitialAsset(
@@ -213,6 +216,7 @@ internal class IosInstanceCreateParamsTest {
                             .clientIp("clientIp")
                             .build()
                     )
+                    .forceBundleId("x")
                     .hardTimeout("hardTimeout")
                     .inactivityTimeout("inactivityTimeout")
                     .addInitialAsset(
