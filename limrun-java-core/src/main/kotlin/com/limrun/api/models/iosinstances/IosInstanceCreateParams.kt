@@ -863,9 +863,9 @@ private constructor(
         fun hardTimeout(): Optional<String> = hardTimeout.getOptional("hardTimeout")
 
         /**
-         * After how many minutes of inactivity should the instance be terminated. Example values
-         * 1m, 10m, 3h. Default is 3m. Providing "0" uses the organization's default inactivity
-         * timeout.
+         * After how many minutes of inactivity should the instance be terminated. The timer starts
+         * once the instance becomes ready. Example values 1m, 10m, 3h. Default is 3m. Providing "0"
+         * uses the organization's default inactivity timeout.
          *
          * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
          *   server responded with an unexpected value).
@@ -1087,9 +1087,9 @@ private constructor(
             }
 
             /**
-             * After how many minutes of inactivity should the instance be terminated. Example
-             * values 1m, 10m, 3h. Default is 3m. Providing "0" uses the organization's default
-             * inactivity timeout.
+             * After how many minutes of inactivity should the instance be terminated. The timer
+             * starts once the instance becomes ready. Example values 1m, 10m, 3h. Default is 3m.
+             * Providing "0" uses the organization's default inactivity timeout.
              */
             fun inactivityTimeout(inactivityTimeout: String) =
                 inactivityTimeout(JsonField.of(inactivityTimeout))
@@ -1688,8 +1688,7 @@ private constructor(
             fun encryptionKey(): Optional<String> = encryptionKey.getOptional("encryptionKey")
 
             /**
-             * Launch mode specifies how to launch the app after installation. If not given, the app
-             * won't be launched.
+             * Launch mode specifies how to launch the app after installation.
              *
              * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if
              *   the server responded with an unexpected value).
@@ -1872,10 +1871,7 @@ private constructor(
                     this.encryptionKey = encryptionKey
                 }
 
-                /**
-                 * Launch mode specifies how to launch the app after installation. If not given, the
-                 * app won't be launched.
-                 */
+                /** Launch mode specifies how to launch the app after installation. */
                 fun launchMode(launchMode: LaunchMode) = launchMode(JsonField.of(launchMode))
 
                 /**
@@ -2286,10 +2282,7 @@ private constructor(
                 override fun toString() = value.toString()
             }
 
-            /**
-             * Launch mode specifies how to launch the app after installation. If not given, the app
-             * won't be launched.
-             */
+            /** Launch mode specifies how to launch the app after installation. */
             class LaunchMode
             @JsonCreator
             private constructor(private val value: JsonField<String>) : Enum {

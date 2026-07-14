@@ -42,6 +42,28 @@ internal class AnalyticsResponseTest {
                                 )
                                 .build()
                         )
+                        .gradle(
+                            AnalyticsResponse.Series.Gradle.builder()
+                                .putAdditionalProperty(
+                                    "foo",
+                                    JsonValue.from(
+                                        mapOf(
+                                            "avgDurationMinutes" to 0,
+                                            "billedMinutes" to 0,
+                                            "cost" to 0,
+                                            "count" to 0,
+                                            "creditsBilledMinutes" to 0,
+                                            "creditsCost" to 0,
+                                            "onDemandBilledMinutes" to 0,
+                                            "onDemandCost" to 0,
+                                            "runtimeMinutes" to 0,
+                                            "subscriptionBilledMinutes" to mapOf("foo" to 0),
+                                            "subscriptionCost" to mapOf("foo" to 0),
+                                        )
+                                    ),
+                                )
+                                .build()
+                        )
                         .ios(
                             AnalyticsResponse.Series.Ios.builder()
                                 .putAdditionalProperty(
@@ -167,6 +189,28 @@ internal class AnalyticsResponseTest {
                                 )
                                 .build()
                         )
+                        .gradle(
+                            AnalyticsResponse.Summary.Gradle.builder()
+                                .putAdditionalProperty(
+                                    "foo",
+                                    JsonValue.from(
+                                        mapOf(
+                                            "avgDurationMinutes" to 0,
+                                            "billedMinutes" to 0,
+                                            "cost" to 0,
+                                            "count" to 0,
+                                            "creditsBilledMinutes" to 0,
+                                            "creditsCost" to 0,
+                                            "onDemandBilledMinutes" to 0,
+                                            "onDemandCost" to 0,
+                                            "runtimeMinutes" to 0,
+                                            "subscriptionBilledMinutes" to mapOf("foo" to 0),
+                                            "subscriptionCost" to mapOf("foo" to 0),
+                                        )
+                                    ),
+                                )
+                                .build()
+                        )
                         .ios(
                             AnalyticsResponse.Summary.Ios.builder()
                                 .putAdditionalProperty(
@@ -227,6 +271,28 @@ internal class AnalyticsResponseTest {
                 AnalyticsResponse.Series.builder()
                     .android(
                         AnalyticsResponse.Series.Android.builder()
+                            .putAdditionalProperty(
+                                "foo",
+                                JsonValue.from(
+                                    mapOf(
+                                        "avgDurationMinutes" to 0,
+                                        "billedMinutes" to 0,
+                                        "cost" to 0,
+                                        "count" to 0,
+                                        "creditsBilledMinutes" to 0,
+                                        "creditsCost" to 0,
+                                        "onDemandBilledMinutes" to 0,
+                                        "onDemandCost" to 0,
+                                        "runtimeMinutes" to 0,
+                                        "subscriptionBilledMinutes" to mapOf("foo" to 0),
+                                        "subscriptionCost" to mapOf("foo" to 0),
+                                    )
+                                ),
+                            )
+                            .build()
+                    )
+                    .gradle(
+                        AnalyticsResponse.Series.Gradle.builder()
                             .putAdditionalProperty(
                                 "foo",
                                 JsonValue.from(
@@ -373,6 +439,28 @@ internal class AnalyticsResponseTest {
                             )
                             .build()
                     )
+                    .gradle(
+                        AnalyticsResponse.Summary.Gradle.builder()
+                            .putAdditionalProperty(
+                                "foo",
+                                JsonValue.from(
+                                    mapOf(
+                                        "avgDurationMinutes" to 0,
+                                        "billedMinutes" to 0,
+                                        "cost" to 0,
+                                        "count" to 0,
+                                        "creditsBilledMinutes" to 0,
+                                        "creditsCost" to 0,
+                                        "onDemandBilledMinutes" to 0,
+                                        "onDemandCost" to 0,
+                                        "runtimeMinutes" to 0,
+                                        "subscriptionBilledMinutes" to mapOf("foo" to 0),
+                                        "subscriptionCost" to mapOf("foo" to 0),
+                                    )
+                                ),
+                            )
+                            .build()
+                    )
                     .ios(
                         AnalyticsResponse.Summary.Ios.builder()
                             .putAdditionalProperty(
@@ -436,6 +524,28 @@ internal class AnalyticsResponseTest {
                     AnalyticsResponse.Series.builder()
                         .android(
                             AnalyticsResponse.Series.Android.builder()
+                                .putAdditionalProperty(
+                                    "foo",
+                                    JsonValue.from(
+                                        mapOf(
+                                            "avgDurationMinutes" to 0,
+                                            "billedMinutes" to 0,
+                                            "cost" to 0,
+                                            "count" to 0,
+                                            "creditsBilledMinutes" to 0,
+                                            "creditsCost" to 0,
+                                            "onDemandBilledMinutes" to 0,
+                                            "onDemandCost" to 0,
+                                            "runtimeMinutes" to 0,
+                                            "subscriptionBilledMinutes" to mapOf("foo" to 0),
+                                            "subscriptionCost" to mapOf("foo" to 0),
+                                        )
+                                    ),
+                                )
+                                .build()
+                        )
+                        .gradle(
+                            AnalyticsResponse.Series.Gradle.builder()
                                 .putAdditionalProperty(
                                     "foo",
                                     JsonValue.from(
@@ -561,6 +671,28 @@ internal class AnalyticsResponseTest {
                     AnalyticsResponse.Summary.builder()
                         .android(
                             AnalyticsResponse.Summary.Android.builder()
+                                .putAdditionalProperty(
+                                    "foo",
+                                    JsonValue.from(
+                                        mapOf(
+                                            "avgDurationMinutes" to 0,
+                                            "billedMinutes" to 0,
+                                            "cost" to 0,
+                                            "count" to 0,
+                                            "creditsBilledMinutes" to 0,
+                                            "creditsCost" to 0,
+                                            "onDemandBilledMinutes" to 0,
+                                            "onDemandCost" to 0,
+                                            "runtimeMinutes" to 0,
+                                            "subscriptionBilledMinutes" to mapOf("foo" to 0),
+                                            "subscriptionCost" to mapOf("foo" to 0),
+                                        )
+                                    ),
+                                )
+                                .build()
+                        )
+                        .gradle(
+                            AnalyticsResponse.Summary.Gradle.builder()
                                 .putAdditionalProperty(
                                     "foo",
                                     JsonValue.from(

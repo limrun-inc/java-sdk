@@ -1044,6 +1044,8 @@ private constructor(
 
                     @JvmField val XCODE = of("xcode")
 
+                    @JvmField val GRADLE = of("gradle")
+
                     @JvmStatic fun of(value: String) = Platform(JsonField.of(value))
                 }
 
@@ -1052,6 +1054,7 @@ private constructor(
                     ANDROID,
                     IOS,
                     XCODE,
+                    GRADLE,
                 }
 
                 /**
@@ -1067,6 +1070,7 @@ private constructor(
                     ANDROID,
                     IOS,
                     XCODE,
+                    GRADLE,
                     /**
                      * An enum member indicating that [Platform] was instantiated with an unknown
                      * value.
@@ -1086,6 +1090,7 @@ private constructor(
                         ANDROID -> Value.ANDROID
                         IOS -> Value.IOS
                         XCODE -> Value.XCODE
+                        GRADLE -> Value.GRADLE
                         else -> Value._UNKNOWN
                     }
 
@@ -1103,6 +1108,7 @@ private constructor(
                         ANDROID -> Known.ANDROID
                         IOS -> Known.IOS
                         XCODE -> Known.XCODE
+                        GRADLE -> Known.GRADLE
                         else -> throw LimrunInvalidDataException("Unknown Platform: $value")
                     }
 

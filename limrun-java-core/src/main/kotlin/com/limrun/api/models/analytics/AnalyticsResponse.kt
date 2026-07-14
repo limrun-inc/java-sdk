@@ -534,6 +534,7 @@ private constructor(
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val android: JsonField<Android>,
+        private val gradle: JsonField<Gradle>,
         private val ios: JsonField<Ios>,
         private val timestamp: JsonField<String>,
         private val xcode: JsonField<Xcode>,
@@ -544,6 +545,7 @@ private constructor(
         @JsonCreator
         private constructor(
             @JsonProperty("android") @ExcludeMissing android: JsonField<Android> = JsonMissing.of(),
+            @JsonProperty("gradle") @ExcludeMissing gradle: JsonField<Gradle> = JsonMissing.of(),
             @JsonProperty("ios") @ExcludeMissing ios: JsonField<Ios> = JsonMissing.of(),
             @JsonProperty("timestamp")
             @ExcludeMissing
@@ -552,7 +554,7 @@ private constructor(
             @JsonProperty("instances")
             @ExcludeMissing
             instances: JsonField<List<Instance>> = JsonMissing.of(),
-        ) : this(android, ios, timestamp, xcode, instances, mutableMapOf())
+        ) : this(android, gradle, ios, timestamp, xcode, instances, mutableMapOf())
 
         /**
          * Map of region to analytics stats for Android
@@ -561,6 +563,14 @@ private constructor(
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun android(): Android = android.getRequired("android")
+
+        /**
+         * Map of region to analytics stats for Gradle
+         *
+         * @throws LimrunInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun gradle(): Gradle = gradle.getRequired("gradle")
 
         /**
          * Map of region to analytics stats for iOS
@@ -601,6 +611,13 @@ private constructor(
          * Unlike [android], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("android") @ExcludeMissing fun _android(): JsonField<Android> = android
+
+        /**
+         * Returns the raw JSON value of [gradle].
+         *
+         * Unlike [gradle], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("gradle") @ExcludeMissing fun _gradle(): JsonField<Gradle> = gradle
 
         /**
          * Returns the raw JSON value of [ios].
@@ -652,6 +669,7 @@ private constructor(
              * The following fields are required:
              * ```java
              * .android()
+             * .gradle()
              * .ios()
              * .timestamp()
              * .xcode()
@@ -664,6 +682,7 @@ private constructor(
         class Builder internal constructor() {
 
             private var android: JsonField<Android>? = null
+            private var gradle: JsonField<Gradle>? = null
             private var ios: JsonField<Ios>? = null
             private var timestamp: JsonField<String>? = null
             private var xcode: JsonField<Xcode>? = null
@@ -673,6 +692,7 @@ private constructor(
             @JvmSynthetic
             internal fun from(series: Series) = apply {
                 android = series.android
+                gradle = series.gradle
                 ios = series.ios
                 timestamp = series.timestamp
                 xcode = series.xcode
@@ -691,6 +711,18 @@ private constructor(
              * supported value.
              */
             fun android(android: JsonField<Android>) = apply { this.android = android }
+
+            /** Map of region to analytics stats for Gradle */
+            fun gradle(gradle: Gradle) = gradle(JsonField.of(gradle))
+
+            /**
+             * Sets [Builder.gradle] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.gradle] with a well-typed [Gradle] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun gradle(gradle: JsonField<Gradle>) = apply { this.gradle = gradle }
 
             /** Map of region to analytics stats for iOS */
             fun ios(ios: Ios) = ios(JsonField.of(ios))
@@ -784,6 +816,7 @@ private constructor(
              * The following fields are required:
              * ```java
              * .android()
+             * .gradle()
              * .ios()
              * .timestamp()
              * .xcode()
@@ -794,6 +827,7 @@ private constructor(
             fun build(): Series =
                 Series(
                     checkRequired("android", android),
+                    checkRequired("gradle", gradle),
                     checkRequired("ios", ios),
                     checkRequired("timestamp", timestamp),
                     checkRequired("xcode", xcode),
@@ -819,6 +853,7 @@ private constructor(
             }
 
             android().validate()
+            gradle().validate()
             ios().validate()
             timestamp()
             xcode().validate()
@@ -843,6 +878,7 @@ private constructor(
         @JvmSynthetic
         internal fun validity(): Int =
             (android.asKnown().getOrNull()?.validity() ?: 0) +
+                (gradle.asKnown().getOrNull()?.validity() ?: 0) +
                 (ios.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (timestamp.asKnown().isPresent) 1 else 0) +
                 (xcode.asKnown().getOrNull()?.validity() ?: 0) +
@@ -959,6 +995,119 @@ private constructor(
             override fun hashCode(): Int = hashCode
 
             override fun toString() = "Android{additionalProperties=$additionalProperties}"
+        }
+
+        /** Map of region to analytics stats for Gradle */
+        class Gradle
+        @JsonCreator
+        private constructor(
+            @com.fasterxml.jackson.annotation.JsonValue
+            private val additionalProperties: Map<String, JsonValue>
+        ) {
+
+            @JsonAnyGetter
+            @ExcludeMissing
+            fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
+
+            fun toBuilder() = Builder().from(this)
+
+            companion object {
+
+                /** Returns a mutable builder for constructing an instance of [Gradle]. */
+                @JvmStatic fun builder() = Builder()
+            }
+
+            /** A builder for [Gradle]. */
+            class Builder internal constructor() {
+
+                private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+                @JvmSynthetic
+                internal fun from(gradle: Gradle) = apply {
+                    additionalProperties = gradle.additionalProperties.toMutableMap()
+                }
+
+                fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
+
+                fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                    additionalProperties.put(key, value)
+                }
+
+                fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                    apply {
+                        this.additionalProperties.putAll(additionalProperties)
+                    }
+
+                fun removeAdditionalProperty(key: String) = apply {
+                    additionalProperties.remove(key)
+                }
+
+                fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
+
+                /**
+                 * Returns an immutable instance of [Gradle].
+                 *
+                 * Further updates to this [Builder] will not mutate the returned instance.
+                 */
+                fun build(): Gradle = Gradle(additionalProperties.toImmutable())
+            }
+
+            private var validated: Boolean = false
+
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws LimrunInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
+             */
+            fun validate(): Gradle = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                validated = true
+            }
+
+            fun isValid(): Boolean =
+                try {
+                    validate()
+                    true
+                } catch (e: LimrunInvalidDataException) {
+                    false
+                }
+
+            /**
+             * Returns a score indicating how many valid values are contained in this object
+             * recursively.
+             *
+             * Used for best match union deserialization.
+             */
+            @JvmSynthetic
+            internal fun validity(): Int =
+                additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
+
+            override fun equals(other: Any?): Boolean {
+                if (this === other) {
+                    return true
+                }
+
+                return other is Gradle && additionalProperties == other.additionalProperties
+            }
+
+            private val hashCode: Int by lazy { Objects.hash(additionalProperties) }
+
+            override fun hashCode(): Int = hashCode
+
+            override fun toString() = "Gradle{additionalProperties=$additionalProperties}"
         }
 
         /** Map of region to analytics stats for iOS */
@@ -1706,6 +1855,8 @@ private constructor(
 
                     @JvmField val XCODE = of("xcode")
 
+                    @JvmField val GRADLE = of("gradle")
+
                     @JvmStatic fun of(value: String) = Platform(JsonField.of(value))
                 }
 
@@ -1714,6 +1865,7 @@ private constructor(
                     ANDROID,
                     IOS,
                     XCODE,
+                    GRADLE,
                 }
 
                 /**
@@ -1729,6 +1881,7 @@ private constructor(
                     ANDROID,
                     IOS,
                     XCODE,
+                    GRADLE,
                     /**
                      * An enum member indicating that [Platform] was instantiated with an unknown
                      * value.
@@ -1748,6 +1901,7 @@ private constructor(
                         ANDROID -> Value.ANDROID
                         IOS -> Value.IOS
                         XCODE -> Value.XCODE
+                        GRADLE -> Value.GRADLE
                         else -> Value._UNKNOWN
                     }
 
@@ -1765,6 +1919,7 @@ private constructor(
                         ANDROID -> Known.ANDROID
                         IOS -> Known.IOS
                         XCODE -> Known.XCODE
+                        GRADLE -> Known.GRADLE
                         else -> throw LimrunInvalidDataException("Unknown Platform: $value")
                     }
 
@@ -3132,6 +3287,7 @@ private constructor(
 
             return other is Series &&
                 android == other.android &&
+                gradle == other.gradle &&
                 ios == other.ios &&
                 timestamp == other.timestamp &&
                 xcode == other.xcode &&
@@ -3140,13 +3296,13 @@ private constructor(
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(android, ios, timestamp, xcode, instances, additionalProperties)
+            Objects.hash(android, gradle, ios, timestamp, xcode, instances, additionalProperties)
         }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Series{android=$android, ios=$ios, timestamp=$timestamp, xcode=$xcode, instances=$instances, additionalProperties=$additionalProperties}"
+            "Series{android=$android, gradle=$gradle, ios=$ios, timestamp=$timestamp, xcode=$xcode, instances=$instances, additionalProperties=$additionalProperties}"
     }
 
     /** Summary of analytics across all time buckets, broken down by platform and region */
@@ -3154,6 +3310,7 @@ private constructor(
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val android: JsonField<Android>,
+        private val gradle: JsonField<Gradle>,
         private val ios: JsonField<Ios>,
         private val xcode: JsonField<Xcode>,
         private val additionalProperties: MutableMap<String, JsonValue>,
@@ -3162,9 +3319,10 @@ private constructor(
         @JsonCreator
         private constructor(
             @JsonProperty("android") @ExcludeMissing android: JsonField<Android> = JsonMissing.of(),
+            @JsonProperty("gradle") @ExcludeMissing gradle: JsonField<Gradle> = JsonMissing.of(),
             @JsonProperty("ios") @ExcludeMissing ios: JsonField<Ios> = JsonMissing.of(),
             @JsonProperty("xcode") @ExcludeMissing xcode: JsonField<Xcode> = JsonMissing.of(),
-        ) : this(android, ios, xcode, mutableMapOf())
+        ) : this(android, gradle, ios, xcode, mutableMapOf())
 
         /**
          * Map of region to analytics stats for Android
@@ -3173,6 +3331,14 @@ private constructor(
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun android(): Android = android.getRequired("android")
+
+        /**
+         * Map of region to analytics stats for Gradle
+         *
+         * @throws LimrunInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun gradle(): Gradle = gradle.getRequired("gradle")
 
         /**
          * Map of region to analytics stats for iOS
@@ -3196,6 +3362,13 @@ private constructor(
          * Unlike [android], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("android") @ExcludeMissing fun _android(): JsonField<Android> = android
+
+        /**
+         * Returns the raw JSON value of [gradle].
+         *
+         * Unlike [gradle], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("gradle") @ExcludeMissing fun _gradle(): JsonField<Gradle> = gradle
 
         /**
          * Returns the raw JSON value of [ios].
@@ -3231,6 +3404,7 @@ private constructor(
              * The following fields are required:
              * ```java
              * .android()
+             * .gradle()
              * .ios()
              * .xcode()
              * ```
@@ -3242,6 +3416,7 @@ private constructor(
         class Builder internal constructor() {
 
             private var android: JsonField<Android>? = null
+            private var gradle: JsonField<Gradle>? = null
             private var ios: JsonField<Ios>? = null
             private var xcode: JsonField<Xcode>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -3249,6 +3424,7 @@ private constructor(
             @JvmSynthetic
             internal fun from(summary: Summary) = apply {
                 android = summary.android
+                gradle = summary.gradle
                 ios = summary.ios
                 xcode = summary.xcode
                 additionalProperties = summary.additionalProperties.toMutableMap()
@@ -3265,6 +3441,18 @@ private constructor(
              * supported value.
              */
             fun android(android: JsonField<Android>) = apply { this.android = android }
+
+            /** Map of region to analytics stats for Gradle */
+            fun gradle(gradle: Gradle) = gradle(JsonField.of(gradle))
+
+            /**
+             * Sets [Builder.gradle] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.gradle] with a well-typed [Gradle] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun gradle(gradle: JsonField<Gradle>) = apply { this.gradle = gradle }
 
             /** Map of region to analytics stats for iOS */
             fun ios(ios: Ios) = ios(JsonField.of(ios))
@@ -3317,6 +3505,7 @@ private constructor(
              * The following fields are required:
              * ```java
              * .android()
+             * .gradle()
              * .ios()
              * .xcode()
              * ```
@@ -3326,6 +3515,7 @@ private constructor(
             fun build(): Summary =
                 Summary(
                     checkRequired("android", android),
+                    checkRequired("gradle", gradle),
                     checkRequired("ios", ios),
                     checkRequired("xcode", xcode),
                     additionalProperties.toMutableMap(),
@@ -3349,6 +3539,7 @@ private constructor(
             }
 
             android().validate()
+            gradle().validate()
             ios().validate()
             xcode().validate()
             validated = true
@@ -3371,6 +3562,7 @@ private constructor(
         @JvmSynthetic
         internal fun validity(): Int =
             (android.asKnown().getOrNull()?.validity() ?: 0) +
+                (gradle.asKnown().getOrNull()?.validity() ?: 0) +
                 (ios.asKnown().getOrNull()?.validity() ?: 0) +
                 (xcode.asKnown().getOrNull()?.validity() ?: 0)
 
@@ -3485,6 +3677,119 @@ private constructor(
             override fun hashCode(): Int = hashCode
 
             override fun toString() = "Android{additionalProperties=$additionalProperties}"
+        }
+
+        /** Map of region to analytics stats for Gradle */
+        class Gradle
+        @JsonCreator
+        private constructor(
+            @com.fasterxml.jackson.annotation.JsonValue
+            private val additionalProperties: Map<String, JsonValue>
+        ) {
+
+            @JsonAnyGetter
+            @ExcludeMissing
+            fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
+
+            fun toBuilder() = Builder().from(this)
+
+            companion object {
+
+                /** Returns a mutable builder for constructing an instance of [Gradle]. */
+                @JvmStatic fun builder() = Builder()
+            }
+
+            /** A builder for [Gradle]. */
+            class Builder internal constructor() {
+
+                private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+                @JvmSynthetic
+                internal fun from(gradle: Gradle) = apply {
+                    additionalProperties = gradle.additionalProperties.toMutableMap()
+                }
+
+                fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
+
+                fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                    additionalProperties.put(key, value)
+                }
+
+                fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                    apply {
+                        this.additionalProperties.putAll(additionalProperties)
+                    }
+
+                fun removeAdditionalProperty(key: String) = apply {
+                    additionalProperties.remove(key)
+                }
+
+                fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
+
+                /**
+                 * Returns an immutable instance of [Gradle].
+                 *
+                 * Further updates to this [Builder] will not mutate the returned instance.
+                 */
+                fun build(): Gradle = Gradle(additionalProperties.toImmutable())
+            }
+
+            private var validated: Boolean = false
+
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws LimrunInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
+             */
+            fun validate(): Gradle = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                validated = true
+            }
+
+            fun isValid(): Boolean =
+                try {
+                    validate()
+                    true
+                } catch (e: LimrunInvalidDataException) {
+                    false
+                }
+
+            /**
+             * Returns a score indicating how many valid values are contained in this object
+             * recursively.
+             *
+             * Used for best match union deserialization.
+             */
+            @JvmSynthetic
+            internal fun validity(): Int =
+                additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
+
+            override fun equals(other: Any?): Boolean {
+                if (this === other) {
+                    return true
+                }
+
+                return other is Gradle && additionalProperties == other.additionalProperties
+            }
+
+            private val hashCode: Int by lazy { Objects.hash(additionalProperties) }
+
+            override fun hashCode(): Int = hashCode
+
+            override fun toString() = "Gradle{additionalProperties=$additionalProperties}"
         }
 
         /** Map of region to analytics stats for iOS */
@@ -3720,19 +4025,20 @@ private constructor(
 
             return other is Summary &&
                 android == other.android &&
+                gradle == other.gradle &&
                 ios == other.ios &&
                 xcode == other.xcode &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(android, ios, xcode, additionalProperties)
+            Objects.hash(android, gradle, ios, xcode, additionalProperties)
         }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Summary{android=$android, ios=$ios, xcode=$xcode, additionalProperties=$additionalProperties}"
+            "Summary{android=$android, gradle=$gradle, ios=$ios, xcode=$xcode, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {
