@@ -12,6 +12,8 @@ import com.limrun.api.services.blocking.AssetService
 import com.limrun.api.services.blocking.AssetServiceImpl
 import com.limrun.api.services.blocking.IosInstanceService
 import com.limrun.api.services.blocking.IosInstanceServiceImpl
+import com.limrun.api.services.blocking.ScopedTokenService
+import com.limrun.api.services.blocking.ScopedTokenServiceImpl
 import com.limrun.api.services.blocking.XcodeInstanceService
 import com.limrun.api.services.blocking.XcodeInstanceServiceImpl
 import java.util.function.Consumer
@@ -51,6 +53,10 @@ class LimrunClientImpl(private val clientOptions: ClientOptions) : LimrunClient 
         AnalyticsServiceImpl(clientOptionsWithUserAgent)
     }
 
+    private val scopedTokens: ScopedTokenService by lazy {
+        ScopedTokenServiceImpl(clientOptionsWithUserAgent)
+    }
+
     override fun async(): LimrunClientAsync = async
 
     override fun withRawResponse(): LimrunClient.WithRawResponse = withRawResponse
@@ -67,6 +73,8 @@ class LimrunClientImpl(private val clientOptions: ClientOptions) : LimrunClient 
     override fun xcodeInstances(): XcodeInstanceService = xcodeInstances
 
     override fun analytics(): AnalyticsService = analytics
+
+    override fun scopedTokens(): ScopedTokenService = scopedTokens
 
     override fun close() = clientOptions.close()
 
@@ -93,6 +101,10 @@ class LimrunClientImpl(private val clientOptions: ClientOptions) : LimrunClient 
             AnalyticsServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val scopedTokens: ScopedTokenService.WithRawResponse by lazy {
+            ScopedTokenServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): LimrunClient.WithRawResponse =
@@ -109,5 +121,7 @@ class LimrunClientImpl(private val clientOptions: ClientOptions) : LimrunClient 
         override fun xcodeInstances(): XcodeInstanceService.WithRawResponse = xcodeInstances
 
         override fun analytics(): AnalyticsService.WithRawResponse = analytics
+
+        override fun scopedTokens(): ScopedTokenService.WithRawResponse = scopedTokens
     }
 }
