@@ -54,6 +54,7 @@ internal class ProGuardCompatibilityTest {
         assertThat(client.iosInstances()).isNotNull()
         assertThat(client.xcodeInstances()).isNotNull()
         assertThat(client.analytics()).isNotNull()
+        assertThat(client.scopedTokens()).isNotNull()
     }
 
     @Test

@@ -7,6 +7,7 @@ import com.limrun.api.services.async.AnalyticsServiceAsync
 import com.limrun.api.services.async.AndroidInstanceServiceAsync
 import com.limrun.api.services.async.AssetServiceAsync
 import com.limrun.api.services.async.IosInstanceServiceAsync
+import com.limrun.api.services.async.ScopedTokenServiceAsync
 import com.limrun.api.services.async.XcodeInstanceServiceAsync
 import java.util.function.Consumer
 
@@ -56,6 +57,8 @@ interface LimrunClientAsync {
 
     fun analytics(): AnalyticsServiceAsync
 
+    fun scopedTokens(): ScopedTokenServiceAsync
+
     /**
      * Closes this client, relinquishing any underlying resources.
      *
@@ -90,5 +93,7 @@ interface LimrunClientAsync {
         fun xcodeInstances(): XcodeInstanceServiceAsync.WithRawResponse
 
         fun analytics(): AnalyticsServiceAsync.WithRawResponse
+
+        fun scopedTokens(): ScopedTokenServiceAsync.WithRawResponse
     }
 }

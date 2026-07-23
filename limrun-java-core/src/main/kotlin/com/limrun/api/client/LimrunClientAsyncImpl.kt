@@ -12,6 +12,8 @@ import com.limrun.api.services.async.AssetServiceAsync
 import com.limrun.api.services.async.AssetServiceAsyncImpl
 import com.limrun.api.services.async.IosInstanceServiceAsync
 import com.limrun.api.services.async.IosInstanceServiceAsyncImpl
+import com.limrun.api.services.async.ScopedTokenServiceAsync
+import com.limrun.api.services.async.ScopedTokenServiceAsyncImpl
 import com.limrun.api.services.async.XcodeInstanceServiceAsync
 import com.limrun.api.services.async.XcodeInstanceServiceAsyncImpl
 import java.util.function.Consumer
@@ -53,6 +55,10 @@ class LimrunClientAsyncImpl(private val clientOptions: ClientOptions) : LimrunCl
         AnalyticsServiceAsyncImpl(clientOptionsWithUserAgent)
     }
 
+    private val scopedTokens: ScopedTokenServiceAsync by lazy {
+        ScopedTokenServiceAsyncImpl(clientOptionsWithUserAgent)
+    }
+
     override fun sync(): LimrunClient = sync
 
     override fun withRawResponse(): LimrunClientAsync.WithRawResponse = withRawResponse
@@ -69,6 +75,8 @@ class LimrunClientAsyncImpl(private val clientOptions: ClientOptions) : LimrunCl
     override fun xcodeInstances(): XcodeInstanceServiceAsync = xcodeInstances
 
     override fun analytics(): AnalyticsServiceAsync = analytics
+
+    override fun scopedTokens(): ScopedTokenServiceAsync = scopedTokens
 
     override fun close() = clientOptions.close()
 
@@ -95,6 +103,10 @@ class LimrunClientAsyncImpl(private val clientOptions: ClientOptions) : LimrunCl
             AnalyticsServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val scopedTokens: ScopedTokenServiceAsync.WithRawResponse by lazy {
+            ScopedTokenServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): LimrunClientAsync.WithRawResponse =
@@ -112,5 +124,7 @@ class LimrunClientAsyncImpl(private val clientOptions: ClientOptions) : LimrunCl
         override fun xcodeInstances(): XcodeInstanceServiceAsync.WithRawResponse = xcodeInstances
 
         override fun analytics(): AnalyticsServiceAsync.WithRawResponse = analytics
+
+        override fun scopedTokens(): ScopedTokenServiceAsync.WithRawResponse = scopedTokens
     }
 }
