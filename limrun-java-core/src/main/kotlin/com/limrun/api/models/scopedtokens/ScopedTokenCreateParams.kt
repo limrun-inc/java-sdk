@@ -36,8 +36,8 @@ private constructor(
 ) : Params {
 
     /**
-     * Scopes in the form <resource>:<id|*>:<action>, e.g. "device:*:install",
-     * "asset:asset_01h455vb4pex5vsknk084sn02q:read" or "applerelay:*:connect". Resource IDs are the
+     * Scopes in the form `<resource>:<id|*>:<action>`, e.g. `device:*:install`,
+     * `asset:asset_01h455vb4pex5vsknk084sn02q:read` or `applerelay:*:connect`. Resource IDs are the
      * customer-visible IDs returned by the API.
      *
      * @throws LimrunInvalidDataException if the JSON field has an unexpected type or is
@@ -115,8 +115,8 @@ private constructor(
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
         /**
-         * Scopes in the form <resource>:<id|*>:<action>, e.g. "device:*:install",
-         * "asset:asset_01h455vb4pex5vsknk084sn02q:read" or "applerelay:*:connect". Resource IDs are
+         * Scopes in the form `<resource>:<id|*>:<action>`, e.g. `device:*:install`,
+         * `asset:asset_01h455vb4pex5vsknk084sn02q:read` or `applerelay:*:connect`. Resource IDs are
          * the customer-visible IDs returned by the API.
          */
         fun scopes(scopes: List<String>) = apply { body.scopes(scopes) }
@@ -312,8 +312,8 @@ private constructor(
         ) : this(scopes, ttlSeconds, mutableMapOf())
 
         /**
-         * Scopes in the form <resource>:<id|*>:<action>, e.g. "device:*:install",
-         * "asset:asset_01h455vb4pex5vsknk084sn02q:read" or "applerelay:*:connect". Resource IDs are
+         * Scopes in the form `<resource>:<id|*>:<action>`, e.g. `device:*:install`,
+         * `asset:asset_01h455vb4pex5vsknk084sn02q:read` or `applerelay:*:connect`. Resource IDs are
          * the customer-visible IDs returned by the API.
          *
          * @throws LimrunInvalidDataException if the JSON field has an unexpected type or is
@@ -383,8 +383,8 @@ private constructor(
             }
 
             /**
-             * Scopes in the form <resource>:<id|*>:<action>, e.g. "device:*:install",
-             * "asset:asset_01h455vb4pex5vsknk084sn02q:read" or "applerelay:*:connect". Resource IDs
+             * Scopes in the form `<resource>:<id|*>:<action>`, e.g. `device:*:install`,
+             * `asset:asset_01h455vb4pex5vsknk084sn02q:read` or `applerelay:*:connect`. Resource IDs
              * are the customer-visible IDs returned by the API.
              */
             fun scopes(scopes: List<String>) = scopes(JsonField.of(scopes))
