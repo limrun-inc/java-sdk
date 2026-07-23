@@ -3,7 +3,7 @@
 package com.limrun.api.services.async
 
 import com.limrun.api.client.okhttp.LimrunOkHttpClientAsync
-import com.limrun.api.models.scopedtokens.ScopedTokenCreate
+import com.limrun.api.models.scopedtokens.ScopedTokenCreateParams
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
@@ -17,7 +17,7 @@ internal class ScopedTokenServiceAsyncTest {
 
         val scopedTokenFuture =
             scopedTokenServiceAsync.create(
-                ScopedTokenCreate.builder().addScope("string").ttlSeconds(1L).build()
+                ScopedTokenCreateParams.builder().addScope("string").ttlSeconds(1L).build()
             )
 
         val scopedToken = scopedTokenFuture.get()
