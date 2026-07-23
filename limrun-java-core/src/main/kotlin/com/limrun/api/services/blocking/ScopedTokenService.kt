@@ -7,7 +7,6 @@ import com.limrun.api.core.ClientOptions
 import com.limrun.api.core.RequestOptions
 import com.limrun.api.core.http.HttpResponseFor
 import com.limrun.api.models.scopedtokens.ScopedToken
-import com.limrun.api.models.scopedtokens.ScopedTokenCreate
 import com.limrun.api.models.scopedtokens.ScopedTokenCreateParams
 import java.util.function.Consumer
 
@@ -39,20 +38,6 @@ interface ScopedTokenService {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): ScopedToken
 
-    /** @see create */
-    fun create(
-        scopedTokenCreate: ScopedTokenCreate,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): ScopedToken =
-        create(
-            ScopedTokenCreateParams.builder().scopedTokenCreate(scopedTokenCreate).build(),
-            requestOptions,
-        )
-
-    /** @see create */
-    fun create(scopedTokenCreate: ScopedTokenCreate): ScopedToken =
-        create(scopedTokenCreate, RequestOptions.none())
-
     /**
      * A view of [ScopedTokenService] that provides access to raw HTTP responses for each method.
      */
@@ -81,21 +66,5 @@ interface ScopedTokenService {
             params: ScopedTokenCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<ScopedToken>
-
-        /** @see create */
-        @MustBeClosed
-        fun create(
-            scopedTokenCreate: ScopedTokenCreate,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<ScopedToken> =
-            create(
-                ScopedTokenCreateParams.builder().scopedTokenCreate(scopedTokenCreate).build(),
-                requestOptions,
-            )
-
-        /** @see create */
-        @MustBeClosed
-        fun create(scopedTokenCreate: ScopedTokenCreate): HttpResponseFor<ScopedToken> =
-            create(scopedTokenCreate, RequestOptions.none())
     }
 }
