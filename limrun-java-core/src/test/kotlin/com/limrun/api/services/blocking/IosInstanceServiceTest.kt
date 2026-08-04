@@ -56,6 +56,7 @@ internal class IosInstanceServiceTest {
                                     .url("url")
                                     .build()
                             )
+                            .jurisdiction(IosInstanceCreateParams.Spec.Jurisdiction.US)
                             .model(IosInstanceCreateParams.Spec.Model.IPHONE)
                             .region("region")
                             .sandbox(
