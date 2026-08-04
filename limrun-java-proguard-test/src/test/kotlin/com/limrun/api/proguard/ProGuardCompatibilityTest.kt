@@ -53,6 +53,7 @@ internal class ProGuardCompatibilityTest {
         assertThat(client.assets()).isNotNull()
         assertThat(client.iosInstances()).isNotNull()
         assertThat(client.xcodeInstances()).isNotNull()
+        assertThat(client.gradleInstances()).isNotNull()
         assertThat(client.analytics()).isNotNull()
         assertThat(client.scopedTokens()).isNotNull()
     }
