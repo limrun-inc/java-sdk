@@ -41,6 +41,7 @@ internal class XcodeInstanceServiceTest {
                             )
                             .hardTimeout("hardTimeout")
                             .inactivityTimeout("inactivityTimeout")
+                            .jurisdiction(XcodeInstanceCreateParams.Spec.Jurisdiction.US)
                             .region("region")
                             .build()
                     )

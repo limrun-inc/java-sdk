@@ -801,6 +801,7 @@ private constructor(
         private val clues: JsonField<List<Clue>>,
         private val hardTimeout: JsonField<String>,
         private val inactivityTimeout: JsonField<String>,
+        private val jurisdiction: JsonField<Jurisdiction>,
         private val region: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
@@ -814,8 +815,11 @@ private constructor(
             @JsonProperty("inactivityTimeout")
             @ExcludeMissing
             inactivityTimeout: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("jurisdiction")
+            @ExcludeMissing
+            jurisdiction: JsonField<Jurisdiction> = JsonMissing.of(),
             @JsonProperty("region") @ExcludeMissing region: JsonField<String> = JsonMissing.of(),
-        ) : this(clues, hardTimeout, inactivityTimeout, region, mutableMapOf())
+        ) : this(clues, hardTimeout, inactivityTimeout, jurisdiction, region, mutableMapOf())
 
         /**
          * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -842,6 +846,18 @@ private constructor(
          */
         fun inactivityTimeout(): Optional<String> =
             inactivityTimeout.getOptional("inactivityTimeout")
+
+        /**
+         * Restricts scheduling to regions in the given jurisdiction. Unlike region, this is a hard
+         * constraint: the request never overflows to a region outside the jurisdiction and fails
+         * when no region in the jurisdiction has capacity. A region belongs to a jurisdiction when
+         * its name starts with the jurisdiction prefix, e.g. "eu-north1" is in "eu". A region
+         * preference pointing outside the jurisdiction is ignored.
+         *
+         * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun jurisdiction(): Optional<Jurisdiction> = jurisdiction.getOptional("jurisdiction")
 
         /**
          * Where the instance will be created. If not given, the region is decided based on
@@ -891,6 +907,16 @@ private constructor(
         fun _inactivityTimeout(): JsonField<String> = inactivityTimeout
 
         /**
+         * Returns the raw JSON value of [jurisdiction].
+         *
+         * Unlike [jurisdiction], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("jurisdiction")
+        @ExcludeMissing
+        fun _jurisdiction(): JsonField<Jurisdiction> = jurisdiction
+
+        /**
          * Returns the raw JSON value of [region].
          *
          * Unlike [region], this method doesn't throw if the JSON field has an unexpected type.
@@ -921,6 +947,7 @@ private constructor(
             private var clues: JsonField<MutableList<Clue>>? = null
             private var hardTimeout: JsonField<String> = JsonMissing.of()
             private var inactivityTimeout: JsonField<String> = JsonMissing.of()
+            private var jurisdiction: JsonField<Jurisdiction> = JsonMissing.of()
             private var region: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -929,6 +956,7 @@ private constructor(
                 clues = spec.clues.map { it.toMutableList() }
                 hardTimeout = spec.hardTimeout
                 inactivityTimeout = spec.inactivityTimeout
+                jurisdiction = spec.jurisdiction
                 region = spec.region
                 additionalProperties = spec.additionalProperties.toMutableMap()
             }
@@ -995,6 +1023,26 @@ private constructor(
             }
 
             /**
+             * Restricts scheduling to regions in the given jurisdiction. Unlike region, this is a
+             * hard constraint: the request never overflows to a region outside the jurisdiction and
+             * fails when no region in the jurisdiction has capacity. A region belongs to a
+             * jurisdiction when its name starts with the jurisdiction prefix, e.g. "eu-north1" is
+             * in "eu". A region preference pointing outside the jurisdiction is ignored.
+             */
+            fun jurisdiction(jurisdiction: Jurisdiction) = jurisdiction(JsonField.of(jurisdiction))
+
+            /**
+             * Sets [Builder.jurisdiction] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.jurisdiction] with a well-typed [Jurisdiction] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun jurisdiction(jurisdiction: JsonField<Jurisdiction>) = apply {
+                this.jurisdiction = jurisdiction
+            }
+
+            /**
              * Where the instance will be created. If not given, the region is decided based on
              * scheduling clues (client IP) and availability.
              *
@@ -1051,6 +1099,7 @@ private constructor(
                     (clues ?: JsonMissing.of()).map { it.toImmutable() },
                     hardTimeout,
                     inactivityTimeout,
+                    jurisdiction,
                     region,
                     additionalProperties.toMutableMap(),
                 )
@@ -1075,6 +1124,7 @@ private constructor(
             clues().ifPresent { it.forEach { it.validate() } }
             hardTimeout()
             inactivityTimeout()
+            jurisdiction().ifPresent { it.validate() }
             region()
             validated = true
         }
@@ -1098,6 +1148,7 @@ private constructor(
             (clues.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                 (if (hardTimeout.asKnown().isPresent) 1 else 0) +
                 (if (inactivityTimeout.asKnown().isPresent) 1 else 0) +
+                (jurisdiction.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (region.asKnown().isPresent) 1 else 0)
 
         class Clue
@@ -1437,6 +1488,160 @@ private constructor(
                 "Clue{kind=$kind, clientIp=$clientIp, additionalProperties=$additionalProperties}"
         }
 
+        /**
+         * Restricts scheduling to regions in the given jurisdiction. Unlike region, this is a hard
+         * constraint: the request never overflows to a region outside the jurisdiction and fails
+         * when no region in the jurisdiction has capacity. A region belongs to a jurisdiction when
+         * its name starts with the jurisdiction prefix, e.g. "eu-north1" is in "eu". A region
+         * preference pointing outside the jurisdiction is ignored.
+         */
+        class Jurisdiction @JsonCreator private constructor(private val value: JsonField<String>) :
+            Enum {
+
+            /**
+             * Returns this class instance's raw value.
+             *
+             * This is usually only useful if this instance was deserialized from data that doesn't
+             * match any known member, and you want to know that value. For example, if the SDK is
+             * on an older version than the API, then the API may respond with new members that the
+             * SDK is unaware of.
+             */
+            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+            companion object {
+
+                @JvmField val US = of("us")
+
+                @JvmField val EU = of("eu")
+
+                @JvmField val AS = of("as")
+
+                @JvmStatic fun of(value: String) = Jurisdiction(JsonField.of(value))
+            }
+
+            /** An enum containing [Jurisdiction]'s known values. */
+            enum class Known {
+                US,
+                EU,
+                AS,
+            }
+
+            /**
+             * An enum containing [Jurisdiction]'s known values, as well as an [_UNKNOWN] member.
+             *
+             * An instance of [Jurisdiction] can contain an unknown value in a couple of cases:
+             * - It was deserialized from data that doesn't match any known member. For example, if
+             *   the SDK is on an older version than the API, then the API may respond with new
+             *   members that the SDK is unaware of.
+             * - It was constructed with an arbitrary value using the [of] method.
+             */
+            enum class Value {
+                US,
+                EU,
+                AS,
+                /**
+                 * An enum member indicating that [Jurisdiction] was instantiated with an unknown
+                 * value.
+                 */
+                _UNKNOWN,
+            }
+
+            /**
+             * Returns an enum member corresponding to this class instance's value, or
+             * [Value._UNKNOWN] if the class was instantiated with an unknown value.
+             *
+             * Use the [known] method instead if you're certain the value is always known or if you
+             * want to throw for the unknown case.
+             */
+            fun value(): Value =
+                when (this) {
+                    US -> Value.US
+                    EU -> Value.EU
+                    AS -> Value.AS
+                    else -> Value._UNKNOWN
+                }
+
+            /**
+             * Returns an enum member corresponding to this class instance's value.
+             *
+             * Use the [value] method instead if you're uncertain the value is always known and
+             * don't want to throw for the unknown case.
+             *
+             * @throws LimrunInvalidDataException if this class instance's value is a not a known
+             *   member.
+             */
+            fun known(): Known =
+                when (this) {
+                    US -> Known.US
+                    EU -> Known.EU
+                    AS -> Known.AS
+                    else -> throw LimrunInvalidDataException("Unknown Jurisdiction: $value")
+                }
+
+            /**
+             * Returns this class instance's primitive wire representation.
+             *
+             * This differs from the [toString] method because that method is primarily for
+             * debugging and generally doesn't throw.
+             *
+             * @throws LimrunInvalidDataException if this class instance's value does not have the
+             *   expected primitive type.
+             */
+            fun asString(): String =
+                _value().asString().orElseThrow {
+                    LimrunInvalidDataException("Value is not a String")
+                }
+
+            private var validated: Boolean = false
+
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws LimrunInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
+             */
+            fun validate(): Jurisdiction = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                known()
+                validated = true
+            }
+
+            fun isValid(): Boolean =
+                try {
+                    validate()
+                    true
+                } catch (e: LimrunInvalidDataException) {
+                    false
+                }
+
+            /**
+             * Returns a score indicating how many valid values are contained in this object
+             * recursively.
+             *
+             * Used for best match union deserialization.
+             */
+            @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+            override fun equals(other: Any?): Boolean {
+                if (this === other) {
+                    return true
+                }
+
+                return other is Jurisdiction && value == other.value
+            }
+
+            override fun hashCode() = value.hashCode()
+
+            override fun toString() = value.toString()
+        }
+
         override fun equals(other: Any?): Boolean {
             if (this === other) {
                 return true
@@ -1446,18 +1651,26 @@ private constructor(
                 clues == other.clues &&
                 hardTimeout == other.hardTimeout &&
                 inactivityTimeout == other.inactivityTimeout &&
+                jurisdiction == other.jurisdiction &&
                 region == other.region &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(clues, hardTimeout, inactivityTimeout, region, additionalProperties)
+            Objects.hash(
+                clues,
+                hardTimeout,
+                inactivityTimeout,
+                jurisdiction,
+                region,
+                additionalProperties,
+            )
         }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Spec{clues=$clues, hardTimeout=$hardTimeout, inactivityTimeout=$inactivityTimeout, region=$region, additionalProperties=$additionalProperties}"
+            "Spec{clues=$clues, hardTimeout=$hardTimeout, inactivityTimeout=$inactivityTimeout, jurisdiction=$jurisdiction, region=$region, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

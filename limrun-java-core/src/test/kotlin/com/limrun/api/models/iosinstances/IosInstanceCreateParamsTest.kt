@@ -49,6 +49,7 @@ internal class IosInstanceCreateParamsTest {
                             .url("url")
                             .build()
                     )
+                    .jurisdiction(IosInstanceCreateParams.Spec.Jurisdiction.US)
                     .model(IosInstanceCreateParams.Spec.Model.IPHONE)
                     .region("region")
                     .sandbox(
@@ -106,6 +107,7 @@ internal class IosInstanceCreateParamsTest {
                                 .url("url")
                                 .build()
                         )
+                        .jurisdiction(IosInstanceCreateParams.Spec.Jurisdiction.US)
                         .model(IosInstanceCreateParams.Spec.Model.IPHONE)
                         .region("region")
                         .sandbox(
@@ -179,6 +181,7 @@ internal class IosInstanceCreateParamsTest {
                                 .url("url")
                                 .build()
                         )
+                        .jurisdiction(IosInstanceCreateParams.Spec.Jurisdiction.US)
                         .model(IosInstanceCreateParams.Spec.Model.IPHONE)
                         .region("region")
                         .sandbox(
@@ -233,6 +236,7 @@ internal class IosInstanceCreateParamsTest {
                             .url("url")
                             .build()
                     )
+                    .jurisdiction(IosInstanceCreateParams.Spec.Jurisdiction.US)
                     .model(IosInstanceCreateParams.Spec.Model.IPHONE)
                     .region("region")
                     .sandbox(

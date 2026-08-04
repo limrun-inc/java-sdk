@@ -95,6 +95,7 @@ internal class ServiceParamsTest {
                                 .addUrl("string")
                                 .build()
                         )
+                        .jurisdiction(AndroidInstanceCreateParams.Spec.Jurisdiction.US)
                         .region("region")
                         .sandbox(
                             AndroidInstanceCreateParams.Spec.Sandbox.builder()

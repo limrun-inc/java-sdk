@@ -61,6 +61,7 @@ internal class AndroidInstanceCreateParamsTest {
                             .addUrl("string")
                             .build()
                     )
+                    .jurisdiction(AndroidInstanceCreateParams.Spec.Jurisdiction.US)
                     .region("region")
                     .sandbox(
                         AndroidInstanceCreateParams.Spec.Sandbox.builder()
@@ -136,6 +137,7 @@ internal class AndroidInstanceCreateParamsTest {
                                 .addUrl("string")
                                 .build()
                         )
+                        .jurisdiction(AndroidInstanceCreateParams.Spec.Jurisdiction.US)
                         .region("region")
                         .sandbox(
                             AndroidInstanceCreateParams.Spec.Sandbox.builder()
@@ -229,6 +231,7 @@ internal class AndroidInstanceCreateParamsTest {
                                 .addUrl("string")
                                 .build()
                         )
+                        .jurisdiction(AndroidInstanceCreateParams.Spec.Jurisdiction.US)
                         .region("region")
                         .sandbox(
                             AndroidInstanceCreateParams.Spec.Sandbox.builder()
@@ -301,6 +304,7 @@ internal class AndroidInstanceCreateParamsTest {
                             .addUrl("string")
                             .build()
                     )
+                    .jurisdiction(AndroidInstanceCreateParams.Spec.Jurisdiction.US)
                     .region("region")
                     .sandbox(
                         AndroidInstanceCreateParams.Spec.Sandbox.builder()
