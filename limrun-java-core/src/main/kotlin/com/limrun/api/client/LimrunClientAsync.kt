@@ -6,6 +6,7 @@ import com.limrun.api.core.ClientOptions
 import com.limrun.api.services.async.AnalyticsServiceAsync
 import com.limrun.api.services.async.AndroidInstanceServiceAsync
 import com.limrun.api.services.async.AssetServiceAsync
+import com.limrun.api.services.async.GradleInstanceServiceAsync
 import com.limrun.api.services.async.IosInstanceServiceAsync
 import com.limrun.api.services.async.ScopedTokenServiceAsync
 import com.limrun.api.services.async.XcodeInstanceServiceAsync
@@ -55,6 +56,8 @@ interface LimrunClientAsync {
 
     fun xcodeInstances(): XcodeInstanceServiceAsync
 
+    fun gradleInstances(): GradleInstanceServiceAsync
+
     fun analytics(): AnalyticsServiceAsync
 
     fun scopedTokens(): ScopedTokenServiceAsync
@@ -91,6 +94,8 @@ interface LimrunClientAsync {
         fun iosInstances(): IosInstanceServiceAsync.WithRawResponse
 
         fun xcodeInstances(): XcodeInstanceServiceAsync.WithRawResponse
+
+        fun gradleInstances(): GradleInstanceServiceAsync.WithRawResponse
 
         fun analytics(): AnalyticsServiceAsync.WithRawResponse
 

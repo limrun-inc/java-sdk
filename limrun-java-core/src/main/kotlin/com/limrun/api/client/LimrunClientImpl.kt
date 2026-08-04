@@ -10,6 +10,8 @@ import com.limrun.api.services.blocking.AndroidInstanceService
 import com.limrun.api.services.blocking.AndroidInstanceServiceImpl
 import com.limrun.api.services.blocking.AssetService
 import com.limrun.api.services.blocking.AssetServiceImpl
+import com.limrun.api.services.blocking.GradleInstanceService
+import com.limrun.api.services.blocking.GradleInstanceServiceImpl
 import com.limrun.api.services.blocking.IosInstanceService
 import com.limrun.api.services.blocking.IosInstanceServiceImpl
 import com.limrun.api.services.blocking.ScopedTokenService
@@ -49,6 +51,10 @@ class LimrunClientImpl(private val clientOptions: ClientOptions) : LimrunClient 
         XcodeInstanceServiceImpl(clientOptionsWithUserAgent)
     }
 
+    private val gradleInstances: GradleInstanceService by lazy {
+        GradleInstanceServiceImpl(clientOptionsWithUserAgent)
+    }
+
     private val analytics: AnalyticsService by lazy {
         AnalyticsServiceImpl(clientOptionsWithUserAgent)
     }
@@ -71,6 +77,8 @@ class LimrunClientImpl(private val clientOptions: ClientOptions) : LimrunClient 
     override fun iosInstances(): IosInstanceService = iosInstances
 
     override fun xcodeInstances(): XcodeInstanceService = xcodeInstances
+
+    override fun gradleInstances(): GradleInstanceService = gradleInstances
 
     override fun analytics(): AnalyticsService = analytics
 
@@ -97,6 +105,10 @@ class LimrunClientImpl(private val clientOptions: ClientOptions) : LimrunClient 
             XcodeInstanceServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val gradleInstances: GradleInstanceService.WithRawResponse by lazy {
+            GradleInstanceServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         private val analytics: AnalyticsService.WithRawResponse by lazy {
             AnalyticsServiceImpl.WithRawResponseImpl(clientOptions)
         }
@@ -119,6 +131,8 @@ class LimrunClientImpl(private val clientOptions: ClientOptions) : LimrunClient 
         override fun iosInstances(): IosInstanceService.WithRawResponse = iosInstances
 
         override fun xcodeInstances(): XcodeInstanceService.WithRawResponse = xcodeInstances
+
+        override fun gradleInstances(): GradleInstanceService.WithRawResponse = gradleInstances
 
         override fun analytics(): AnalyticsService.WithRawResponse = analytics
 
