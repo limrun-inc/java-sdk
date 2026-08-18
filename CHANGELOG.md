@@ -1,5 +1,96 @@
 # Changelog
 
+## 0.2.0 (2026-08-18)
+
+Full Changelog: [v0.1.0...v0.2.0](https://github.com/limrun-inc/java-sdk/compare/v0.1.0...v0.2.0)
+
+### Features
+
+* **api:** add analytics api ([67147a7](https://github.com/limrun-inc/java-sdk/commit/67147a72daac8397e94ae136c11fc546b267ed87))
+* **api:** add apiUrl to android ([1d49262](https://github.com/limrun-inc/java-sdk/commit/1d49262e102b050cdee662a34dcf98534667d871))
+* **api:** add displayName to asset ([5bc3543](https://github.com/limrun-inc/java-sdk/commit/5bc3543916894173c3ebc2cfd833b4f2bc5fcd57))
+* **api:** add gradle to stainless config as well ([74c92fb](https://github.com/limrun-inc/java-sdk/commit/74c92fb53151013df794cd62e596f25aefc0ff4c))
+* **api:** add ios sandbox properties and app store for assets ([6d57611](https://github.com/limrun-inc/java-sdk/commit/6d57611a3b60439c214bf37155af31ee61c4b815))
+* **api:** add jurisdiction ([b06ca8c](https://github.com/limrun-inc/java-sdk/commit/b06ca8c5b2b49eaacf00b18098105309d4bcd662))
+* **api:** add optional os field to assets ([498ef02](https://github.com/limrun-inc/java-sdk/commit/498ef0209db5a80cf29e798c24b19f92d8f74ce6))
+* **api:** add scoped tokens to stainless config ([2cc5ec3](https://github.com/limrun-inc/java-sdk/commit/2cc5ec364148e2208ccb42ba204b6af820ee21a7))
+* **api:** add spec.model to ios creation api ([239bad5](https://github.com/limrun-inc/java-sdk/commit/239bad56e45f8d89a207ecf210dd21c04ff3fac5))
+* **api:** add status.mcpUrl for ios ([f428625](https://github.com/limrun-inc/java-sdk/commit/f4286251ffab4d972d42b34eefc93e4715a4c7bf))
+* **api:** add status.mcpUrl to android ([e4775ac](https://github.com/limrun-inc/java-sdk/commit/e4775acb7faeca85746ab500691e37096813635f))
+* **api:** add version to android playwright ([1c12fed](https://github.com/limrun-inc/java-sdk/commit/1c12fed019f4a526bb0ce6f7d031146b2f153257))
+* **api:** add xcode build logs and signedStreamUrl ([e32c48b](https://github.com/limrun-inc/java-sdk/commit/e32c48b137b1ac8d4a080e0844b0de65986747ea))
+* **api:** add xcode instances endpoints ([f21d783](https://github.com/limrun-inc/java-sdk/commit/f21d7832b2512eaf5e67506a217e08f2f86e317e))
+* **api:** analytics api, make platform enum ([5a075ad](https://github.com/limrun-inc/java-sdk/commit/5a075ad98ced409c067d2dcd42a413c1e1648bfb))
+* **api:** fix indentation ([ff69897](https://github.com/limrun-inc/java-sdk/commit/ff69897d794a708eaf359d38c76349ea707a37f6))
+* **api:** fix model name for xcode_instance in stainless config ([2197db7](https://github.com/limrun-inc/java-sdk/commit/2197db7d2f7f3e5e658a106d30feb8d7f6271925))
+* **api:** fix stainless models for scoped tokens ([d57f795](https://github.com/limrun-inc/java-sdk/commit/d57f7955a0952a765f51c464223716839054da5a))
+* **api:** increase timeout to 5 minutes since big app installations may take longer than a minute ([b14dd27](https://github.com/limrun-inc/java-sdk/commit/b14dd27d6452eb3b6abb60a134e0244c3de674a9))
+* **api:** ios add forceBundleId ([02f8576](https://github.com/limrun-inc/java-sdk/commit/02f8576e40683c9971f09c799cd4f0d39677a4e2))
+* **api:** manual updates ([44d3609](https://github.com/limrun-inc/java-sdk/commit/44d36093b623d1d88e558873710f28b11cf8e794))
+* **api:** manual updates ([30fd624](https://github.com/limrun-inc/java-sdk/commit/30fd62482a809c140e2a47b4bb42a433a7998e80))
+* **api:** manual updates ([9e5c499](https://github.com/limrun-inc/java-sdk/commit/9e5c499376819ed2cac75db8aacbe73c0d6abec6))
+* **api:** scoped tokens desc fix ([ab7a960](https://github.com/limrun-inc/java-sdk/commit/ab7a9607f02aaa386e217824d7ffc2193806f680))
+* **api:** simplify the models for analytics endpoint ([b833612](https://github.com/limrun-inc/java-sdk/commit/b833612249a65c0a4f2ec42aa592f1f682fc83be))
+* **api:** update stainless config for xcode_instances resource ([e5d9b30](https://github.com/limrun-inc/java-sdk/commit/e5d9b30eb27c75fda4f8494ac29b39355c5a1df0))
+* **api:** update to latest main ([342dc09](https://github.com/limrun-inc/java-sdk/commit/342dc09d3a3d892cdf1df1939bbb7fe49061c937))
+* **client:** add `HttpRequest#url()` method ([ed55316](https://github.com/limrun-inc/java-sdk/commit/ed55316ee4e61a234a5b2b7a94cb6feccca1ae5d))
+* **client:** allow configuring dispatcher executor service ([494257b](https://github.com/limrun-inc/java-sdk/commit/494257b745805402e87e7fd96745455e2d052952))
+* **client:** improve logging ([530600e](https://github.com/limrun-inc/java-sdk/commit/530600e3875734e356b780a8452f7c069e2b01f4))
+* **client:** send `X-Stainless-Kotlin-Version` header ([d6e480e](https://github.com/limrun-inc/java-sdk/commit/d6e480ed810a48f2ca6dc5867aab1f12f589449c))
+* **stlc:** configurable CI runner and private-production-repo support in workflow templates ([2617b98](https://github.com/limrun-inc/java-sdk/commit/2617b98a516e23aaeb5ea8533fd951abc1a301b7))
+
+
+### Bug Fixes
+
+* **client:** disallow coercion from float to int ([d69101d](https://github.com/limrun-inc/java-sdk/commit/d69101d246d82fbf243d009c0fdf03a0e5cdd5c9))
+* **client:** fully respect max retries ([a4c51e6](https://github.com/limrun-inc/java-sdk/commit/a4c51e68f3b6424ba263fd2a3e439dd336c6dc14))
+* **client:** preserve time zone in lenient date-time parsing ([a4ce447](https://github.com/limrun-inc/java-sdk/commit/a4ce4474019c9d74abc34bef4fe1d038fbe2cd3a))
+* **client:** send retry count header for max retries 0 ([a4c51e6](https://github.com/limrun-inc/java-sdk/commit/a4c51e68f3b6424ba263fd2a3e439dd336c6dc14))
+* date time deserialization leniency ([7210b00](https://github.com/limrun-inc/java-sdk/commit/7210b00aef62163c1153b3185cced46e266c2b3d))
+
+
+### Chores
+
+* **ci:** upgrade `actions/github-script` ([bfd4ab7](https://github.com/limrun-inc/java-sdk/commit/bfd4ab7ebf5e2d2f10bf3697409816bef44a0b50))
+* **ci:** upgrade `actions/setup-java` ([06e3dd3](https://github.com/limrun-inc/java-sdk/commit/06e3dd3a92b845232a2ef5d55709925e400d56b5))
+* **internal:** allow passing args to `./scripts/test` ([5c266ea](https://github.com/limrun-inc/java-sdk/commit/5c266ea49d7834380859c2adce1f522b9ba12f98))
+* **internal:** clean up maven repo artifact script and add html documentation to repo root ([de97a18](https://github.com/limrun-inc/java-sdk/commit/de97a186e1bc5d684d96a657f71818a45ef0ec3f))
+* **internal:** codegen related update ([156e802](https://github.com/limrun-inc/java-sdk/commit/156e802eeed523cfe2280b4a3f6e2d0bfeb210bb))
+* **internal:** codegen related update ([cfcb7e9](https://github.com/limrun-inc/java-sdk/commit/cfcb7e91e4e69fc5f45d10bc37285952578bfbce))
+* **internal:** codegen related update ([92ec738](https://github.com/limrun-inc/java-sdk/commit/92ec738ffcef5bce3d85a5c3fec1ee26775ce5b6))
+* **internal:** codegen related update ([d2085bf](https://github.com/limrun-inc/java-sdk/commit/d2085bf6d0d633ac8ad01c9d0f2117a09b441c70))
+* **internal:** codegen related update ([2d57820](https://github.com/limrun-inc/java-sdk/commit/2d5782009fc8e08d65baf8d18902cb0063ecd408))
+* **internal:** codegen related update ([bfe7d78](https://github.com/limrun-inc/java-sdk/commit/bfe7d786be2f2c896a582207ce7baa2728804a52))
+* **internal:** codegen related update ([eb54b26](https://github.com/limrun-inc/java-sdk/commit/eb54b26f97a2107a8ca297c07fd39b05e6b409d7))
+* **internal:** codegen related update ([786c15f](https://github.com/limrun-inc/java-sdk/commit/786c15f10ca8c029431fbc8c2d7a8f572df33891))
+* **internal:** codegen related update ([774c881](https://github.com/limrun-inc/java-sdk/commit/774c881c0a4494df567c62215a600540634c00f2))
+* **internal:** codegen related update ([4f05d6e](https://github.com/limrun-inc/java-sdk/commit/4f05d6e5435678c4522f5571c0124a982ede4091))
+* **internal:** codegen related update ([5584053](https://github.com/limrun-inc/java-sdk/commit/558405315738baf480b48453485bc50ebf941369))
+* **internal:** codegen related update ([79c8267](https://github.com/limrun-inc/java-sdk/commit/79c82679bf6fc00fd5137d13da65408d7e4e6592))
+* **internal:** codegen related update ([81e05c4](https://github.com/limrun-inc/java-sdk/commit/81e05c411ca977b7f7f26b6fd2c481503477cdbf))
+* **internal:** codegen related update ([72091c5](https://github.com/limrun-inc/java-sdk/commit/72091c59c0a175a69cd1c671ccefcc8b2fc1ddaa))
+* **internal:** codegen related update ([4286530](https://github.com/limrun-inc/java-sdk/commit/42865303a8f5b92e1b9ce72fc7b29be0449be013))
+* **internal:** codegen related update ([1547584](https://github.com/limrun-inc/java-sdk/commit/1547584362925c11c26767c1c3064b7970a10c6e))
+* **internal:** codegen related update ([db96269](https://github.com/limrun-inc/java-sdk/commit/db96269cbe0cc3b090c69517a780e141bfc8f7b2))
+* **internal:** codegen related update ([002e4f7](https://github.com/limrun-inc/java-sdk/commit/002e4f739c64d6875fcaa6500bfde20344f84862))
+* **internal:** codegen related update ([ec5652e](https://github.com/limrun-inc/java-sdk/commit/ec5652ea8b0e1ac8c7216a3057769ad94e90622d))
+* **internal:** codegen related update ([099f5e0](https://github.com/limrun-inc/java-sdk/commit/099f5e002d0f4b72b808a1ec4040a604327f085b))
+* **internal:** correct cache invalidation for `SKIP_MOCK_TESTS` ([daaf28c](https://github.com/limrun-inc/java-sdk/commit/daaf28c480c5eac553c7952272f65d3cbb679835))
+* **internal:** depend on packages directly in example ([a4c51e6](https://github.com/limrun-inc/java-sdk/commit/a4c51e68f3b6424ba263fd2a3e439dd336c6dc14))
+* **internal:** improve maven repo docs ([febe2a5](https://github.com/limrun-inc/java-sdk/commit/febe2a5e40bd15a6173db2512c2472f0b718a438))
+* **internal:** remove mock server code ([649dc15](https://github.com/limrun-inc/java-sdk/commit/649dc158a399a58fd8206f16b246de2e74e694b8))
+* **internal:** support uploading Maven repo artifacts to stainless package server ([5b56984](https://github.com/limrun-inc/java-sdk/commit/5b569846d14fed990a3c9a97648c14af5dace205))
+* **internal:** update `actions/checkout` version ([912a4ea](https://github.com/limrun-inc/java-sdk/commit/912a4ea62f24ff40f44b9651614d3eb319a4f9d4))
+* **internal:** update maven repo doc to include authentication ([608554c](https://github.com/limrun-inc/java-sdk/commit/608554c87c6c7f45124118862830f054dca52ae9))
+* **internal:** upgrade AssertJ ([0a6955c](https://github.com/limrun-inc/java-sdk/commit/0a6955cc423e4b72a10aa775b401688c64a874e7))
+* test on Jackson 2.14.0 to avoid encountering FasterXML/jackson-databind[#3240](https://github.com/limrun-inc/java-sdk/issues/3240) in tests ([7210b00](https://github.com/limrun-inc/java-sdk/commit/7210b00aef62163c1153b3185cced46e266c2b3d))
+* update mock server docs ([0c434df](https://github.com/limrun-inc/java-sdk/commit/0c434dfdff93e25b4e4dcb8c0392aafef50c7d84))
+
+
+### Documentation
+
+* add more examples ([b67df38](https://github.com/limrun-inc/java-sdk/commit/b67df3863715632d578cf104dbb99d023bcadf81))
+
 ## 0.1.0 (2025-12-15)
 
 Full Changelog: [v0.0.1...v0.1.0](https://github.com/limrun-inc/java-sdk/compare/v0.0.1...v0.1.0)
