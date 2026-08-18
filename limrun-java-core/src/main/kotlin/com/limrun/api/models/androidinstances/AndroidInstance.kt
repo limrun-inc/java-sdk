@@ -193,6 +193,14 @@ private constructor(
 
     private var validated: Boolean = false
 
+    /**
+     * Validates that the types of all values in this object match their expected types recursively.
+     *
+     * This method is _not_ forwards compatible with new types from the API for existing fields.
+     *
+     * @throws LimrunInvalidDataException if any value type in this object doesn't match its
+     *   expected type.
+     */
     fun validate(): AndroidInstance = apply {
         if (validated) {
             return@apply
@@ -513,6 +521,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws LimrunInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): Metadata = apply {
             if (validated) {
                 return@apply
@@ -611,6 +628,16 @@ private constructor(
 
             private var validated: Boolean = false
 
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws LimrunInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
+             */
             fun validate(): Labels = apply {
                 if (validated) {
                     return@apply
@@ -706,8 +733,9 @@ private constructor(
         ) : this(inactivityTimeout, region, hardTimeout, mutableMapOf())
 
         /**
-         * After how many minutes of inactivity should the instance be terminated. Example values
-         * 1m, 10m, 3h. Default is 3m. Providing "0" disables inactivity checks altogether.
+         * After how many minutes of inactivity should the instance be terminated. The timer starts
+         * once the instance becomes ready. Example values 1m, 10m, 3h. Default is 3m. Providing "0"
+         * uses the organization's default inactivity timeout.
          *
          * @throws LimrunInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -801,9 +829,9 @@ private constructor(
             }
 
             /**
-             * After how many minutes of inactivity should the instance be terminated. Example
-             * values 1m, 10m, 3h. Default is 3m. Providing "0" disables inactivity checks
-             * altogether.
+             * After how many minutes of inactivity should the instance be terminated. The timer
+             * starts once the instance becomes ready. Example values 1m, 10m, 3h. Default is 3m.
+             * Providing "0" uses the organization's default inactivity timeout.
              */
             fun inactivityTimeout(inactivityTimeout: String) =
                 inactivityTimeout(JsonField.of(inactivityTimeout))
@@ -894,6 +922,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws LimrunInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): Spec = apply {
             if (validated) {
                 return@apply
@@ -953,10 +990,14 @@ private constructor(
         private val token: JsonField<String>,
         private val state: JsonField<State>,
         private val adbWebSocketUrl: JsonField<String>,
+        private val apiUrl: JsonField<String>,
         private val endpointWebSocketUrl: JsonField<String>,
         private val errorMessage: JsonField<String>,
+        private val mcpUrl: JsonField<String>,
         private val sandbox: JsonField<Sandbox>,
+        private val signedStreamUrl: JsonField<String>,
         private val targetHttpPortUrlPrefix: JsonField<String>,
+        private val terminationReason: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -967,24 +1008,36 @@ private constructor(
             @JsonProperty("adbWebSocketUrl")
             @ExcludeMissing
             adbWebSocketUrl: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("apiUrl") @ExcludeMissing apiUrl: JsonField<String> = JsonMissing.of(),
             @JsonProperty("endpointWebSocketUrl")
             @ExcludeMissing
             endpointWebSocketUrl: JsonField<String> = JsonMissing.of(),
             @JsonProperty("errorMessage")
             @ExcludeMissing
             errorMessage: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("mcpUrl") @ExcludeMissing mcpUrl: JsonField<String> = JsonMissing.of(),
             @JsonProperty("sandbox") @ExcludeMissing sandbox: JsonField<Sandbox> = JsonMissing.of(),
+            @JsonProperty("signedStreamUrl")
+            @ExcludeMissing
+            signedStreamUrl: JsonField<String> = JsonMissing.of(),
             @JsonProperty("targetHttpPortUrlPrefix")
             @ExcludeMissing
             targetHttpPortUrlPrefix: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("terminationReason")
+            @ExcludeMissing
+            terminationReason: JsonField<String> = JsonMissing.of(),
         ) : this(
             token,
             state,
             adbWebSocketUrl,
+            apiUrl,
             endpointWebSocketUrl,
             errorMessage,
+            mcpUrl,
             sandbox,
+            signedStreamUrl,
             targetHttpPortUrlPrefix,
+            terminationReason,
             mutableMapOf(),
         )
 
@@ -1010,6 +1063,12 @@ private constructor(
          * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
          *   server responded with an unexpected value).
          */
+        fun apiUrl(): Optional<String> = apiUrl.getOptional("apiUrl")
+
+        /**
+         * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
         fun endpointWebSocketUrl(): Optional<String> =
             endpointWebSocketUrl.getOptional("endpointWebSocketUrl")
 
@@ -1023,7 +1082,19 @@ private constructor(
          * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
          *   server responded with an unexpected value).
          */
+        fun mcpUrl(): Optional<String> = mcpUrl.getOptional("mcpUrl")
+
+        /**
+         * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
         fun sandbox(): Optional<Sandbox> = sandbox.getOptional("sandbox")
+
+        /**
+         * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun signedStreamUrl(): Optional<String> = signedStreamUrl.getOptional("signedStreamUrl")
 
         /**
          * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -1031,6 +1102,22 @@ private constructor(
          */
         fun targetHttpPortUrlPrefix(): Optional<String> =
             targetHttpPortUrlPrefix.getOptional("targetHttpPortUrlPrefix")
+
+        /**
+         * Machine-readable reason the instance was terminated. Always present once state is
+         * "terminated", never present before that. New values may be added over time, so treat any
+         * unrecognized value as "Unknown". Known values:
+         * - "UserRequested": terminated by a delete request to the API.
+         * - "InactivityTimeout": the timeout given in spec.inactivityTimeout elapsed.
+         * - "HardTimeout": the timeout given in spec.hardTimeout elapsed.
+         * - "Unknown": terminated for a cause the platform did not attribute, including instances
+         *   that failed to get ready during creation. See errorMessage for details when available.
+         *
+         * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun terminationReason(): Optional<String> =
+            terminationReason.getOptional("terminationReason")
 
         /**
          * Returns the raw JSON value of [token].
@@ -1057,6 +1144,13 @@ private constructor(
         fun _adbWebSocketUrl(): JsonField<String> = adbWebSocketUrl
 
         /**
+         * Returns the raw JSON value of [apiUrl].
+         *
+         * Unlike [apiUrl], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("apiUrl") @ExcludeMissing fun _apiUrl(): JsonField<String> = apiUrl
+
+        /**
          * Returns the raw JSON value of [endpointWebSocketUrl].
          *
          * Unlike [endpointWebSocketUrl], this method doesn't throw if the JSON field has an
@@ -1077,11 +1171,28 @@ private constructor(
         fun _errorMessage(): JsonField<String> = errorMessage
 
         /**
+         * Returns the raw JSON value of [mcpUrl].
+         *
+         * Unlike [mcpUrl], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("mcpUrl") @ExcludeMissing fun _mcpUrl(): JsonField<String> = mcpUrl
+
+        /**
          * Returns the raw JSON value of [sandbox].
          *
          * Unlike [sandbox], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("sandbox") @ExcludeMissing fun _sandbox(): JsonField<Sandbox> = sandbox
+
+        /**
+         * Returns the raw JSON value of [signedStreamUrl].
+         *
+         * Unlike [signedStreamUrl], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("signedStreamUrl")
+        @ExcludeMissing
+        fun _signedStreamUrl(): JsonField<String> = signedStreamUrl
 
         /**
          * Returns the raw JSON value of [targetHttpPortUrlPrefix].
@@ -1092,6 +1203,16 @@ private constructor(
         @JsonProperty("targetHttpPortUrlPrefix")
         @ExcludeMissing
         fun _targetHttpPortUrlPrefix(): JsonField<String> = targetHttpPortUrlPrefix
+
+        /**
+         * Returns the raw JSON value of [terminationReason].
+         *
+         * Unlike [terminationReason], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("terminationReason")
+        @ExcludeMissing
+        fun _terminationReason(): JsonField<String> = terminationReason
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -1125,10 +1246,14 @@ private constructor(
             private var token: JsonField<String>? = null
             private var state: JsonField<State>? = null
             private var adbWebSocketUrl: JsonField<String> = JsonMissing.of()
+            private var apiUrl: JsonField<String> = JsonMissing.of()
             private var endpointWebSocketUrl: JsonField<String> = JsonMissing.of()
             private var errorMessage: JsonField<String> = JsonMissing.of()
+            private var mcpUrl: JsonField<String> = JsonMissing.of()
             private var sandbox: JsonField<Sandbox> = JsonMissing.of()
+            private var signedStreamUrl: JsonField<String> = JsonMissing.of()
             private var targetHttpPortUrlPrefix: JsonField<String> = JsonMissing.of()
+            private var terminationReason: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
@@ -1136,10 +1261,14 @@ private constructor(
                 token = status.token
                 state = status.state
                 adbWebSocketUrl = status.adbWebSocketUrl
+                apiUrl = status.apiUrl
                 endpointWebSocketUrl = status.endpointWebSocketUrl
                 errorMessage = status.errorMessage
+                mcpUrl = status.mcpUrl
                 sandbox = status.sandbox
+                signedStreamUrl = status.signedStreamUrl
                 targetHttpPortUrlPrefix = status.targetHttpPortUrlPrefix
+                terminationReason = status.terminationReason
                 additionalProperties = status.additionalProperties.toMutableMap()
             }
 
@@ -1179,6 +1308,17 @@ private constructor(
                 this.adbWebSocketUrl = adbWebSocketUrl
             }
 
+            fun apiUrl(apiUrl: String) = apiUrl(JsonField.of(apiUrl))
+
+            /**
+             * Sets [Builder.apiUrl] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.apiUrl] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun apiUrl(apiUrl: JsonField<String>) = apply { this.apiUrl = apiUrl }
+
             fun endpointWebSocketUrl(endpointWebSocketUrl: String) =
                 endpointWebSocketUrl(JsonField.of(endpointWebSocketUrl))
 
@@ -1206,6 +1346,17 @@ private constructor(
                 this.errorMessage = errorMessage
             }
 
+            fun mcpUrl(mcpUrl: String) = mcpUrl(JsonField.of(mcpUrl))
+
+            /**
+             * Sets [Builder.mcpUrl] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.mcpUrl] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun mcpUrl(mcpUrl: JsonField<String>) = apply { this.mcpUrl = mcpUrl }
+
             fun sandbox(sandbox: Sandbox) = sandbox(JsonField.of(sandbox))
 
             /**
@@ -1216,6 +1367,20 @@ private constructor(
              * supported value.
              */
             fun sandbox(sandbox: JsonField<Sandbox>) = apply { this.sandbox = sandbox }
+
+            fun signedStreamUrl(signedStreamUrl: String) =
+                signedStreamUrl(JsonField.of(signedStreamUrl))
+
+            /**
+             * Sets [Builder.signedStreamUrl] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.signedStreamUrl] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun signedStreamUrl(signedStreamUrl: JsonField<String>) = apply {
+                this.signedStreamUrl = signedStreamUrl
+            }
 
             fun targetHttpPortUrlPrefix(targetHttpPortUrlPrefix: String) =
                 targetHttpPortUrlPrefix(JsonField.of(targetHttpPortUrlPrefix))
@@ -1229,6 +1394,31 @@ private constructor(
              */
             fun targetHttpPortUrlPrefix(targetHttpPortUrlPrefix: JsonField<String>) = apply {
                 this.targetHttpPortUrlPrefix = targetHttpPortUrlPrefix
+            }
+
+            /**
+             * Machine-readable reason the instance was terminated. Always present once state is
+             * "terminated", never present before that. New values may be added over time, so treat
+             * any unrecognized value as "Unknown". Known values:
+             * - "UserRequested": terminated by a delete request to the API.
+             * - "InactivityTimeout": the timeout given in spec.inactivityTimeout elapsed.
+             * - "HardTimeout": the timeout given in spec.hardTimeout elapsed.
+             * - "Unknown": terminated for a cause the platform did not attribute, including
+             *   instances that failed to get ready during creation. See errorMessage for details
+             *   when available.
+             */
+            fun terminationReason(terminationReason: String) =
+                terminationReason(JsonField.of(terminationReason))
+
+            /**
+             * Sets [Builder.terminationReason] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.terminationReason] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun terminationReason(terminationReason: JsonField<String>) = apply {
+                this.terminationReason = terminationReason
             }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -1268,16 +1458,29 @@ private constructor(
                     checkRequired("token", token),
                     checkRequired("state", state),
                     adbWebSocketUrl,
+                    apiUrl,
                     endpointWebSocketUrl,
                     errorMessage,
+                    mcpUrl,
                     sandbox,
+                    signedStreamUrl,
                     targetHttpPortUrlPrefix,
+                    terminationReason,
                     additionalProperties.toMutableMap(),
                 )
         }
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws LimrunInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): Status = apply {
             if (validated) {
                 return@apply
@@ -1286,10 +1489,14 @@ private constructor(
             token()
             state().validate()
             adbWebSocketUrl()
+            apiUrl()
             endpointWebSocketUrl()
             errorMessage()
+            mcpUrl()
             sandbox().ifPresent { it.validate() }
+            signedStreamUrl()
             targetHttpPortUrlPrefix()
+            terminationReason()
             validated = true
         }
 
@@ -1312,10 +1519,14 @@ private constructor(
             (if (token.asKnown().isPresent) 1 else 0) +
                 (state.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (adbWebSocketUrl.asKnown().isPresent) 1 else 0) +
+                (if (apiUrl.asKnown().isPresent) 1 else 0) +
                 (if (endpointWebSocketUrl.asKnown().isPresent) 1 else 0) +
                 (if (errorMessage.asKnown().isPresent) 1 else 0) +
+                (if (mcpUrl.asKnown().isPresent) 1 else 0) +
                 (sandbox.asKnown().getOrNull()?.validity() ?: 0) +
-                (if (targetHttpPortUrlPrefix.asKnown().isPresent) 1 else 0)
+                (if (signedStreamUrl.asKnown().isPresent) 1 else 0) +
+                (if (targetHttpPortUrlPrefix.asKnown().isPresent) 1 else 0) +
+                (if (terminationReason.asKnown().isPresent) 1 else 0)
 
         class State @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
@@ -1426,6 +1637,16 @@ private constructor(
 
             private var validated: Boolean = false
 
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws LimrunInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
+             */
             fun validate(): State = apply {
                 if (validated) {
                     return@apply
@@ -1572,6 +1793,16 @@ private constructor(
 
             private var validated: Boolean = false
 
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws LimrunInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
+             */
             fun validate(): Sandbox = apply {
                 if (validated) {
                     return@apply
@@ -1701,6 +1932,16 @@ private constructor(
 
                 private var validated: Boolean = false
 
+                /**
+                 * Validates that the types of all values in this object match their expected types
+                 * recursively.
+                 *
+                 * This method is _not_ forwards compatible with new types from the API for existing
+                 * fields.
+                 *
+                 * @throws LimrunInvalidDataException if any value type in this object doesn't match
+                 *   its expected type.
+                 */
                 fun validate(): PlaywrightAndroid = apply {
                     if (validated) {
                         return@apply
@@ -1773,10 +2014,14 @@ private constructor(
                 token == other.token &&
                 state == other.state &&
                 adbWebSocketUrl == other.adbWebSocketUrl &&
+                apiUrl == other.apiUrl &&
                 endpointWebSocketUrl == other.endpointWebSocketUrl &&
                 errorMessage == other.errorMessage &&
+                mcpUrl == other.mcpUrl &&
                 sandbox == other.sandbox &&
+                signedStreamUrl == other.signedStreamUrl &&
                 targetHttpPortUrlPrefix == other.targetHttpPortUrlPrefix &&
+                terminationReason == other.terminationReason &&
                 additionalProperties == other.additionalProperties
         }
 
@@ -1785,10 +2030,14 @@ private constructor(
                 token,
                 state,
                 adbWebSocketUrl,
+                apiUrl,
                 endpointWebSocketUrl,
                 errorMessage,
+                mcpUrl,
                 sandbox,
+                signedStreamUrl,
                 targetHttpPortUrlPrefix,
+                terminationReason,
                 additionalProperties,
             )
         }
@@ -1796,7 +2045,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Status{token=$token, state=$state, adbWebSocketUrl=$adbWebSocketUrl, endpointWebSocketUrl=$endpointWebSocketUrl, errorMessage=$errorMessage, sandbox=$sandbox, targetHttpPortUrlPrefix=$targetHttpPortUrlPrefix, additionalProperties=$additionalProperties}"
+            "Status{token=$token, state=$state, adbWebSocketUrl=$adbWebSocketUrl, apiUrl=$apiUrl, endpointWebSocketUrl=$endpointWebSocketUrl, errorMessage=$errorMessage, mcpUrl=$mcpUrl, sandbox=$sandbox, signedStreamUrl=$signedStreamUrl, targetHttpPortUrlPrefix=$targetHttpPortUrlPrefix, terminationReason=$terminationReason, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

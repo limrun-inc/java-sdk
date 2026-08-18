@@ -9,11 +9,34 @@ internal class AssetGetOrCreateParamsTest {
 
     @Test
     fun create() {
-        AssetGetOrCreateParams.builder().name("name").build()
+        AssetGetOrCreateParams.builder()
+            .name("name")
+            .kind(AssetGetOrCreateParams.Kind.APP)
+            .platform(AssetGetOrCreateParams.Platform.IOS)
+            .ttl("ttl")
+            .build()
     }
 
     @Test
     fun body() {
+        val params =
+            AssetGetOrCreateParams.builder()
+                .name("name")
+                .kind(AssetGetOrCreateParams.Kind.APP)
+                .platform(AssetGetOrCreateParams.Platform.IOS)
+                .ttl("ttl")
+                .build()
+
+        val body = params._body()
+
+        assertThat(body.name()).isEqualTo("name")
+        assertThat(body.kind()).contains(AssetGetOrCreateParams.Kind.APP)
+        assertThat(body.platform()).contains(AssetGetOrCreateParams.Platform.IOS)
+        assertThat(body.ttl()).contains("ttl")
+    }
+
+    @Test
+    fun bodyWithoutOptionalFields() {
         val params = AssetGetOrCreateParams.builder().name("name").build()
 
         val body = params._body()

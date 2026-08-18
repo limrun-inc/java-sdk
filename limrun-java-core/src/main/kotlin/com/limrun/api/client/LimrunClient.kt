@@ -3,9 +3,13 @@
 package com.limrun.api.client
 
 import com.limrun.api.core.ClientOptions
+import com.limrun.api.services.blocking.AnalyticsService
 import com.limrun.api.services.blocking.AndroidInstanceService
 import com.limrun.api.services.blocking.AssetService
+import com.limrun.api.services.blocking.GradleInstanceService
 import com.limrun.api.services.blocking.IosInstanceService
+import com.limrun.api.services.blocking.ScopedTokenService
+import com.limrun.api.services.blocking.XcodeInstanceService
 import java.util.function.Consumer
 
 /**
@@ -50,6 +54,14 @@ interface LimrunClient {
 
     fun iosInstances(): IosInstanceService
 
+    fun xcodeInstances(): XcodeInstanceService
+
+    fun gradleInstances(): GradleInstanceService
+
+    fun analytics(): AnalyticsService
+
+    fun scopedTokens(): ScopedTokenService
+
     /**
      * Closes this client, relinquishing any underlying resources.
      *
@@ -78,5 +90,13 @@ interface LimrunClient {
         fun assets(): AssetService.WithRawResponse
 
         fun iosInstances(): IosInstanceService.WithRawResponse
+
+        fun xcodeInstances(): XcodeInstanceService.WithRawResponse
+
+        fun gradleInstances(): GradleInstanceService.WithRawResponse
+
+        fun analytics(): AnalyticsService.WithRawResponse
+
+        fun scopedTokens(): ScopedTokenService.WithRawResponse
     }
 }

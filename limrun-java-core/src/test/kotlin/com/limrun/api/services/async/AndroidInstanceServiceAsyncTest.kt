@@ -2,25 +2,18 @@
 
 package com.limrun.api.services.async
 
-import com.limrun.api.TestServerExtension
 import com.limrun.api.client.okhttp.LimrunOkHttpClientAsync
 import com.limrun.api.core.JsonValue
 import com.limrun.api.models.androidinstances.AndroidInstanceCreateParams
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 
-@ExtendWith(TestServerExtension::class)
 internal class AndroidInstanceServiceAsyncTest {
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun create() {
-        val client =
-            LimrunOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
-                .build()
+        val client = LimrunOkHttpClientAsync.builder().apiKey("My API Key").build()
         val androidInstanceServiceAsync = client.androidInstances()
 
         val androidInstanceFuture =
@@ -79,6 +72,7 @@ internal class AndroidInstanceServiceAsyncTest {
                                     .addUrl("string")
                                     .build()
                             )
+                            .jurisdiction(AndroidInstanceCreateParams.Spec.Jurisdiction.US)
                             .region("region")
                             .sandbox(
                                 AndroidInstanceCreateParams.Spec.Sandbox.builder()
@@ -86,6 +80,12 @@ internal class AndroidInstanceServiceAsyncTest {
                                         AndroidInstanceCreateParams.Spec.Sandbox.PlaywrightAndroid
                                             .builder()
                                             .enabled(true)
+                                            .version(
+                                                AndroidInstanceCreateParams.Spec.Sandbox
+                                                    .PlaywrightAndroid
+                                                    .Version
+                                                    ._1_56_1_LIM_1
+                                            )
                                             .build()
                                     )
                                     .build()
@@ -99,14 +99,10 @@ internal class AndroidInstanceServiceAsyncTest {
         androidInstance.validate()
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun list() {
-        val client =
-            LimrunOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
-                .build()
+        val client = LimrunOkHttpClientAsync.builder().apiKey("My API Key").build()
         val androidInstanceServiceAsync = client.androidInstances()
 
         val pageFuture = androidInstanceServiceAsync.list()
@@ -115,14 +111,10 @@ internal class AndroidInstanceServiceAsyncTest {
         page.items().forEach { it.validate() }
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun delete() {
-        val client =
-            LimrunOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
-                .build()
+        val client = LimrunOkHttpClientAsync.builder().apiKey("My API Key").build()
         val androidInstanceServiceAsync = client.androidInstances()
 
         val future = androidInstanceServiceAsync.delete("id")
@@ -130,14 +122,10 @@ internal class AndroidInstanceServiceAsyncTest {
         val response = future.get()
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun get() {
-        val client =
-            LimrunOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
-                .build()
+        val client = LimrunOkHttpClientAsync.builder().apiKey("My API Key").build()
         val androidInstanceServiceAsync = client.androidInstances()
 
         val androidInstanceFuture = androidInstanceServiceAsync.get("id")

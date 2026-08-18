@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.limrun.api.core.Enum
 import com.limrun.api.core.ExcludeMissing
 import com.limrun.api.core.JsonField
 import com.limrun.api.core.JsonMissing
@@ -17,6 +18,8 @@ import com.limrun.api.core.http.QueryParams
 import com.limrun.api.errors.LimrunInvalidDataException
 import java.util.Collections
 import java.util.Objects
+import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
 /**
  * Creates an asset and returns upload and download URLs. If there is a corresponding file uploaded
@@ -39,11 +42,54 @@ private constructor(
     fun name(): String = body.name()
 
     /**
+     * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun kind(): Optional<Kind> = body.kind()
+
+    /**
+     * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun platform(): Optional<Platform> = body.platform()
+
+    /**
+     * Optional time-to-live as a Go duration string (e.g. "24h"). When set, the asset is deleted
+     * this long after now; minimum is 1m. Omit for no expiry. On re-upload of an existing asset, a
+     * value updates the expiry while omitting it leaves the current expiry unchanged.
+     *
+     * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun ttl(): Optional<String> = body.ttl()
+
+    /**
      * Returns the raw JSON value of [name].
      *
      * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _name(): JsonField<String> = body._name()
+
+    /**
+     * Returns the raw JSON value of [kind].
+     *
+     * Unlike [kind], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _kind(): JsonField<Kind> = body._kind()
+
+    /**
+     * Returns the raw JSON value of [platform].
+     *
+     * Unlike [platform], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _platform(): JsonField<Platform> = body._platform()
+
+    /**
+     * Returns the raw JSON value of [ttl].
+     *
+     * Unlike [ttl], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _ttl(): JsonField<String> = body._ttl()
 
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
@@ -88,6 +134,9 @@ private constructor(
          * This is generally only useful if you are already constructing the body separately.
          * Otherwise, it's more convenient to use the top-level setters instead:
          * - [name]
+         * - [kind]
+         * - [platform]
+         * - [ttl]
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
@@ -100,6 +149,43 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun name(name: JsonField<String>) = apply { body.name(name) }
+
+        fun kind(kind: Kind) = apply { body.kind(kind) }
+
+        /**
+         * Sets [Builder.kind] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.kind] with a well-typed [Kind] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun kind(kind: JsonField<Kind>) = apply { body.kind(kind) }
+
+        fun platform(platform: Platform) = apply { body.platform(platform) }
+
+        /**
+         * Sets [Builder.platform] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.platform] with a well-typed [Platform] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun platform(platform: JsonField<Platform>) = apply { body.platform(platform) }
+
+        /**
+         * Optional time-to-live as a Go duration string (e.g. "24h"). When set, the asset is
+         * deleted this long after now; minimum is 1m. Omit for no expiry. On re-upload of an
+         * existing asset, a value updates the expiry while omitting it leaves the current expiry
+         * unchanged.
+         */
+        fun ttl(ttl: String) = apply { body.ttl(ttl) }
+
+        /**
+         * Sets [Builder.ttl] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.ttl] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun ttl(ttl: JsonField<String>) = apply { body.ttl(ttl) }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             body.additionalProperties(additionalBodyProperties)
@@ -248,13 +334,21 @@ private constructor(
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val name: JsonField<String>,
+        private val kind: JsonField<Kind>,
+        private val platform: JsonField<Platform>,
+        private val ttl: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
         @JsonCreator
         private constructor(
-            @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of()
-        ) : this(name, mutableMapOf())
+            @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("kind") @ExcludeMissing kind: JsonField<Kind> = JsonMissing.of(),
+            @JsonProperty("platform")
+            @ExcludeMissing
+            platform: JsonField<Platform> = JsonMissing.of(),
+            @JsonProperty("ttl") @ExcludeMissing ttl: JsonField<String> = JsonMissing.of(),
+        ) : this(name, kind, platform, ttl, mutableMapOf())
 
         /**
          * @throws LimrunInvalidDataException if the JSON field has an unexpected type or is
@@ -263,11 +357,55 @@ private constructor(
         fun name(): String = name.getRequired("name")
 
         /**
+         * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun kind(): Optional<Kind> = kind.getOptional("kind")
+
+        /**
+         * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun platform(): Optional<Platform> = platform.getOptional("platform")
+
+        /**
+         * Optional time-to-live as a Go duration string (e.g. "24h"). When set, the asset is
+         * deleted this long after now; minimum is 1m. Omit for no expiry. On re-upload of an
+         * existing asset, a value updates the expiry while omitting it leaves the current expiry
+         * unchanged.
+         *
+         * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun ttl(): Optional<String> = ttl.getOptional("ttl")
+
+        /**
          * Returns the raw JSON value of [name].
          *
          * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
+
+        /**
+         * Returns the raw JSON value of [kind].
+         *
+         * Unlike [kind], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("kind") @ExcludeMissing fun _kind(): JsonField<Kind> = kind
+
+        /**
+         * Returns the raw JSON value of [platform].
+         *
+         * Unlike [platform], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("platform") @ExcludeMissing fun _platform(): JsonField<Platform> = platform
+
+        /**
+         * Returns the raw JSON value of [ttl].
+         *
+         * Unlike [ttl], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("ttl") @ExcludeMissing fun _ttl(): JsonField<String> = ttl
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -298,11 +436,17 @@ private constructor(
         class Builder internal constructor() {
 
             private var name: JsonField<String>? = null
+            private var kind: JsonField<Kind> = JsonMissing.of()
+            private var platform: JsonField<Platform> = JsonMissing.of()
+            private var ttl: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
             internal fun from(body: Body) = apply {
                 name = body.name
+                kind = body.kind
+                platform = body.platform
+                ttl = body.ttl
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
@@ -316,6 +460,45 @@ private constructor(
              * value.
              */
             fun name(name: JsonField<String>) = apply { this.name = name }
+
+            fun kind(kind: Kind) = kind(JsonField.of(kind))
+
+            /**
+             * Sets [Builder.kind] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.kind] with a well-typed [Kind] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
+             */
+            fun kind(kind: JsonField<Kind>) = apply { this.kind = kind }
+
+            fun platform(platform: Platform) = platform(JsonField.of(platform))
+
+            /**
+             * Sets [Builder.platform] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.platform] with a well-typed [Platform] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun platform(platform: JsonField<Platform>) = apply { this.platform = platform }
+
+            /**
+             * Optional time-to-live as a Go duration string (e.g. "24h"). When set, the asset is
+             * deleted this long after now; minimum is 1m. Omit for no expiry. On re-upload of an
+             * existing asset, a value updates the expiry while omitting it leaves the current
+             * expiry unchanged.
+             */
+            fun ttl(ttl: String) = ttl(JsonField.of(ttl))
+
+            /**
+             * Sets [Builder.ttl] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.ttl] with a well-typed [String] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
+             */
+            fun ttl(ttl: JsonField<String>) = apply { this.ttl = ttl }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
@@ -349,17 +532,35 @@ private constructor(
              * @throws IllegalStateException if any required field is unset.
              */
             fun build(): Body =
-                Body(checkRequired("name", name), additionalProperties.toMutableMap())
+                Body(
+                    checkRequired("name", name),
+                    kind,
+                    platform,
+                    ttl,
+                    additionalProperties.toMutableMap(),
+                )
         }
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws LimrunInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): Body = apply {
             if (validated) {
                 return@apply
             }
 
             name()
+            kind().ifPresent { it.validate() }
+            platform().ifPresent { it.validate() }
+            ttl()
             validated = true
         }
 
@@ -377,7 +578,12 @@ private constructor(
          *
          * Used for best match union deserialization.
          */
-        @JvmSynthetic internal fun validity(): Int = (if (name.asKnown().isPresent) 1 else 0)
+        @JvmSynthetic
+        internal fun validity(): Int =
+            (if (name.asKnown().isPresent) 1 else 0) +
+                (kind.asKnown().getOrNull()?.validity() ?: 0) +
+                (platform.asKnown().getOrNull()?.validity() ?: 0) +
+                (if (ttl.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -386,14 +592,294 @@ private constructor(
 
             return other is Body &&
                 name == other.name &&
+                kind == other.kind &&
+                platform == other.platform &&
+                ttl == other.ttl &&
                 additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy { Objects.hash(name, additionalProperties) }
+        private val hashCode: Int by lazy {
+            Objects.hash(name, kind, platform, ttl, additionalProperties)
+        }
 
         override fun hashCode(): Int = hashCode
 
-        override fun toString() = "Body{name=$name, additionalProperties=$additionalProperties}"
+        override fun toString() =
+            "Body{name=$name, kind=$kind, platform=$platform, ttl=$ttl, additionalProperties=$additionalProperties}"
+    }
+
+    class Kind @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+
+        /**
+         * Returns this class instance's raw value.
+         *
+         * This is usually only useful if this instance was deserialized from data that doesn't
+         * match any known member, and you want to know that value. For example, if the SDK is on an
+         * older version than the API, then the API may respond with new members that the SDK is
+         * unaware of.
+         */
+        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+        companion object {
+
+            @JvmField val APP = of("App")
+
+            @JvmField val KEYCHAIN = of("Keychain")
+
+            @JvmStatic fun of(value: String) = Kind(JsonField.of(value))
+        }
+
+        /** An enum containing [Kind]'s known values. */
+        enum class Known {
+            APP,
+            KEYCHAIN,
+        }
+
+        /**
+         * An enum containing [Kind]'s known values, as well as an [_UNKNOWN] member.
+         *
+         * An instance of [Kind] can contain an unknown value in a couple of cases:
+         * - It was deserialized from data that doesn't match any known member. For example, if the
+         *   SDK is on an older version than the API, then the API may respond with new members that
+         *   the SDK is unaware of.
+         * - It was constructed with an arbitrary value using the [of] method.
+         */
+        enum class Value {
+            APP,
+            KEYCHAIN,
+            /** An enum member indicating that [Kind] was instantiated with an unknown value. */
+            _UNKNOWN,
+        }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if the class was instantiated with an unknown value.
+         *
+         * Use the [known] method instead if you're certain the value is always known or if you want
+         * to throw for the unknown case.
+         */
+        fun value(): Value =
+            when (this) {
+                APP -> Value.APP
+                KEYCHAIN -> Value.KEYCHAIN
+                else -> Value._UNKNOWN
+            }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value.
+         *
+         * Use the [value] method instead if you're uncertain the value is always known and don't
+         * want to throw for the unknown case.
+         *
+         * @throws LimrunInvalidDataException if this class instance's value is a not a known
+         *   member.
+         */
+        fun known(): Known =
+            when (this) {
+                APP -> Known.APP
+                KEYCHAIN -> Known.KEYCHAIN
+                else -> throw LimrunInvalidDataException("Unknown Kind: $value")
+            }
+
+        /**
+         * Returns this class instance's primitive wire representation.
+         *
+         * This differs from the [toString] method because that method is primarily for debugging
+         * and generally doesn't throw.
+         *
+         * @throws LimrunInvalidDataException if this class instance's value does not have the
+         *   expected primitive type.
+         */
+        fun asString(): String =
+            _value().asString().orElseThrow { LimrunInvalidDataException("Value is not a String") }
+
+        private var validated: Boolean = false
+
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws LimrunInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
+        fun validate(): Kind = apply {
+            if (validated) {
+                return@apply
+            }
+
+            known()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: LimrunInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is Kind && value == other.value
+        }
+
+        override fun hashCode() = value.hashCode()
+
+        override fun toString() = value.toString()
+    }
+
+    class Platform @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+
+        /**
+         * Returns this class instance's raw value.
+         *
+         * This is usually only useful if this instance was deserialized from data that doesn't
+         * match any known member, and you want to know that value. For example, if the SDK is on an
+         * older version than the API, then the API may respond with new members that the SDK is
+         * unaware of.
+         */
+        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+        companion object {
+
+            @JvmField val IOS = of("ios")
+
+            @JvmField val ANDROID = of("android")
+
+            @JvmField val XCODE = of("xcode")
+
+            @JvmStatic fun of(value: String) = Platform(JsonField.of(value))
+        }
+
+        /** An enum containing [Platform]'s known values. */
+        enum class Known {
+            IOS,
+            ANDROID,
+            XCODE,
+        }
+
+        /**
+         * An enum containing [Platform]'s known values, as well as an [_UNKNOWN] member.
+         *
+         * An instance of [Platform] can contain an unknown value in a couple of cases:
+         * - It was deserialized from data that doesn't match any known member. For example, if the
+         *   SDK is on an older version than the API, then the API may respond with new members that
+         *   the SDK is unaware of.
+         * - It was constructed with an arbitrary value using the [of] method.
+         */
+        enum class Value {
+            IOS,
+            ANDROID,
+            XCODE,
+            /** An enum member indicating that [Platform] was instantiated with an unknown value. */
+            _UNKNOWN,
+        }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if the class was instantiated with an unknown value.
+         *
+         * Use the [known] method instead if you're certain the value is always known or if you want
+         * to throw for the unknown case.
+         */
+        fun value(): Value =
+            when (this) {
+                IOS -> Value.IOS
+                ANDROID -> Value.ANDROID
+                XCODE -> Value.XCODE
+                else -> Value._UNKNOWN
+            }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value.
+         *
+         * Use the [value] method instead if you're uncertain the value is always known and don't
+         * want to throw for the unknown case.
+         *
+         * @throws LimrunInvalidDataException if this class instance's value is a not a known
+         *   member.
+         */
+        fun known(): Known =
+            when (this) {
+                IOS -> Known.IOS
+                ANDROID -> Known.ANDROID
+                XCODE -> Known.XCODE
+                else -> throw LimrunInvalidDataException("Unknown Platform: $value")
+            }
+
+        /**
+         * Returns this class instance's primitive wire representation.
+         *
+         * This differs from the [toString] method because that method is primarily for debugging
+         * and generally doesn't throw.
+         *
+         * @throws LimrunInvalidDataException if this class instance's value does not have the
+         *   expected primitive type.
+         */
+        fun asString(): String =
+            _value().asString().orElseThrow { LimrunInvalidDataException("Value is not a String") }
+
+        private var validated: Boolean = false
+
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws LimrunInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
+        fun validate(): Platform = apply {
+            if (validated) {
+                return@apply
+            }
+
+            known()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: LimrunInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is Platform && value == other.value
+        }
+
+        override fun hashCode() = value.hashCode()
+
+        override fun toString() = value.toString()
     }
 
     override fun equals(other: Any?): Boolean {

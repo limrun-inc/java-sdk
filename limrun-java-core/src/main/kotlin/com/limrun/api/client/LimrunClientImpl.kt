@@ -4,12 +4,20 @@ package com.limrun.api.client
 
 import com.limrun.api.core.ClientOptions
 import com.limrun.api.core.getPackageVersion
+import com.limrun.api.services.blocking.AnalyticsService
+import com.limrun.api.services.blocking.AnalyticsServiceImpl
 import com.limrun.api.services.blocking.AndroidInstanceService
 import com.limrun.api.services.blocking.AndroidInstanceServiceImpl
 import com.limrun.api.services.blocking.AssetService
 import com.limrun.api.services.blocking.AssetServiceImpl
+import com.limrun.api.services.blocking.GradleInstanceService
+import com.limrun.api.services.blocking.GradleInstanceServiceImpl
 import com.limrun.api.services.blocking.IosInstanceService
 import com.limrun.api.services.blocking.IosInstanceServiceImpl
+import com.limrun.api.services.blocking.ScopedTokenService
+import com.limrun.api.services.blocking.ScopedTokenServiceImpl
+import com.limrun.api.services.blocking.XcodeInstanceService
+import com.limrun.api.services.blocking.XcodeInstanceServiceImpl
 import java.util.function.Consumer
 
 class LimrunClientImpl(private val clientOptions: ClientOptions) : LimrunClient {
@@ -39,6 +47,22 @@ class LimrunClientImpl(private val clientOptions: ClientOptions) : LimrunClient 
         IosInstanceServiceImpl(clientOptionsWithUserAgent)
     }
 
+    private val xcodeInstances: XcodeInstanceService by lazy {
+        XcodeInstanceServiceImpl(clientOptionsWithUserAgent)
+    }
+
+    private val gradleInstances: GradleInstanceService by lazy {
+        GradleInstanceServiceImpl(clientOptionsWithUserAgent)
+    }
+
+    private val analytics: AnalyticsService by lazy {
+        AnalyticsServiceImpl(clientOptionsWithUserAgent)
+    }
+
+    private val scopedTokens: ScopedTokenService by lazy {
+        ScopedTokenServiceImpl(clientOptionsWithUserAgent)
+    }
+
     override fun async(): LimrunClientAsync = async
 
     override fun withRawResponse(): LimrunClient.WithRawResponse = withRawResponse
@@ -51,6 +75,14 @@ class LimrunClientImpl(private val clientOptions: ClientOptions) : LimrunClient 
     override fun assets(): AssetService = assets
 
     override fun iosInstances(): IosInstanceService = iosInstances
+
+    override fun xcodeInstances(): XcodeInstanceService = xcodeInstances
+
+    override fun gradleInstances(): GradleInstanceService = gradleInstances
+
+    override fun analytics(): AnalyticsService = analytics
+
+    override fun scopedTokens(): ScopedTokenService = scopedTokens
 
     override fun close() = clientOptions.close()
 
@@ -69,6 +101,22 @@ class LimrunClientImpl(private val clientOptions: ClientOptions) : LimrunClient 
             IosInstanceServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val xcodeInstances: XcodeInstanceService.WithRawResponse by lazy {
+            XcodeInstanceServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val gradleInstances: GradleInstanceService.WithRawResponse by lazy {
+            GradleInstanceServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val analytics: AnalyticsService.WithRawResponse by lazy {
+            AnalyticsServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val scopedTokens: ScopedTokenService.WithRawResponse by lazy {
+            ScopedTokenServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): LimrunClient.WithRawResponse =
@@ -81,5 +129,13 @@ class LimrunClientImpl(private val clientOptions: ClientOptions) : LimrunClient 
         override fun assets(): AssetService.WithRawResponse = assets
 
         override fun iosInstances(): IosInstanceService.WithRawResponse = iosInstances
+
+        override fun xcodeInstances(): XcodeInstanceService.WithRawResponse = xcodeInstances
+
+        override fun gradleInstances(): GradleInstanceService.WithRawResponse = gradleInstances
+
+        override fun analytics(): AnalyticsService.WithRawResponse = analytics
+
+        override fun scopedTokens(): ScopedTokenService.WithRawResponse = scopedTokens
     }
 }

@@ -4,12 +4,20 @@ package com.limrun.api.client
 
 import com.limrun.api.core.ClientOptions
 import com.limrun.api.core.getPackageVersion
+import com.limrun.api.services.async.AnalyticsServiceAsync
+import com.limrun.api.services.async.AnalyticsServiceAsyncImpl
 import com.limrun.api.services.async.AndroidInstanceServiceAsync
 import com.limrun.api.services.async.AndroidInstanceServiceAsyncImpl
 import com.limrun.api.services.async.AssetServiceAsync
 import com.limrun.api.services.async.AssetServiceAsyncImpl
+import com.limrun.api.services.async.GradleInstanceServiceAsync
+import com.limrun.api.services.async.GradleInstanceServiceAsyncImpl
 import com.limrun.api.services.async.IosInstanceServiceAsync
 import com.limrun.api.services.async.IosInstanceServiceAsyncImpl
+import com.limrun.api.services.async.ScopedTokenServiceAsync
+import com.limrun.api.services.async.ScopedTokenServiceAsyncImpl
+import com.limrun.api.services.async.XcodeInstanceServiceAsync
+import com.limrun.api.services.async.XcodeInstanceServiceAsyncImpl
 import java.util.function.Consumer
 
 class LimrunClientAsyncImpl(private val clientOptions: ClientOptions) : LimrunClientAsync {
@@ -41,6 +49,22 @@ class LimrunClientAsyncImpl(private val clientOptions: ClientOptions) : LimrunCl
         IosInstanceServiceAsyncImpl(clientOptionsWithUserAgent)
     }
 
+    private val xcodeInstances: XcodeInstanceServiceAsync by lazy {
+        XcodeInstanceServiceAsyncImpl(clientOptionsWithUserAgent)
+    }
+
+    private val gradleInstances: GradleInstanceServiceAsync by lazy {
+        GradleInstanceServiceAsyncImpl(clientOptionsWithUserAgent)
+    }
+
+    private val analytics: AnalyticsServiceAsync by lazy {
+        AnalyticsServiceAsyncImpl(clientOptionsWithUserAgent)
+    }
+
+    private val scopedTokens: ScopedTokenServiceAsync by lazy {
+        ScopedTokenServiceAsyncImpl(clientOptionsWithUserAgent)
+    }
+
     override fun sync(): LimrunClient = sync
 
     override fun withRawResponse(): LimrunClientAsync.WithRawResponse = withRawResponse
@@ -53,6 +77,14 @@ class LimrunClientAsyncImpl(private val clientOptions: ClientOptions) : LimrunCl
     override fun assets(): AssetServiceAsync = assets
 
     override fun iosInstances(): IosInstanceServiceAsync = iosInstances
+
+    override fun xcodeInstances(): XcodeInstanceServiceAsync = xcodeInstances
+
+    override fun gradleInstances(): GradleInstanceServiceAsync = gradleInstances
+
+    override fun analytics(): AnalyticsServiceAsync = analytics
+
+    override fun scopedTokens(): ScopedTokenServiceAsync = scopedTokens
 
     override fun close() = clientOptions.close()
 
@@ -71,6 +103,22 @@ class LimrunClientAsyncImpl(private val clientOptions: ClientOptions) : LimrunCl
             IosInstanceServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val xcodeInstances: XcodeInstanceServiceAsync.WithRawResponse by lazy {
+            XcodeInstanceServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val gradleInstances: GradleInstanceServiceAsync.WithRawResponse by lazy {
+            GradleInstanceServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val analytics: AnalyticsServiceAsync.WithRawResponse by lazy {
+            AnalyticsServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val scopedTokens: ScopedTokenServiceAsync.WithRawResponse by lazy {
+            ScopedTokenServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): LimrunClientAsync.WithRawResponse =
@@ -84,5 +132,13 @@ class LimrunClientAsyncImpl(private val clientOptions: ClientOptions) : LimrunCl
         override fun assets(): AssetServiceAsync.WithRawResponse = assets
 
         override fun iosInstances(): IosInstanceServiceAsync.WithRawResponse = iosInstances
+
+        override fun xcodeInstances(): XcodeInstanceServiceAsync.WithRawResponse = xcodeInstances
+
+        override fun gradleInstances(): GradleInstanceServiceAsync.WithRawResponse = gradleInstances
+
+        override fun analytics(): AnalyticsServiceAsync.WithRawResponse = analytics
+
+        override fun scopedTokens(): ScopedTokenServiceAsync.WithRawResponse = scopedTokens
     }
 }

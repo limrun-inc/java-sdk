@@ -128,6 +128,7 @@ internal class ErrorHandlingTest {
                                         .addUrl("string")
                                         .build()
                                 )
+                                .jurisdiction(AndroidInstanceCreateParams.Spec.Jurisdiction.US)
                                 .region("region")
                                 .sandbox(
                                     AndroidInstanceCreateParams.Spec.Sandbox.builder()
@@ -136,6 +137,12 @@ internal class ErrorHandlingTest {
                                                 .PlaywrightAndroid
                                                 .builder()
                                                 .enabled(true)
+                                                .version(
+                                                    AndroidInstanceCreateParams.Spec.Sandbox
+                                                        .PlaywrightAndroid
+                                                        .Version
+                                                        ._1_56_1_LIM_1
+                                                )
                                                 .build()
                                         )
                                         .build()
@@ -221,6 +228,7 @@ internal class ErrorHandlingTest {
                                         .addUrl("string")
                                         .build()
                                 )
+                                .jurisdiction(AndroidInstanceCreateParams.Spec.Jurisdiction.US)
                                 .region("region")
                                 .sandbox(
                                     AndroidInstanceCreateParams.Spec.Sandbox.builder()
@@ -229,6 +237,12 @@ internal class ErrorHandlingTest {
                                                 .PlaywrightAndroid
                                                 .builder()
                                                 .enabled(true)
+                                                .version(
+                                                    AndroidInstanceCreateParams.Spec.Sandbox
+                                                        .PlaywrightAndroid
+                                                        .Version
+                                                        ._1_56_1_LIM_1
+                                                )
                                                 .build()
                                         )
                                         .build()
@@ -314,6 +328,7 @@ internal class ErrorHandlingTest {
                                         .addUrl("string")
                                         .build()
                                 )
+                                .jurisdiction(AndroidInstanceCreateParams.Spec.Jurisdiction.US)
                                 .region("region")
                                 .sandbox(
                                     AndroidInstanceCreateParams.Spec.Sandbox.builder()
@@ -322,6 +337,12 @@ internal class ErrorHandlingTest {
                                                 .PlaywrightAndroid
                                                 .builder()
                                                 .enabled(true)
+                                                .version(
+                                                    AndroidInstanceCreateParams.Spec.Sandbox
+                                                        .PlaywrightAndroid
+                                                        .Version
+                                                        ._1_56_1_LIM_1
+                                                )
                                                 .build()
                                         )
                                         .build()
@@ -407,6 +428,7 @@ internal class ErrorHandlingTest {
                                         .addUrl("string")
                                         .build()
                                 )
+                                .jurisdiction(AndroidInstanceCreateParams.Spec.Jurisdiction.US)
                                 .region("region")
                                 .sandbox(
                                     AndroidInstanceCreateParams.Spec.Sandbox.builder()
@@ -415,6 +437,12 @@ internal class ErrorHandlingTest {
                                                 .PlaywrightAndroid
                                                 .builder()
                                                 .enabled(true)
+                                                .version(
+                                                    AndroidInstanceCreateParams.Spec.Sandbox
+                                                        .PlaywrightAndroid
+                                                        .Version
+                                                        ._1_56_1_LIM_1
+                                                )
                                                 .build()
                                         )
                                         .build()
@@ -500,6 +528,7 @@ internal class ErrorHandlingTest {
                                         .addUrl("string")
                                         .build()
                                 )
+                                .jurisdiction(AndroidInstanceCreateParams.Spec.Jurisdiction.US)
                                 .region("region")
                                 .sandbox(
                                     AndroidInstanceCreateParams.Spec.Sandbox.builder()
@@ -508,6 +537,12 @@ internal class ErrorHandlingTest {
                                                 .PlaywrightAndroid
                                                 .builder()
                                                 .enabled(true)
+                                                .version(
+                                                    AndroidInstanceCreateParams.Spec.Sandbox
+                                                        .PlaywrightAndroid
+                                                        .Version
+                                                        ._1_56_1_LIM_1
+                                                )
                                                 .build()
                                         )
                                         .build()
@@ -593,6 +628,7 @@ internal class ErrorHandlingTest {
                                         .addUrl("string")
                                         .build()
                                 )
+                                .jurisdiction(AndroidInstanceCreateParams.Spec.Jurisdiction.US)
                                 .region("region")
                                 .sandbox(
                                     AndroidInstanceCreateParams.Spec.Sandbox.builder()
@@ -601,6 +637,12 @@ internal class ErrorHandlingTest {
                                                 .PlaywrightAndroid
                                                 .builder()
                                                 .enabled(true)
+                                                .version(
+                                                    AndroidInstanceCreateParams.Spec.Sandbox
+                                                        .PlaywrightAndroid
+                                                        .Version
+                                                        ._1_56_1_LIM_1
+                                                )
                                                 .build()
                                         )
                                         .build()
@@ -686,6 +728,7 @@ internal class ErrorHandlingTest {
                                         .addUrl("string")
                                         .build()
                                 )
+                                .jurisdiction(AndroidInstanceCreateParams.Spec.Jurisdiction.US)
                                 .region("region")
                                 .sandbox(
                                     AndroidInstanceCreateParams.Spec.Sandbox.builder()
@@ -694,6 +737,12 @@ internal class ErrorHandlingTest {
                                                 .PlaywrightAndroid
                                                 .builder()
                                                 .enabled(true)
+                                                .version(
+                                                    AndroidInstanceCreateParams.Spec.Sandbox
+                                                        .PlaywrightAndroid
+                                                        .Version
+                                                        ._1_56_1_LIM_1
+                                                )
                                                 .build()
                                         )
                                         .build()
@@ -779,6 +828,7 @@ internal class ErrorHandlingTest {
                                         .addUrl("string")
                                         .build()
                                 )
+                                .jurisdiction(AndroidInstanceCreateParams.Spec.Jurisdiction.US)
                                 .region("region")
                                 .sandbox(
                                     AndroidInstanceCreateParams.Spec.Sandbox.builder()
@@ -787,6 +837,12 @@ internal class ErrorHandlingTest {
                                                 .PlaywrightAndroid
                                                 .builder()
                                                 .enabled(true)
+                                                .version(
+                                                    AndroidInstanceCreateParams.Spec.Sandbox
+                                                        .PlaywrightAndroid
+                                                        .Version
+                                                        ._1_56_1_LIM_1
+                                                )
                                                 .build()
                                         )
                                         .build()
@@ -872,6 +928,7 @@ internal class ErrorHandlingTest {
                                         .addUrl("string")
                                         .build()
                                 )
+                                .jurisdiction(AndroidInstanceCreateParams.Spec.Jurisdiction.US)
                                 .region("region")
                                 .sandbox(
                                     AndroidInstanceCreateParams.Spec.Sandbox.builder()
@@ -880,6 +937,12 @@ internal class ErrorHandlingTest {
                                                 .PlaywrightAndroid
                                                 .builder()
                                                 .enabled(true)
+                                                .version(
+                                                    AndroidInstanceCreateParams.Spec.Sandbox
+                                                        .PlaywrightAndroid
+                                                        .Version
+                                                        ._1_56_1_LIM_1
+                                                )
                                                 .build()
                                         )
                                         .build()
@@ -965,6 +1028,7 @@ internal class ErrorHandlingTest {
                                         .addUrl("string")
                                         .build()
                                 )
+                                .jurisdiction(AndroidInstanceCreateParams.Spec.Jurisdiction.US)
                                 .region("region")
                                 .sandbox(
                                     AndroidInstanceCreateParams.Spec.Sandbox.builder()
@@ -973,6 +1037,12 @@ internal class ErrorHandlingTest {
                                                 .PlaywrightAndroid
                                                 .builder()
                                                 .enabled(true)
+                                                .version(
+                                                    AndroidInstanceCreateParams.Spec.Sandbox
+                                                        .PlaywrightAndroid
+                                                        .Version
+                                                        ._1_56_1_LIM_1
+                                                )
                                                 .build()
                                         )
                                         .build()
@@ -1058,6 +1128,7 @@ internal class ErrorHandlingTest {
                                         .addUrl("string")
                                         .build()
                                 )
+                                .jurisdiction(AndroidInstanceCreateParams.Spec.Jurisdiction.US)
                                 .region("region")
                                 .sandbox(
                                     AndroidInstanceCreateParams.Spec.Sandbox.builder()
@@ -1066,6 +1137,12 @@ internal class ErrorHandlingTest {
                                                 .PlaywrightAndroid
                                                 .builder()
                                                 .enabled(true)
+                                                .version(
+                                                    AndroidInstanceCreateParams.Spec.Sandbox
+                                                        .PlaywrightAndroid
+                                                        .Version
+                                                        ._1_56_1_LIM_1
+                                                )
                                                 .build()
                                         )
                                         .build()
@@ -1151,6 +1228,7 @@ internal class ErrorHandlingTest {
                                         .addUrl("string")
                                         .build()
                                 )
+                                .jurisdiction(AndroidInstanceCreateParams.Spec.Jurisdiction.US)
                                 .region("region")
                                 .sandbox(
                                     AndroidInstanceCreateParams.Spec.Sandbox.builder()
@@ -1159,6 +1237,12 @@ internal class ErrorHandlingTest {
                                                 .PlaywrightAndroid
                                                 .builder()
                                                 .enabled(true)
+                                                .version(
+                                                    AndroidInstanceCreateParams.Spec.Sandbox
+                                                        .PlaywrightAndroid
+                                                        .Version
+                                                        ._1_56_1_LIM_1
+                                                )
                                                 .build()
                                         )
                                         .build()
@@ -1244,6 +1328,7 @@ internal class ErrorHandlingTest {
                                         .addUrl("string")
                                         .build()
                                 )
+                                .jurisdiction(AndroidInstanceCreateParams.Spec.Jurisdiction.US)
                                 .region("region")
                                 .sandbox(
                                     AndroidInstanceCreateParams.Spec.Sandbox.builder()
@@ -1252,6 +1337,12 @@ internal class ErrorHandlingTest {
                                                 .PlaywrightAndroid
                                                 .builder()
                                                 .enabled(true)
+                                                .version(
+                                                    AndroidInstanceCreateParams.Spec.Sandbox
+                                                        .PlaywrightAndroid
+                                                        .Version
+                                                        ._1_56_1_LIM_1
+                                                )
                                                 .build()
                                         )
                                         .build()
@@ -1337,6 +1428,7 @@ internal class ErrorHandlingTest {
                                         .addUrl("string")
                                         .build()
                                 )
+                                .jurisdiction(AndroidInstanceCreateParams.Spec.Jurisdiction.US)
                                 .region("region")
                                 .sandbox(
                                     AndroidInstanceCreateParams.Spec.Sandbox.builder()
@@ -1345,6 +1437,12 @@ internal class ErrorHandlingTest {
                                                 .PlaywrightAndroid
                                                 .builder()
                                                 .enabled(true)
+                                                .version(
+                                                    AndroidInstanceCreateParams.Spec.Sandbox
+                                                        .PlaywrightAndroid
+                                                        .Version
+                                                        ._1_56_1_LIM_1
+                                                )
                                                 .build()
                                         )
                                         .build()
@@ -1430,6 +1528,7 @@ internal class ErrorHandlingTest {
                                         .addUrl("string")
                                         .build()
                                 )
+                                .jurisdiction(AndroidInstanceCreateParams.Spec.Jurisdiction.US)
                                 .region("region")
                                 .sandbox(
                                     AndroidInstanceCreateParams.Spec.Sandbox.builder()
@@ -1438,6 +1537,12 @@ internal class ErrorHandlingTest {
                                                 .PlaywrightAndroid
                                                 .builder()
                                                 .enabled(true)
+                                                .version(
+                                                    AndroidInstanceCreateParams.Spec.Sandbox
+                                                        .PlaywrightAndroid
+                                                        .Version
+                                                        ._1_56_1_LIM_1
+                                                )
                                                 .build()
                                         )
                                         .build()
@@ -1523,6 +1628,7 @@ internal class ErrorHandlingTest {
                                         .addUrl("string")
                                         .build()
                                 )
+                                .jurisdiction(AndroidInstanceCreateParams.Spec.Jurisdiction.US)
                                 .region("region")
                                 .sandbox(
                                     AndroidInstanceCreateParams.Spec.Sandbox.builder()
@@ -1531,6 +1637,12 @@ internal class ErrorHandlingTest {
                                                 .PlaywrightAndroid
                                                 .builder()
                                                 .enabled(true)
+                                                .version(
+                                                    AndroidInstanceCreateParams.Spec.Sandbox
+                                                        .PlaywrightAndroid
+                                                        .Version
+                                                        ._1_56_1_LIM_1
+                                                )
                                                 .build()
                                         )
                                         .build()
@@ -1614,6 +1726,7 @@ internal class ErrorHandlingTest {
                                         .addUrl("string")
                                         .build()
                                 )
+                                .jurisdiction(AndroidInstanceCreateParams.Spec.Jurisdiction.US)
                                 .region("region")
                                 .sandbox(
                                     AndroidInstanceCreateParams.Spec.Sandbox.builder()
@@ -1622,6 +1735,12 @@ internal class ErrorHandlingTest {
                                                 .PlaywrightAndroid
                                                 .builder()
                                                 .enabled(true)
+                                                .version(
+                                                    AndroidInstanceCreateParams.Spec.Sandbox
+                                                        .PlaywrightAndroid
+                                                        .Version
+                                                        ._1_56_1_LIM_1
+                                                )
                                                 .build()
                                         )
                                         .build()

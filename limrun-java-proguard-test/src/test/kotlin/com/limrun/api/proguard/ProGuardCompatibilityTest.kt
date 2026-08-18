@@ -52,6 +52,10 @@ internal class ProGuardCompatibilityTest {
         assertThat(client.androidInstances()).isNotNull()
         assertThat(client.assets()).isNotNull()
         assertThat(client.iosInstances()).isNotNull()
+        assertThat(client.xcodeInstances()).isNotNull()
+        assertThat(client.gradleInstances()).isNotNull()
+        assertThat(client.analytics()).isNotNull()
+        assertThat(client.scopedTokens()).isNotNull()
     }
 
     @Test
@@ -85,8 +89,10 @@ internal class ProGuardCompatibilityTest {
                         .token("token")
                         .state(AndroidInstance.Status.State.UNKNOWN)
                         .adbWebSocketUrl("adbWebSocketUrl")
+                        .apiUrl("apiUrl")
                         .endpointWebSocketUrl("endpointWebSocketUrl")
                         .errorMessage("errorMessage")
+                        .mcpUrl("mcpUrl")
                         .sandbox(
                             AndroidInstance.Status.Sandbox.builder()
                                 .playwrightAndroid(
@@ -96,7 +102,9 @@ internal class ProGuardCompatibilityTest {
                                 )
                                 .build()
                         )
+                        .signedStreamUrl("signedStreamUrl")
                         .targetHttpPortUrlPrefix("targetHttpPortUrlPrefix")
+                        .terminationReason("InactivityTimeout")
                         .build()
                 )
                 .build()

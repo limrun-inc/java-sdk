@@ -4,6 +4,7 @@ package com.limrun.api.models.assets
 
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.limrun.api.core.jsonMapper
+import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -14,17 +15,25 @@ internal class AssetGetOrCreateResponseTest {
         val assetGetOrCreateResponse =
             AssetGetOrCreateResponse.builder()
                 .id("id")
+                .kind(AssetGetOrCreateResponse.Kind.APP)
                 .name("name")
                 .signedDownloadUrl("signedDownloadUrl")
                 .signedUploadUrl("signedUploadUrl")
+                .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .md5("md5")
+                .platform(AssetGetOrCreateResponse.Platform.IOS)
                 .build()
 
         assertThat(assetGetOrCreateResponse.id()).isEqualTo("id")
+        assertThat(assetGetOrCreateResponse.kind()).isEqualTo(AssetGetOrCreateResponse.Kind.APP)
         assertThat(assetGetOrCreateResponse.name()).isEqualTo("name")
         assertThat(assetGetOrCreateResponse.signedDownloadUrl()).isEqualTo("signedDownloadUrl")
         assertThat(assetGetOrCreateResponse.signedUploadUrl()).isEqualTo("signedUploadUrl")
+        assertThat(assetGetOrCreateResponse.expiresAt())
+            .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(assetGetOrCreateResponse.md5()).contains("md5")
+        assertThat(assetGetOrCreateResponse.platform())
+            .contains(AssetGetOrCreateResponse.Platform.IOS)
     }
 
     @Test
@@ -33,10 +42,13 @@ internal class AssetGetOrCreateResponseTest {
         val assetGetOrCreateResponse =
             AssetGetOrCreateResponse.builder()
                 .id("id")
+                .kind(AssetGetOrCreateResponse.Kind.APP)
                 .name("name")
                 .signedDownloadUrl("signedDownloadUrl")
                 .signedUploadUrl("signedUploadUrl")
+                .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .md5("md5")
+                .platform(AssetGetOrCreateResponse.Platform.IOS)
                 .build()
 
         val roundtrippedAssetGetOrCreateResponse =

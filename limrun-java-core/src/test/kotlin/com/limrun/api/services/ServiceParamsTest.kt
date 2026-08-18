@@ -36,7 +36,7 @@ internal class ServiceParamsTest {
                 .build()
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun create() {
         val androidInstanceService = client.androidInstances()
@@ -95,6 +95,7 @@ internal class ServiceParamsTest {
                                 .addUrl("string")
                                 .build()
                         )
+                        .jurisdiction(AndroidInstanceCreateParams.Spec.Jurisdiction.US)
                         .region("region")
                         .sandbox(
                             AndroidInstanceCreateParams.Spec.Sandbox.builder()
@@ -102,6 +103,12 @@ internal class ServiceParamsTest {
                                     AndroidInstanceCreateParams.Spec.Sandbox.PlaywrightAndroid
                                         .builder()
                                         .enabled(true)
+                                        .version(
+                                            AndroidInstanceCreateParams.Spec.Sandbox
+                                                .PlaywrightAndroid
+                                                .Version
+                                                ._1_56_1_LIM_1
+                                        )
                                         .build()
                                 )
                                 .build()

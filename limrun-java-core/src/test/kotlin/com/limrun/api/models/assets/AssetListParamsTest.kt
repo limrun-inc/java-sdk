@@ -11,10 +11,13 @@ internal class AssetListParamsTest {
     @Test
     fun create() {
         AssetListParams.builder()
+            .includeAppStore(true)
             .includeDownloadUrl(true)
             .includeUploadUrl(true)
+            .kindFilter(AssetListParams.KindFilter.APP)
             .limit(50L)
             .nameFilter("nameFilter")
+            .namePrefixFilter("namePrefixFilter")
             .build()
     }
 
@@ -22,10 +25,13 @@ internal class AssetListParamsTest {
     fun queryParams() {
         val params =
             AssetListParams.builder()
+                .includeAppStore(true)
                 .includeDownloadUrl(true)
                 .includeUploadUrl(true)
+                .kindFilter(AssetListParams.KindFilter.APP)
                 .limit(50L)
                 .nameFilter("nameFilter")
+                .namePrefixFilter("namePrefixFilter")
                 .build()
 
         val queryParams = params._queryParams()
@@ -33,10 +39,13 @@ internal class AssetListParamsTest {
         assertThat(queryParams)
             .isEqualTo(
                 QueryParams.builder()
+                    .put("includeAppStore", "true")
                     .put("includeDownloadUrl", "true")
                     .put("includeUploadUrl", "true")
+                    .put("kindFilter", "App")
                     .put("limit", "50")
                     .put("nameFilter", "nameFilter")
+                    .put("namePrefixFilter", "namePrefixFilter")
                     .build()
             )
     }

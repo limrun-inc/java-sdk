@@ -435,6 +435,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws LimrunInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): Body = apply {
             if (validated) {
                 return@apply
@@ -613,6 +622,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws LimrunInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): Metadata = apply {
             if (validated) {
                 return@apply
@@ -703,6 +721,16 @@ private constructor(
 
             private var validated: Boolean = false
 
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws LimrunInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
+             */
             fun validate(): Labels = apply {
                 if (validated) {
                     return@apply
@@ -769,16 +797,23 @@ private constructor(
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val clues: JsonField<List<Clue>>,
+        private val forceBundleId: JsonField<String>,
         private val hardTimeout: JsonField<String>,
         private val inactivityTimeout: JsonField<String>,
         private val initialAssets: JsonField<List<InitialAsset>>,
+        private val jurisdiction: JsonField<Jurisdiction>,
+        private val model: JsonField<Model>,
         private val region: JsonField<String>,
+        private val sandbox: JsonField<Sandbox>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
         @JsonCreator
         private constructor(
             @JsonProperty("clues") @ExcludeMissing clues: JsonField<List<Clue>> = JsonMissing.of(),
+            @JsonProperty("forceBundleId")
+            @ExcludeMissing
+            forceBundleId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("hardTimeout")
             @ExcludeMissing
             hardTimeout: JsonField<String> = JsonMissing.of(),
@@ -788,14 +823,40 @@ private constructor(
             @JsonProperty("initialAssets")
             @ExcludeMissing
             initialAssets: JsonField<List<InitialAsset>> = JsonMissing.of(),
+            @JsonProperty("jurisdiction")
+            @ExcludeMissing
+            jurisdiction: JsonField<Jurisdiction> = JsonMissing.of(),
+            @JsonProperty("model") @ExcludeMissing model: JsonField<Model> = JsonMissing.of(),
             @JsonProperty("region") @ExcludeMissing region: JsonField<String> = JsonMissing.of(),
-        ) : this(clues, hardTimeout, inactivityTimeout, initialAssets, region, mutableMapOf())
+            @JsonProperty("sandbox") @ExcludeMissing sandbox: JsonField<Sandbox> = JsonMissing.of(),
+        ) : this(
+            clues,
+            forceBundleId,
+            hardTimeout,
+            inactivityTimeout,
+            initialAssets,
+            jurisdiction,
+            model,
+            region,
+            sandbox,
+            mutableMapOf(),
+        )
 
         /**
          * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
          *   server responded with an unexpected value).
          */
         fun clues(): Optional<List<Clue>> = clues.getOptional("clues")
+
+        /**
+         * Keeps this app in the foreground after it is first observed there. This does not launch
+         * the app when the simulator starts. Once armed, closing or backgrounding the app causes it
+         * to be brought back to the foreground.
+         *
+         * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun forceBundleId(): Optional<String> = forceBundleId.getOptional("forceBundleId")
 
         /**
          * After how many minutes should the instance be terminated. Example values 1m, 10m, 3h.
@@ -807,8 +868,9 @@ private constructor(
         fun hardTimeout(): Optional<String> = hardTimeout.getOptional("hardTimeout")
 
         /**
-         * After how many minutes of inactivity should the instance be terminated. Example values
-         * 1m, 10m, 3h. Default is 3m. Providing "0" disables inactivity checks altogether.
+         * After how many minutes of inactivity should the instance be terminated. The timer starts
+         * once the instance becomes ready. Example values 1m, 10m, 3h. Default is 3m. Providing "0"
+         * uses the organization's default inactivity timeout.
          *
          * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
          *   server responded with an unexpected value).
@@ -824,8 +886,40 @@ private constructor(
             initialAssets.getOptional("initialAssets")
 
         /**
-         * The region where the instance will be created. If not given, will be decided based on
-         * scheduling clues and availability.
+         * Restricts scheduling to regions in the given jurisdiction. Unlike region, this is a hard
+         * constraint: the request never overflows to a region outside the jurisdiction and fails
+         * when no region in the jurisdiction has capacity. A region belongs to a jurisdiction when
+         * its name starts with the jurisdiction prefix, e.g. "eu-north1" is in "eu". A region
+         * preference pointing outside the jurisdiction is ignored.
+         *
+         * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun jurisdiction(): Optional<Jurisdiction> = jurisdiction.getOptional("jurisdiction")
+
+        /**
+         * The model for the Apple Simulator. Default is iphone.
+         *
+         * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun model(): Optional<Model> = model.getOptional("model")
+
+        /**
+         * Where the instance will be created. If not given, the region is decided based on
+         * scheduling clues (client IP) and availability.
+         *
+         * A region is a preference, not a hard pin: the request always overflows to every other
+         * available region, ordered by proximity, when the preferred ones are full.
+         *
+         * Accepted values:
+         * * A specific region name (e.g. "us-west1"). It is tried first, then the remaining regions
+         *   in order of proximity to it. Scheduling clues (client IP) are ignored when a region is
+         *   given.
+         * * A region group name (e.g. "us", "eu"). Its member regions are tried first in their
+         *   listed order, then the remaining regions by proximity to the first member.
+         * * A pipe-separated, ordered list of regions (e.g. "us-east1|us-west1"). Those are tried
+         *   first in the given order, then the remaining regions by proximity to the first.
          *
          * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
          *   server responded with an unexpected value).
@@ -833,11 +927,27 @@ private constructor(
         fun region(): Optional<String> = region.getOptional("region")
 
         /**
+         * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun sandbox(): Optional<Sandbox> = sandbox.getOptional("sandbox")
+
+        /**
          * Returns the raw JSON value of [clues].
          *
          * Unlike [clues], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("clues") @ExcludeMissing fun _clues(): JsonField<List<Clue>> = clues
+
+        /**
+         * Returns the raw JSON value of [forceBundleId].
+         *
+         * Unlike [forceBundleId], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("forceBundleId")
+        @ExcludeMissing
+        fun _forceBundleId(): JsonField<String> = forceBundleId
 
         /**
          * Returns the raw JSON value of [hardTimeout].
@@ -869,11 +979,35 @@ private constructor(
         fun _initialAssets(): JsonField<List<InitialAsset>> = initialAssets
 
         /**
+         * Returns the raw JSON value of [jurisdiction].
+         *
+         * Unlike [jurisdiction], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("jurisdiction")
+        @ExcludeMissing
+        fun _jurisdiction(): JsonField<Jurisdiction> = jurisdiction
+
+        /**
+         * Returns the raw JSON value of [model].
+         *
+         * Unlike [model], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("model") @ExcludeMissing fun _model(): JsonField<Model> = model
+
+        /**
          * Returns the raw JSON value of [region].
          *
          * Unlike [region], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("region") @ExcludeMissing fun _region(): JsonField<String> = region
+
+        /**
+         * Returns the raw JSON value of [sandbox].
+         *
+         * Unlike [sandbox], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("sandbox") @ExcludeMissing fun _sandbox(): JsonField<Sandbox> = sandbox
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -897,19 +1031,27 @@ private constructor(
         class Builder internal constructor() {
 
             private var clues: JsonField<MutableList<Clue>>? = null
+            private var forceBundleId: JsonField<String> = JsonMissing.of()
             private var hardTimeout: JsonField<String> = JsonMissing.of()
             private var inactivityTimeout: JsonField<String> = JsonMissing.of()
             private var initialAssets: JsonField<MutableList<InitialAsset>>? = null
+            private var jurisdiction: JsonField<Jurisdiction> = JsonMissing.of()
+            private var model: JsonField<Model> = JsonMissing.of()
             private var region: JsonField<String> = JsonMissing.of()
+            private var sandbox: JsonField<Sandbox> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
             internal fun from(spec: Spec) = apply {
                 clues = spec.clues.map { it.toMutableList() }
+                forceBundleId = spec.forceBundleId
                 hardTimeout = spec.hardTimeout
                 inactivityTimeout = spec.inactivityTimeout
                 initialAssets = spec.initialAssets.map { it.toMutableList() }
+                jurisdiction = spec.jurisdiction
+                model = spec.model
                 region = spec.region
+                sandbox = spec.sandbox
                 additionalProperties = spec.additionalProperties.toMutableMap()
             }
 
@@ -939,6 +1081,24 @@ private constructor(
             }
 
             /**
+             * Keeps this app in the foreground after it is first observed there. This does not
+             * launch the app when the simulator starts. Once armed, closing or backgrounding the
+             * app causes it to be brought back to the foreground.
+             */
+            fun forceBundleId(forceBundleId: String) = forceBundleId(JsonField.of(forceBundleId))
+
+            /**
+             * Sets [Builder.forceBundleId] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.forceBundleId] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun forceBundleId(forceBundleId: JsonField<String>) = apply {
+                this.forceBundleId = forceBundleId
+            }
+
+            /**
              * After how many minutes should the instance be terminated. Example values 1m, 10m, 3h.
              * Default is "0" which means no hard timeout.
              */
@@ -956,9 +1116,9 @@ private constructor(
             }
 
             /**
-             * After how many minutes of inactivity should the instance be terminated. Example
-             * values 1m, 10m, 3h. Default is 3m. Providing "0" disables inactivity checks
-             * altogether.
+             * After how many minutes of inactivity should the instance be terminated. The timer
+             * starts once the instance becomes ready. Example values 1m, 10m, 3h. Default is 3m.
+             * Providing "0" uses the organization's default inactivity timeout.
              */
             fun inactivityTimeout(inactivityTimeout: String) =
                 inactivityTimeout(JsonField.of(inactivityTimeout))
@@ -1001,8 +1161,53 @@ private constructor(
             }
 
             /**
-             * The region where the instance will be created. If not given, will be decided based on
-             * scheduling clues and availability.
+             * Restricts scheduling to regions in the given jurisdiction. Unlike region, this is a
+             * hard constraint: the request never overflows to a region outside the jurisdiction and
+             * fails when no region in the jurisdiction has capacity. A region belongs to a
+             * jurisdiction when its name starts with the jurisdiction prefix, e.g. "eu-north1" is
+             * in "eu". A region preference pointing outside the jurisdiction is ignored.
+             */
+            fun jurisdiction(jurisdiction: Jurisdiction) = jurisdiction(JsonField.of(jurisdiction))
+
+            /**
+             * Sets [Builder.jurisdiction] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.jurisdiction] with a well-typed [Jurisdiction] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun jurisdiction(jurisdiction: JsonField<Jurisdiction>) = apply {
+                this.jurisdiction = jurisdiction
+            }
+
+            /** The model for the Apple Simulator. Default is iphone. */
+            fun model(model: Model) = model(JsonField.of(model))
+
+            /**
+             * Sets [Builder.model] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.model] with a well-typed [Model] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
+             */
+            fun model(model: JsonField<Model>) = apply { this.model = model }
+
+            /**
+             * Where the instance will be created. If not given, the region is decided based on
+             * scheduling clues (client IP) and availability.
+             *
+             * A region is a preference, not a hard pin: the request always overflows to every other
+             * available region, ordered by proximity, when the preferred ones are full.
+             *
+             * Accepted values:
+             * * A specific region name (e.g. "us-west1"). It is tried first, then the remaining
+             *   regions in order of proximity to it. Scheduling clues (client IP) are ignored when
+             *   a region is given.
+             * * A region group name (e.g. "us", "eu"). Its member regions are tried first in their
+             *   listed order, then the remaining regions by proximity to the first member.
+             * * A pipe-separated, ordered list of regions (e.g. "us-east1|us-west1"). Those are
+             *   tried first in the given order, then the remaining regions by proximity to the
+             *   first.
              */
             fun region(region: String) = region(JsonField.of(region))
 
@@ -1014,6 +1219,17 @@ private constructor(
              * supported value.
              */
             fun region(region: JsonField<String>) = apply { this.region = region }
+
+            fun sandbox(sandbox: Sandbox) = sandbox(JsonField.of(sandbox))
+
+            /**
+             * Sets [Builder.sandbox] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.sandbox] with a well-typed [Sandbox] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun sandbox(sandbox: JsonField<Sandbox>) = apply { this.sandbox = sandbox }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
@@ -1042,26 +1258,43 @@ private constructor(
             fun build(): Spec =
                 Spec(
                     (clues ?: JsonMissing.of()).map { it.toImmutable() },
+                    forceBundleId,
                     hardTimeout,
                     inactivityTimeout,
                     (initialAssets ?: JsonMissing.of()).map { it.toImmutable() },
+                    jurisdiction,
+                    model,
                     region,
+                    sandbox,
                     additionalProperties.toMutableMap(),
                 )
         }
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws LimrunInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): Spec = apply {
             if (validated) {
                 return@apply
             }
 
             clues().ifPresent { it.forEach { it.validate() } }
+            forceBundleId()
             hardTimeout()
             inactivityTimeout()
             initialAssets().ifPresent { it.forEach { it.validate() } }
+            jurisdiction().ifPresent { it.validate() }
+            model().ifPresent { it.validate() }
             region()
+            sandbox().ifPresent { it.validate() }
             validated = true
         }
 
@@ -1082,10 +1315,14 @@ private constructor(
         @JvmSynthetic
         internal fun validity(): Int =
             (clues.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+                (if (forceBundleId.asKnown().isPresent) 1 else 0) +
                 (if (hardTimeout.asKnown().isPresent) 1 else 0) +
                 (if (inactivityTimeout.asKnown().isPresent) 1 else 0) +
                 (initialAssets.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
-                (if (region.asKnown().isPresent) 1 else 0)
+                (jurisdiction.asKnown().getOrNull()?.validity() ?: 0) +
+                (model.asKnown().getOrNull()?.validity() ?: 0) +
+                (if (region.asKnown().isPresent) 1 else 0) +
+                (sandbox.asKnown().getOrNull()?.validity() ?: 0)
 
         class Clue
         @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -1232,6 +1469,16 @@ private constructor(
 
             private var validated: Boolean = false
 
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws LimrunInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
+             */
             fun validate(): Clue = apply {
                 if (validated) {
                     return@apply
@@ -1347,6 +1594,16 @@ private constructor(
 
                 private var validated: Boolean = false
 
+                /**
+                 * Validates that the types of all values in this object match their expected types
+                 * recursively.
+                 *
+                 * This method is _not_ forwards compatible with new types from the API for existing
+                 * fields.
+                 *
+                 * @throws LimrunInvalidDataException if any value type in this object doesn't match
+                 *   its expected type.
+                 */
                 fun validate(): Kind = apply {
                     if (validated) {
                         return@apply
@@ -1411,6 +1668,7 @@ private constructor(
             private val source: JsonField<Source>,
             private val assetId: JsonField<String>,
             private val assetName: JsonField<String>,
+            private val encryptionKey: JsonField<String>,
             private val launchMode: JsonField<LaunchMode>,
             private val url: JsonField<String>,
             private val additionalProperties: MutableMap<String, JsonValue>,
@@ -1428,11 +1686,23 @@ private constructor(
                 @JsonProperty("assetName")
                 @ExcludeMissing
                 assetName: JsonField<String> = JsonMissing.of(),
+                @JsonProperty("encryptionKey")
+                @ExcludeMissing
+                encryptionKey: JsonField<String> = JsonMissing.of(),
                 @JsonProperty("launchMode")
                 @ExcludeMissing
                 launchMode: JsonField<LaunchMode> = JsonMissing.of(),
                 @JsonProperty("url") @ExcludeMissing url: JsonField<String> = JsonMissing.of(),
-            ) : this(kind, source, assetId, assetName, launchMode, url, mutableMapOf())
+            ) : this(
+                kind,
+                source,
+                assetId,
+                assetName,
+                encryptionKey,
+                launchMode,
+                url,
+                mutableMapOf(),
+            )
 
             /**
              * @throws LimrunInvalidDataException if the JSON field has an unexpected type or is
@@ -1461,8 +1731,16 @@ private constructor(
             fun assetName(): Optional<String> = assetName.getOptional("assetName")
 
             /**
-             * Launch mode specifies how to launch the app after installation. If not given, the app
-             * won't be launched.
+             * Base64/base64url-encoded 32-byte key used to decrypt Keychain assets. Required when
+             * kind is Keychain.
+             *
+             * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if
+             *   the server responded with an unexpected value).
+             */
+            fun encryptionKey(): Optional<String> = encryptionKey.getOptional("encryptionKey")
+
+            /**
+             * Launch mode specifies how to launch the app after installation.
              *
              * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if
              *   the server responded with an unexpected value).
@@ -1505,6 +1783,16 @@ private constructor(
             @JsonProperty("assetName")
             @ExcludeMissing
             fun _assetName(): JsonField<String> = assetName
+
+            /**
+             * Returns the raw JSON value of [encryptionKey].
+             *
+             * Unlike [encryptionKey], this method doesn't throw if the JSON field has an unexpected
+             * type.
+             */
+            @JsonProperty("encryptionKey")
+            @ExcludeMissing
+            fun _encryptionKey(): JsonField<String> = encryptionKey
 
             /**
              * Returns the raw JSON value of [launchMode].
@@ -1556,6 +1844,7 @@ private constructor(
                 private var source: JsonField<Source>? = null
                 private var assetId: JsonField<String> = JsonMissing.of()
                 private var assetName: JsonField<String> = JsonMissing.of()
+                private var encryptionKey: JsonField<String> = JsonMissing.of()
                 private var launchMode: JsonField<LaunchMode> = JsonMissing.of()
                 private var url: JsonField<String> = JsonMissing.of()
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -1566,6 +1855,7 @@ private constructor(
                     source = initialAsset.source
                     assetId = initialAsset.assetId
                     assetName = initialAsset.assetName
+                    encryptionKey = initialAsset.encryptionKey
                     launchMode = initialAsset.launchMode
                     url = initialAsset.url
                     additionalProperties = initialAsset.additionalProperties.toMutableMap()
@@ -1616,9 +1906,24 @@ private constructor(
                 fun assetName(assetName: JsonField<String>) = apply { this.assetName = assetName }
 
                 /**
-                 * Launch mode specifies how to launch the app after installation. If not given, the
-                 * app won't be launched.
+                 * Base64/base64url-encoded 32-byte key used to decrypt Keychain assets. Required
+                 * when kind is Keychain.
                  */
+                fun encryptionKey(encryptionKey: String) =
+                    encryptionKey(JsonField.of(encryptionKey))
+
+                /**
+                 * Sets [Builder.encryptionKey] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.encryptionKey] with a well-typed [String] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun encryptionKey(encryptionKey: JsonField<String>) = apply {
+                    this.encryptionKey = encryptionKey
+                }
+
+                /** Launch mode specifies how to launch the app after installation. */
                 fun launchMode(launchMode: LaunchMode) = launchMode(JsonField.of(launchMode))
 
                 /**
@@ -1684,6 +1989,7 @@ private constructor(
                         checkRequired("source", source),
                         assetId,
                         assetName,
+                        encryptionKey,
                         launchMode,
                         url,
                         additionalProperties.toMutableMap(),
@@ -1692,6 +1998,16 @@ private constructor(
 
             private var validated: Boolean = false
 
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws LimrunInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
+             */
             fun validate(): InitialAsset = apply {
                 if (validated) {
                     return@apply
@@ -1701,6 +2017,7 @@ private constructor(
                 source().validate()
                 assetId()
                 assetName()
+                encryptionKey()
                 launchMode().ifPresent { it.validate() }
                 url()
                 validated = true
@@ -1726,6 +2043,7 @@ private constructor(
                     (source.asKnown().getOrNull()?.validity() ?: 0) +
                     (if (assetId.asKnown().isPresent) 1 else 0) +
                     (if (assetName.asKnown().isPresent) 1 else 0) +
+                    (if (encryptionKey.asKnown().isPresent) 1 else 0) +
                     (launchMode.asKnown().getOrNull()?.validity() ?: 0) +
                     (if (url.asKnown().isPresent) 1 else 0)
 
@@ -1746,12 +2064,15 @@ private constructor(
 
                     @JvmField val APP = of("App")
 
+                    @JvmField val KEYCHAIN = of("Keychain")
+
                     @JvmStatic fun of(value: String) = Kind(JsonField.of(value))
                 }
 
                 /** An enum containing [Kind]'s known values. */
                 enum class Known {
-                    APP
+                    APP,
+                    KEYCHAIN,
                 }
 
                 /**
@@ -1765,6 +2086,7 @@ private constructor(
                  */
                 enum class Value {
                     APP,
+                    KEYCHAIN,
                     /**
                      * An enum member indicating that [Kind] was instantiated with an unknown value.
                      */
@@ -1781,6 +2103,7 @@ private constructor(
                 fun value(): Value =
                     when (this) {
                         APP -> Value.APP
+                        KEYCHAIN -> Value.KEYCHAIN
                         else -> Value._UNKNOWN
                     }
 
@@ -1796,6 +2119,7 @@ private constructor(
                 fun known(): Known =
                     when (this) {
                         APP -> Known.APP
+                        KEYCHAIN -> Known.KEYCHAIN
                         else -> throw LimrunInvalidDataException("Unknown Kind: $value")
                     }
 
@@ -1815,6 +2139,16 @@ private constructor(
 
                 private var validated: Boolean = false
 
+                /**
+                 * Validates that the types of all values in this object match their expected types
+                 * recursively.
+                 *
+                 * This method is _not_ forwards compatible with new types from the API for existing
+                 * fields.
+                 *
+                 * @throws LimrunInvalidDataException if any value type in this object doesn't match
+                 *   its expected type.
+                 */
                 fun validate(): Kind = apply {
                     if (validated) {
                         return@apply
@@ -1952,6 +2286,16 @@ private constructor(
 
                 private var validated: Boolean = false
 
+                /**
+                 * Validates that the types of all values in this object match their expected types
+                 * recursively.
+                 *
+                 * This method is _not_ forwards compatible with new types from the API for existing
+                 * fields.
+                 *
+                 * @throws LimrunInvalidDataException if any value type in this object doesn't match
+                 *   its expected type.
+                 */
                 fun validate(): Source = apply {
                     if (validated) {
                         return@apply
@@ -1990,10 +2334,7 @@ private constructor(
                 override fun toString() = value.toString()
             }
 
-            /**
-             * Launch mode specifies how to launch the app after installation. If not given, the app
-             * won't be launched.
-             */
+            /** Launch mode specifies how to launch the app after installation. */
             class LaunchMode
             @JsonCreator
             private constructor(private val value: JsonField<String>) : Enum {
@@ -2094,6 +2435,16 @@ private constructor(
 
                 private var validated: Boolean = false
 
+                /**
+                 * Validates that the types of all values in this object match their expected types
+                 * recursively.
+                 *
+                 * This method is _not_ forwards compatible with new types from the API for existing
+                 * fields.
+                 *
+                 * @throws LimrunInvalidDataException if any value type in this object doesn't match
+                 *   its expected type.
+                 */
                 fun validate(): LaunchMode = apply {
                     if (validated) {
                         return@apply
@@ -2142,6 +2493,7 @@ private constructor(
                     source == other.source &&
                     assetId == other.assetId &&
                     assetName == other.assetName &&
+                    encryptionKey == other.encryptionKey &&
                     launchMode == other.launchMode &&
                     url == other.url &&
                     additionalProperties == other.additionalProperties
@@ -2153,6 +2505,7 @@ private constructor(
                     source,
                     assetId,
                     assetName,
+                    encryptionKey,
                     launchMode,
                     url,
                     additionalProperties,
@@ -2162,7 +2515,616 @@ private constructor(
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "InitialAsset{kind=$kind, source=$source, assetId=$assetId, assetName=$assetName, launchMode=$launchMode, url=$url, additionalProperties=$additionalProperties}"
+                "InitialAsset{kind=$kind, source=$source, assetId=$assetId, assetName=$assetName, encryptionKey=$encryptionKey, launchMode=$launchMode, url=$url, additionalProperties=$additionalProperties}"
+        }
+
+        /**
+         * Restricts scheduling to regions in the given jurisdiction. Unlike region, this is a hard
+         * constraint: the request never overflows to a region outside the jurisdiction and fails
+         * when no region in the jurisdiction has capacity. A region belongs to a jurisdiction when
+         * its name starts with the jurisdiction prefix, e.g. "eu-north1" is in "eu". A region
+         * preference pointing outside the jurisdiction is ignored.
+         */
+        class Jurisdiction @JsonCreator private constructor(private val value: JsonField<String>) :
+            Enum {
+
+            /**
+             * Returns this class instance's raw value.
+             *
+             * This is usually only useful if this instance was deserialized from data that doesn't
+             * match any known member, and you want to know that value. For example, if the SDK is
+             * on an older version than the API, then the API may respond with new members that the
+             * SDK is unaware of.
+             */
+            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+            companion object {
+
+                @JvmField val US = of("us")
+
+                @JvmField val EU = of("eu")
+
+                @JvmField val AS = of("as")
+
+                @JvmStatic fun of(value: String) = Jurisdiction(JsonField.of(value))
+            }
+
+            /** An enum containing [Jurisdiction]'s known values. */
+            enum class Known {
+                US,
+                EU,
+                AS,
+            }
+
+            /**
+             * An enum containing [Jurisdiction]'s known values, as well as an [_UNKNOWN] member.
+             *
+             * An instance of [Jurisdiction] can contain an unknown value in a couple of cases:
+             * - It was deserialized from data that doesn't match any known member. For example, if
+             *   the SDK is on an older version than the API, then the API may respond with new
+             *   members that the SDK is unaware of.
+             * - It was constructed with an arbitrary value using the [of] method.
+             */
+            enum class Value {
+                US,
+                EU,
+                AS,
+                /**
+                 * An enum member indicating that [Jurisdiction] was instantiated with an unknown
+                 * value.
+                 */
+                _UNKNOWN,
+            }
+
+            /**
+             * Returns an enum member corresponding to this class instance's value, or
+             * [Value._UNKNOWN] if the class was instantiated with an unknown value.
+             *
+             * Use the [known] method instead if you're certain the value is always known or if you
+             * want to throw for the unknown case.
+             */
+            fun value(): Value =
+                when (this) {
+                    US -> Value.US
+                    EU -> Value.EU
+                    AS -> Value.AS
+                    else -> Value._UNKNOWN
+                }
+
+            /**
+             * Returns an enum member corresponding to this class instance's value.
+             *
+             * Use the [value] method instead if you're uncertain the value is always known and
+             * don't want to throw for the unknown case.
+             *
+             * @throws LimrunInvalidDataException if this class instance's value is a not a known
+             *   member.
+             */
+            fun known(): Known =
+                when (this) {
+                    US -> Known.US
+                    EU -> Known.EU
+                    AS -> Known.AS
+                    else -> throw LimrunInvalidDataException("Unknown Jurisdiction: $value")
+                }
+
+            /**
+             * Returns this class instance's primitive wire representation.
+             *
+             * This differs from the [toString] method because that method is primarily for
+             * debugging and generally doesn't throw.
+             *
+             * @throws LimrunInvalidDataException if this class instance's value does not have the
+             *   expected primitive type.
+             */
+            fun asString(): String =
+                _value().asString().orElseThrow {
+                    LimrunInvalidDataException("Value is not a String")
+                }
+
+            private var validated: Boolean = false
+
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws LimrunInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
+             */
+            fun validate(): Jurisdiction = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                known()
+                validated = true
+            }
+
+            fun isValid(): Boolean =
+                try {
+                    validate()
+                    true
+                } catch (e: LimrunInvalidDataException) {
+                    false
+                }
+
+            /**
+             * Returns a score indicating how many valid values are contained in this object
+             * recursively.
+             *
+             * Used for best match union deserialization.
+             */
+            @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+            override fun equals(other: Any?): Boolean {
+                if (this === other) {
+                    return true
+                }
+
+                return other is Jurisdiction && value == other.value
+            }
+
+            override fun hashCode() = value.hashCode()
+
+            override fun toString() = value.toString()
+        }
+
+        /** The model for the Apple Simulator. Default is iphone. */
+        class Model @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+
+            /**
+             * Returns this class instance's raw value.
+             *
+             * This is usually only useful if this instance was deserialized from data that doesn't
+             * match any known member, and you want to know that value. For example, if the SDK is
+             * on an older version than the API, then the API may respond with new members that the
+             * SDK is unaware of.
+             */
+            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+            companion object {
+
+                @JvmField val IPHONE = of("iphone")
+
+                @JvmField val IPAD = of("ipad")
+
+                @JvmField val WATCH = of("watch")
+
+                @JvmStatic fun of(value: String) = Model(JsonField.of(value))
+            }
+
+            /** An enum containing [Model]'s known values. */
+            enum class Known {
+                IPHONE,
+                IPAD,
+                WATCH,
+            }
+
+            /**
+             * An enum containing [Model]'s known values, as well as an [_UNKNOWN] member.
+             *
+             * An instance of [Model] can contain an unknown value in a couple of cases:
+             * - It was deserialized from data that doesn't match any known member. For example, if
+             *   the SDK is on an older version than the API, then the API may respond with new
+             *   members that the SDK is unaware of.
+             * - It was constructed with an arbitrary value using the [of] method.
+             */
+            enum class Value {
+                IPHONE,
+                IPAD,
+                WATCH,
+                /**
+                 * An enum member indicating that [Model] was instantiated with an unknown value.
+                 */
+                _UNKNOWN,
+            }
+
+            /**
+             * Returns an enum member corresponding to this class instance's value, or
+             * [Value._UNKNOWN] if the class was instantiated with an unknown value.
+             *
+             * Use the [known] method instead if you're certain the value is always known or if you
+             * want to throw for the unknown case.
+             */
+            fun value(): Value =
+                when (this) {
+                    IPHONE -> Value.IPHONE
+                    IPAD -> Value.IPAD
+                    WATCH -> Value.WATCH
+                    else -> Value._UNKNOWN
+                }
+
+            /**
+             * Returns an enum member corresponding to this class instance's value.
+             *
+             * Use the [value] method instead if you're uncertain the value is always known and
+             * don't want to throw for the unknown case.
+             *
+             * @throws LimrunInvalidDataException if this class instance's value is a not a known
+             *   member.
+             */
+            fun known(): Known =
+                when (this) {
+                    IPHONE -> Known.IPHONE
+                    IPAD -> Known.IPAD
+                    WATCH -> Known.WATCH
+                    else -> throw LimrunInvalidDataException("Unknown Model: $value")
+                }
+
+            /**
+             * Returns this class instance's primitive wire representation.
+             *
+             * This differs from the [toString] method because that method is primarily for
+             * debugging and generally doesn't throw.
+             *
+             * @throws LimrunInvalidDataException if this class instance's value does not have the
+             *   expected primitive type.
+             */
+            fun asString(): String =
+                _value().asString().orElseThrow {
+                    LimrunInvalidDataException("Value is not a String")
+                }
+
+            private var validated: Boolean = false
+
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws LimrunInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
+             */
+            fun validate(): Model = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                known()
+                validated = true
+            }
+
+            fun isValid(): Boolean =
+                try {
+                    validate()
+                    true
+                } catch (e: LimrunInvalidDataException) {
+                    false
+                }
+
+            /**
+             * Returns a score indicating how many valid values are contained in this object
+             * recursively.
+             *
+             * Used for best match union deserialization.
+             */
+            @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+            override fun equals(other: Any?): Boolean {
+                if (this === other) {
+                    return true
+                }
+
+                return other is Model && value == other.value
+            }
+
+            override fun hashCode() = value.hashCode()
+
+            override fun toString() = value.toString()
+        }
+
+        class Sandbox
+        @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+        private constructor(
+            private val xcode: JsonField<Xcode>,
+            private val additionalProperties: MutableMap<String, JsonValue>,
+        ) {
+
+            @JsonCreator
+            private constructor(
+                @JsonProperty("xcode") @ExcludeMissing xcode: JsonField<Xcode> = JsonMissing.of()
+            ) : this(xcode, mutableMapOf())
+
+            /**
+             * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if
+             *   the server responded with an unexpected value).
+             */
+            fun xcode(): Optional<Xcode> = xcode.getOptional("xcode")
+
+            /**
+             * Returns the raw JSON value of [xcode].
+             *
+             * Unlike [xcode], this method doesn't throw if the JSON field has an unexpected type.
+             */
+            @JsonProperty("xcode") @ExcludeMissing fun _xcode(): JsonField<Xcode> = xcode
+
+            @JsonAnySetter
+            private fun putAdditionalProperty(key: String, value: JsonValue) {
+                additionalProperties.put(key, value)
+            }
+
+            @JsonAnyGetter
+            @ExcludeMissing
+            fun _additionalProperties(): Map<String, JsonValue> =
+                Collections.unmodifiableMap(additionalProperties)
+
+            fun toBuilder() = Builder().from(this)
+
+            companion object {
+
+                /** Returns a mutable builder for constructing an instance of [Sandbox]. */
+                @JvmStatic fun builder() = Builder()
+            }
+
+            /** A builder for [Sandbox]. */
+            class Builder internal constructor() {
+
+                private var xcode: JsonField<Xcode> = JsonMissing.of()
+                private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+                @JvmSynthetic
+                internal fun from(sandbox: Sandbox) = apply {
+                    xcode = sandbox.xcode
+                    additionalProperties = sandbox.additionalProperties.toMutableMap()
+                }
+
+                fun xcode(xcode: Xcode) = xcode(JsonField.of(xcode))
+
+                /**
+                 * Sets [Builder.xcode] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.xcode] with a well-typed [Xcode] value instead.
+                 * This method is primarily for setting the field to an undocumented or not yet
+                 * supported value.
+                 */
+                fun xcode(xcode: JsonField<Xcode>) = apply { this.xcode = xcode }
+
+                fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
+
+                fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                    additionalProperties.put(key, value)
+                }
+
+                fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                    apply {
+                        this.additionalProperties.putAll(additionalProperties)
+                    }
+
+                fun removeAdditionalProperty(key: String) = apply {
+                    additionalProperties.remove(key)
+                }
+
+                fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
+
+                /**
+                 * Returns an immutable instance of [Sandbox].
+                 *
+                 * Further updates to this [Builder] will not mutate the returned instance.
+                 */
+                fun build(): Sandbox = Sandbox(xcode, additionalProperties.toMutableMap())
+            }
+
+            private var validated: Boolean = false
+
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws LimrunInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
+             */
+            fun validate(): Sandbox = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                xcode().ifPresent { it.validate() }
+                validated = true
+            }
+
+            fun isValid(): Boolean =
+                try {
+                    validate()
+                    true
+                } catch (e: LimrunInvalidDataException) {
+                    false
+                }
+
+            /**
+             * Returns a score indicating how many valid values are contained in this object
+             * recursively.
+             *
+             * Used for best match union deserialization.
+             */
+            @JvmSynthetic
+            internal fun validity(): Int = (xcode.asKnown().getOrNull()?.validity() ?: 0)
+
+            class Xcode
+            @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+            private constructor(
+                private val enabled: JsonField<Boolean>,
+                private val additionalProperties: MutableMap<String, JsonValue>,
+            ) {
+
+                @JsonCreator
+                private constructor(
+                    @JsonProperty("enabled")
+                    @ExcludeMissing
+                    enabled: JsonField<Boolean> = JsonMissing.of()
+                ) : this(enabled, mutableMapOf())
+
+                /**
+                 * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g.
+                 *   if the server responded with an unexpected value).
+                 */
+                fun enabled(): Optional<Boolean> = enabled.getOptional("enabled")
+
+                /**
+                 * Returns the raw JSON value of [enabled].
+                 *
+                 * Unlike [enabled], this method doesn't throw if the JSON field has an unexpected
+                 * type.
+                 */
+                @JsonProperty("enabled")
+                @ExcludeMissing
+                fun _enabled(): JsonField<Boolean> = enabled
+
+                @JsonAnySetter
+                private fun putAdditionalProperty(key: String, value: JsonValue) {
+                    additionalProperties.put(key, value)
+                }
+
+                @JsonAnyGetter
+                @ExcludeMissing
+                fun _additionalProperties(): Map<String, JsonValue> =
+                    Collections.unmodifiableMap(additionalProperties)
+
+                fun toBuilder() = Builder().from(this)
+
+                companion object {
+
+                    /** Returns a mutable builder for constructing an instance of [Xcode]. */
+                    @JvmStatic fun builder() = Builder()
+                }
+
+                /** A builder for [Xcode]. */
+                class Builder internal constructor() {
+
+                    private var enabled: JsonField<Boolean> = JsonMissing.of()
+                    private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+                    @JvmSynthetic
+                    internal fun from(xcode: Xcode) = apply {
+                        enabled = xcode.enabled
+                        additionalProperties = xcode.additionalProperties.toMutableMap()
+                    }
+
+                    fun enabled(enabled: Boolean) = enabled(JsonField.of(enabled))
+
+                    /**
+                     * Sets [Builder.enabled] to an arbitrary JSON value.
+                     *
+                     * You should usually call [Builder.enabled] with a well-typed [Boolean] value
+                     * instead. This method is primarily for setting the field to an undocumented or
+                     * not yet supported value.
+                     */
+                    fun enabled(enabled: JsonField<Boolean>) = apply { this.enabled = enabled }
+
+                    fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                        this.additionalProperties.clear()
+                        putAllAdditionalProperties(additionalProperties)
+                    }
+
+                    fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                        additionalProperties.put(key, value)
+                    }
+
+                    fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                        apply {
+                            this.additionalProperties.putAll(additionalProperties)
+                        }
+
+                    fun removeAdditionalProperty(key: String) = apply {
+                        additionalProperties.remove(key)
+                    }
+
+                    fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                        keys.forEach(::removeAdditionalProperty)
+                    }
+
+                    /**
+                     * Returns an immutable instance of [Xcode].
+                     *
+                     * Further updates to this [Builder] will not mutate the returned instance.
+                     */
+                    fun build(): Xcode = Xcode(enabled, additionalProperties.toMutableMap())
+                }
+
+                private var validated: Boolean = false
+
+                /**
+                 * Validates that the types of all values in this object match their expected types
+                 * recursively.
+                 *
+                 * This method is _not_ forwards compatible with new types from the API for existing
+                 * fields.
+                 *
+                 * @throws LimrunInvalidDataException if any value type in this object doesn't match
+                 *   its expected type.
+                 */
+                fun validate(): Xcode = apply {
+                    if (validated) {
+                        return@apply
+                    }
+
+                    enabled()
+                    validated = true
+                }
+
+                fun isValid(): Boolean =
+                    try {
+                        validate()
+                        true
+                    } catch (e: LimrunInvalidDataException) {
+                        false
+                    }
+
+                /**
+                 * Returns a score indicating how many valid values are contained in this object
+                 * recursively.
+                 *
+                 * Used for best match union deserialization.
+                 */
+                @JvmSynthetic
+                internal fun validity(): Int = (if (enabled.asKnown().isPresent) 1 else 0)
+
+                override fun equals(other: Any?): Boolean {
+                    if (this === other) {
+                        return true
+                    }
+
+                    return other is Xcode &&
+                        enabled == other.enabled &&
+                        additionalProperties == other.additionalProperties
+                }
+
+                private val hashCode: Int by lazy { Objects.hash(enabled, additionalProperties) }
+
+                override fun hashCode(): Int = hashCode
+
+                override fun toString() =
+                    "Xcode{enabled=$enabled, additionalProperties=$additionalProperties}"
+            }
+
+            override fun equals(other: Any?): Boolean {
+                if (this === other) {
+                    return true
+                }
+
+                return other is Sandbox &&
+                    xcode == other.xcode &&
+                    additionalProperties == other.additionalProperties
+            }
+
+            private val hashCode: Int by lazy { Objects.hash(xcode, additionalProperties) }
+
+            override fun hashCode(): Int = hashCode
+
+            override fun toString() =
+                "Sandbox{xcode=$xcode, additionalProperties=$additionalProperties}"
         }
 
         override fun equals(other: Any?): Boolean {
@@ -2172,20 +3134,28 @@ private constructor(
 
             return other is Spec &&
                 clues == other.clues &&
+                forceBundleId == other.forceBundleId &&
                 hardTimeout == other.hardTimeout &&
                 inactivityTimeout == other.inactivityTimeout &&
                 initialAssets == other.initialAssets &&
+                jurisdiction == other.jurisdiction &&
+                model == other.model &&
                 region == other.region &&
+                sandbox == other.sandbox &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
             Objects.hash(
                 clues,
+                forceBundleId,
                 hardTimeout,
                 inactivityTimeout,
                 initialAssets,
+                jurisdiction,
+                model,
                 region,
+                sandbox,
                 additionalProperties,
             )
         }
@@ -2193,7 +3163,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Spec{clues=$clues, hardTimeout=$hardTimeout, inactivityTimeout=$inactivityTimeout, initialAssets=$initialAssets, region=$region, additionalProperties=$additionalProperties}"
+            "Spec{clues=$clues, forceBundleId=$forceBundleId, hardTimeout=$hardTimeout, inactivityTimeout=$inactivityTimeout, initialAssets=$initialAssets, jurisdiction=$jurisdiction, model=$model, region=$region, sandbox=$sandbox, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

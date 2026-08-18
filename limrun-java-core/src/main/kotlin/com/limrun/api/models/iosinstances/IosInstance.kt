@@ -193,6 +193,14 @@ private constructor(
 
     private var validated: Boolean = false
 
+    /**
+     * Validates that the types of all values in this object match their expected types recursively.
+     *
+     * This method is _not_ forwards compatible with new types from the API for existing fields.
+     *
+     * @throws LimrunInvalidDataException if any value type in this object doesn't match its
+     *   expected type.
+     */
     fun validate(): IosInstance = apply {
         if (validated) {
             return@apply
@@ -513,6 +521,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws LimrunInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): Metadata = apply {
             if (validated) {
                 return@apply
@@ -611,6 +628,16 @@ private constructor(
 
             private var validated: Boolean = false
 
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws LimrunInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
+             */
             fun validate(): Labels = apply {
                 if (validated) {
                     return@apply
@@ -706,8 +733,9 @@ private constructor(
         ) : this(inactivityTimeout, region, hardTimeout, mutableMapOf())
 
         /**
-         * After how many minutes of inactivity should the instance be terminated. Example values
-         * 1m, 10m, 3h. Default is 3m. Providing "0" disables inactivity checks altogether.
+         * After how many minutes of inactivity should the instance be terminated. The timer starts
+         * once the instance becomes ready. Example values 1m, 10m, 3h. Default is 3m. Providing "0"
+         * uses the organization's default inactivity timeout.
          *
          * @throws LimrunInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -801,9 +829,9 @@ private constructor(
             }
 
             /**
-             * After how many minutes of inactivity should the instance be terminated. Example
-             * values 1m, 10m, 3h. Default is 3m. Providing "0" disables inactivity checks
-             * altogether.
+             * After how many minutes of inactivity should the instance be terminated. The timer
+             * starts once the instance becomes ready. Example values 1m, 10m, 3h. Default is 3m.
+             * Providing "0" uses the organization's default inactivity timeout.
              */
             fun inactivityTimeout(inactivityTimeout: String) =
                 inactivityTimeout(JsonField.of(inactivityTimeout))
@@ -894,6 +922,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws LimrunInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): Spec = apply {
             if (validated) {
                 return@apply
@@ -955,7 +992,11 @@ private constructor(
         private val apiUrl: JsonField<String>,
         private val endpointWebSocketUrl: JsonField<String>,
         private val errorMessage: JsonField<String>,
+        private val mcpUrl: JsonField<String>,
+        private val sandbox: JsonField<Sandbox>,
+        private val signedStreamUrl: JsonField<String>,
         private val targetHttpPortUrlPrefix: JsonField<String>,
+        private val terminationReason: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -970,16 +1011,28 @@ private constructor(
             @JsonProperty("errorMessage")
             @ExcludeMissing
             errorMessage: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("mcpUrl") @ExcludeMissing mcpUrl: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("sandbox") @ExcludeMissing sandbox: JsonField<Sandbox> = JsonMissing.of(),
+            @JsonProperty("signedStreamUrl")
+            @ExcludeMissing
+            signedStreamUrl: JsonField<String> = JsonMissing.of(),
             @JsonProperty("targetHttpPortUrlPrefix")
             @ExcludeMissing
             targetHttpPortUrlPrefix: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("terminationReason")
+            @ExcludeMissing
+            terminationReason: JsonField<String> = JsonMissing.of(),
         ) : this(
             token,
             state,
             apiUrl,
             endpointWebSocketUrl,
             errorMessage,
+            mcpUrl,
+            sandbox,
+            signedStreamUrl,
             targetHttpPortUrlPrefix,
+            terminationReason,
             mutableMapOf(),
         )
 
@@ -1018,8 +1071,42 @@ private constructor(
          * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
          *   server responded with an unexpected value).
          */
+        fun mcpUrl(): Optional<String> = mcpUrl.getOptional("mcpUrl")
+
+        /**
+         * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun sandbox(): Optional<Sandbox> = sandbox.getOptional("sandbox")
+
+        /**
+         * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun signedStreamUrl(): Optional<String> = signedStreamUrl.getOptional("signedStreamUrl")
+
+        /**
+         * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
         fun targetHttpPortUrlPrefix(): Optional<String> =
             targetHttpPortUrlPrefix.getOptional("targetHttpPortUrlPrefix")
+
+        /**
+         * Machine-readable reason the instance was terminated. Always present once state is
+         * "terminated", never present before that. New values may be added over time, so treat any
+         * unrecognized value as "Unknown". Known values:
+         * - "UserRequested": terminated by a delete request to the API.
+         * - "InactivityTimeout": the timeout given in spec.inactivityTimeout elapsed.
+         * - "HardTimeout": the timeout given in spec.hardTimeout elapsed.
+         * - "Unknown": terminated for a cause the platform did not attribute, including instances
+         *   that failed to get ready during creation. See errorMessage for details when available.
+         *
+         * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun terminationReason(): Optional<String> =
+            terminationReason.getOptional("terminationReason")
 
         /**
          * Returns the raw JSON value of [token].
@@ -1063,6 +1150,30 @@ private constructor(
         fun _errorMessage(): JsonField<String> = errorMessage
 
         /**
+         * Returns the raw JSON value of [mcpUrl].
+         *
+         * Unlike [mcpUrl], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("mcpUrl") @ExcludeMissing fun _mcpUrl(): JsonField<String> = mcpUrl
+
+        /**
+         * Returns the raw JSON value of [sandbox].
+         *
+         * Unlike [sandbox], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("sandbox") @ExcludeMissing fun _sandbox(): JsonField<Sandbox> = sandbox
+
+        /**
+         * Returns the raw JSON value of [signedStreamUrl].
+         *
+         * Unlike [signedStreamUrl], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("signedStreamUrl")
+        @ExcludeMissing
+        fun _signedStreamUrl(): JsonField<String> = signedStreamUrl
+
+        /**
          * Returns the raw JSON value of [targetHttpPortUrlPrefix].
          *
          * Unlike [targetHttpPortUrlPrefix], this method doesn't throw if the JSON field has an
@@ -1071,6 +1182,16 @@ private constructor(
         @JsonProperty("targetHttpPortUrlPrefix")
         @ExcludeMissing
         fun _targetHttpPortUrlPrefix(): JsonField<String> = targetHttpPortUrlPrefix
+
+        /**
+         * Returns the raw JSON value of [terminationReason].
+         *
+         * Unlike [terminationReason], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("terminationReason")
+        @ExcludeMissing
+        fun _terminationReason(): JsonField<String> = terminationReason
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -1106,7 +1227,11 @@ private constructor(
             private var apiUrl: JsonField<String> = JsonMissing.of()
             private var endpointWebSocketUrl: JsonField<String> = JsonMissing.of()
             private var errorMessage: JsonField<String> = JsonMissing.of()
+            private var mcpUrl: JsonField<String> = JsonMissing.of()
+            private var sandbox: JsonField<Sandbox> = JsonMissing.of()
+            private var signedStreamUrl: JsonField<String> = JsonMissing.of()
             private var targetHttpPortUrlPrefix: JsonField<String> = JsonMissing.of()
+            private var terminationReason: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
@@ -1116,7 +1241,11 @@ private constructor(
                 apiUrl = status.apiUrl
                 endpointWebSocketUrl = status.endpointWebSocketUrl
                 errorMessage = status.errorMessage
+                mcpUrl = status.mcpUrl
+                sandbox = status.sandbox
+                signedStreamUrl = status.signedStreamUrl
                 targetHttpPortUrlPrefix = status.targetHttpPortUrlPrefix
+                terminationReason = status.terminationReason
                 additionalProperties = status.additionalProperties.toMutableMap()
             }
 
@@ -1180,6 +1309,42 @@ private constructor(
                 this.errorMessage = errorMessage
             }
 
+            fun mcpUrl(mcpUrl: String) = mcpUrl(JsonField.of(mcpUrl))
+
+            /**
+             * Sets [Builder.mcpUrl] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.mcpUrl] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun mcpUrl(mcpUrl: JsonField<String>) = apply { this.mcpUrl = mcpUrl }
+
+            fun sandbox(sandbox: Sandbox) = sandbox(JsonField.of(sandbox))
+
+            /**
+             * Sets [Builder.sandbox] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.sandbox] with a well-typed [Sandbox] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun sandbox(sandbox: JsonField<Sandbox>) = apply { this.sandbox = sandbox }
+
+            fun signedStreamUrl(signedStreamUrl: String) =
+                signedStreamUrl(JsonField.of(signedStreamUrl))
+
+            /**
+             * Sets [Builder.signedStreamUrl] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.signedStreamUrl] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun signedStreamUrl(signedStreamUrl: JsonField<String>) = apply {
+                this.signedStreamUrl = signedStreamUrl
+            }
+
             fun targetHttpPortUrlPrefix(targetHttpPortUrlPrefix: String) =
                 targetHttpPortUrlPrefix(JsonField.of(targetHttpPortUrlPrefix))
 
@@ -1192,6 +1357,31 @@ private constructor(
              */
             fun targetHttpPortUrlPrefix(targetHttpPortUrlPrefix: JsonField<String>) = apply {
                 this.targetHttpPortUrlPrefix = targetHttpPortUrlPrefix
+            }
+
+            /**
+             * Machine-readable reason the instance was terminated. Always present once state is
+             * "terminated", never present before that. New values may be added over time, so treat
+             * any unrecognized value as "Unknown". Known values:
+             * - "UserRequested": terminated by a delete request to the API.
+             * - "InactivityTimeout": the timeout given in spec.inactivityTimeout elapsed.
+             * - "HardTimeout": the timeout given in spec.hardTimeout elapsed.
+             * - "Unknown": terminated for a cause the platform did not attribute, including
+             *   instances that failed to get ready during creation. See errorMessage for details
+             *   when available.
+             */
+            fun terminationReason(terminationReason: String) =
+                terminationReason(JsonField.of(terminationReason))
+
+            /**
+             * Sets [Builder.terminationReason] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.terminationReason] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun terminationReason(terminationReason: JsonField<String>) = apply {
+                this.terminationReason = terminationReason
             }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -1233,13 +1423,26 @@ private constructor(
                     apiUrl,
                     endpointWebSocketUrl,
                     errorMessage,
+                    mcpUrl,
+                    sandbox,
+                    signedStreamUrl,
                     targetHttpPortUrlPrefix,
+                    terminationReason,
                     additionalProperties.toMutableMap(),
                 )
         }
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws LimrunInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): Status = apply {
             if (validated) {
                 return@apply
@@ -1250,7 +1453,11 @@ private constructor(
             apiUrl()
             endpointWebSocketUrl()
             errorMessage()
+            mcpUrl()
+            sandbox().ifPresent { it.validate() }
+            signedStreamUrl()
             targetHttpPortUrlPrefix()
+            terminationReason()
             validated = true
         }
 
@@ -1275,7 +1482,11 @@ private constructor(
                 (if (apiUrl.asKnown().isPresent) 1 else 0) +
                 (if (endpointWebSocketUrl.asKnown().isPresent) 1 else 0) +
                 (if (errorMessage.asKnown().isPresent) 1 else 0) +
-                (if (targetHttpPortUrlPrefix.asKnown().isPresent) 1 else 0)
+                (if (mcpUrl.asKnown().isPresent) 1 else 0) +
+                (sandbox.asKnown().getOrNull()?.validity() ?: 0) +
+                (if (signedStreamUrl.asKnown().isPresent) 1 else 0) +
+                (if (targetHttpPortUrlPrefix.asKnown().isPresent) 1 else 0) +
+                (if (terminationReason.asKnown().isPresent) 1 else 0)
 
         class State @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
@@ -1386,6 +1597,16 @@ private constructor(
 
             private var validated: Boolean = false
 
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws LimrunInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
+             */
             fun validate(): State = apply {
                 if (validated) {
                     return@apply
@@ -1424,6 +1645,309 @@ private constructor(
             override fun toString() = value.toString()
         }
 
+        class Sandbox
+        @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+        private constructor(
+            private val xcode: JsonField<Xcode>,
+            private val additionalProperties: MutableMap<String, JsonValue>,
+        ) {
+
+            @JsonCreator
+            private constructor(
+                @JsonProperty("xcode") @ExcludeMissing xcode: JsonField<Xcode> = JsonMissing.of()
+            ) : this(xcode, mutableMapOf())
+
+            /**
+             * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if
+             *   the server responded with an unexpected value).
+             */
+            fun xcode(): Optional<Xcode> = xcode.getOptional("xcode")
+
+            /**
+             * Returns the raw JSON value of [xcode].
+             *
+             * Unlike [xcode], this method doesn't throw if the JSON field has an unexpected type.
+             */
+            @JsonProperty("xcode") @ExcludeMissing fun _xcode(): JsonField<Xcode> = xcode
+
+            @JsonAnySetter
+            private fun putAdditionalProperty(key: String, value: JsonValue) {
+                additionalProperties.put(key, value)
+            }
+
+            @JsonAnyGetter
+            @ExcludeMissing
+            fun _additionalProperties(): Map<String, JsonValue> =
+                Collections.unmodifiableMap(additionalProperties)
+
+            fun toBuilder() = Builder().from(this)
+
+            companion object {
+
+                /** Returns a mutable builder for constructing an instance of [Sandbox]. */
+                @JvmStatic fun builder() = Builder()
+            }
+
+            /** A builder for [Sandbox]. */
+            class Builder internal constructor() {
+
+                private var xcode: JsonField<Xcode> = JsonMissing.of()
+                private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+                @JvmSynthetic
+                internal fun from(sandbox: Sandbox) = apply {
+                    xcode = sandbox.xcode
+                    additionalProperties = sandbox.additionalProperties.toMutableMap()
+                }
+
+                fun xcode(xcode: Xcode) = xcode(JsonField.of(xcode))
+
+                /**
+                 * Sets [Builder.xcode] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.xcode] with a well-typed [Xcode] value instead.
+                 * This method is primarily for setting the field to an undocumented or not yet
+                 * supported value.
+                 */
+                fun xcode(xcode: JsonField<Xcode>) = apply { this.xcode = xcode }
+
+                fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
+
+                fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                    additionalProperties.put(key, value)
+                }
+
+                fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                    apply {
+                        this.additionalProperties.putAll(additionalProperties)
+                    }
+
+                fun removeAdditionalProperty(key: String) = apply {
+                    additionalProperties.remove(key)
+                }
+
+                fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
+
+                /**
+                 * Returns an immutable instance of [Sandbox].
+                 *
+                 * Further updates to this [Builder] will not mutate the returned instance.
+                 */
+                fun build(): Sandbox = Sandbox(xcode, additionalProperties.toMutableMap())
+            }
+
+            private var validated: Boolean = false
+
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws LimrunInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
+             */
+            fun validate(): Sandbox = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                xcode().ifPresent { it.validate() }
+                validated = true
+            }
+
+            fun isValid(): Boolean =
+                try {
+                    validate()
+                    true
+                } catch (e: LimrunInvalidDataException) {
+                    false
+                }
+
+            /**
+             * Returns a score indicating how many valid values are contained in this object
+             * recursively.
+             *
+             * Used for best match union deserialization.
+             */
+            @JvmSynthetic
+            internal fun validity(): Int = (xcode.asKnown().getOrNull()?.validity() ?: 0)
+
+            class Xcode
+            @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+            private constructor(
+                private val url: JsonField<String>,
+                private val additionalProperties: MutableMap<String, JsonValue>,
+            ) {
+
+                @JsonCreator
+                private constructor(
+                    @JsonProperty("url") @ExcludeMissing url: JsonField<String> = JsonMissing.of()
+                ) : this(url, mutableMapOf())
+
+                /**
+                 * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g.
+                 *   if the server responded with an unexpected value).
+                 */
+                fun url(): Optional<String> = url.getOptional("url")
+
+                /**
+                 * Returns the raw JSON value of [url].
+                 *
+                 * Unlike [url], this method doesn't throw if the JSON field has an unexpected type.
+                 */
+                @JsonProperty("url") @ExcludeMissing fun _url(): JsonField<String> = url
+
+                @JsonAnySetter
+                private fun putAdditionalProperty(key: String, value: JsonValue) {
+                    additionalProperties.put(key, value)
+                }
+
+                @JsonAnyGetter
+                @ExcludeMissing
+                fun _additionalProperties(): Map<String, JsonValue> =
+                    Collections.unmodifiableMap(additionalProperties)
+
+                fun toBuilder() = Builder().from(this)
+
+                companion object {
+
+                    /** Returns a mutable builder for constructing an instance of [Xcode]. */
+                    @JvmStatic fun builder() = Builder()
+                }
+
+                /** A builder for [Xcode]. */
+                class Builder internal constructor() {
+
+                    private var url: JsonField<String> = JsonMissing.of()
+                    private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+                    @JvmSynthetic
+                    internal fun from(xcode: Xcode) = apply {
+                        url = xcode.url
+                        additionalProperties = xcode.additionalProperties.toMutableMap()
+                    }
+
+                    fun url(url: String) = url(JsonField.of(url))
+
+                    /**
+                     * Sets [Builder.url] to an arbitrary JSON value.
+                     *
+                     * You should usually call [Builder.url] with a well-typed [String] value
+                     * instead. This method is primarily for setting the field to an undocumented or
+                     * not yet supported value.
+                     */
+                    fun url(url: JsonField<String>) = apply { this.url = url }
+
+                    fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                        this.additionalProperties.clear()
+                        putAllAdditionalProperties(additionalProperties)
+                    }
+
+                    fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                        additionalProperties.put(key, value)
+                    }
+
+                    fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                        apply {
+                            this.additionalProperties.putAll(additionalProperties)
+                        }
+
+                    fun removeAdditionalProperty(key: String) = apply {
+                        additionalProperties.remove(key)
+                    }
+
+                    fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                        keys.forEach(::removeAdditionalProperty)
+                    }
+
+                    /**
+                     * Returns an immutable instance of [Xcode].
+                     *
+                     * Further updates to this [Builder] will not mutate the returned instance.
+                     */
+                    fun build(): Xcode = Xcode(url, additionalProperties.toMutableMap())
+                }
+
+                private var validated: Boolean = false
+
+                /**
+                 * Validates that the types of all values in this object match their expected types
+                 * recursively.
+                 *
+                 * This method is _not_ forwards compatible with new types from the API for existing
+                 * fields.
+                 *
+                 * @throws LimrunInvalidDataException if any value type in this object doesn't match
+                 *   its expected type.
+                 */
+                fun validate(): Xcode = apply {
+                    if (validated) {
+                        return@apply
+                    }
+
+                    url()
+                    validated = true
+                }
+
+                fun isValid(): Boolean =
+                    try {
+                        validate()
+                        true
+                    } catch (e: LimrunInvalidDataException) {
+                        false
+                    }
+
+                /**
+                 * Returns a score indicating how many valid values are contained in this object
+                 * recursively.
+                 *
+                 * Used for best match union deserialization.
+                 */
+                @JvmSynthetic internal fun validity(): Int = (if (url.asKnown().isPresent) 1 else 0)
+
+                override fun equals(other: Any?): Boolean {
+                    if (this === other) {
+                        return true
+                    }
+
+                    return other is Xcode &&
+                        url == other.url &&
+                        additionalProperties == other.additionalProperties
+                }
+
+                private val hashCode: Int by lazy { Objects.hash(url, additionalProperties) }
+
+                override fun hashCode(): Int = hashCode
+
+                override fun toString() =
+                    "Xcode{url=$url, additionalProperties=$additionalProperties}"
+            }
+
+            override fun equals(other: Any?): Boolean {
+                if (this === other) {
+                    return true
+                }
+
+                return other is Sandbox &&
+                    xcode == other.xcode &&
+                    additionalProperties == other.additionalProperties
+            }
+
+            private val hashCode: Int by lazy { Objects.hash(xcode, additionalProperties) }
+
+            override fun hashCode(): Int = hashCode
+
+            override fun toString() =
+                "Sandbox{xcode=$xcode, additionalProperties=$additionalProperties}"
+        }
+
         override fun equals(other: Any?): Boolean {
             if (this === other) {
                 return true
@@ -1435,7 +1959,11 @@ private constructor(
                 apiUrl == other.apiUrl &&
                 endpointWebSocketUrl == other.endpointWebSocketUrl &&
                 errorMessage == other.errorMessage &&
+                mcpUrl == other.mcpUrl &&
+                sandbox == other.sandbox &&
+                signedStreamUrl == other.signedStreamUrl &&
                 targetHttpPortUrlPrefix == other.targetHttpPortUrlPrefix &&
+                terminationReason == other.terminationReason &&
                 additionalProperties == other.additionalProperties
         }
 
@@ -1446,7 +1974,11 @@ private constructor(
                 apiUrl,
                 endpointWebSocketUrl,
                 errorMessage,
+                mcpUrl,
+                sandbox,
+                signedStreamUrl,
                 targetHttpPortUrlPrefix,
+                terminationReason,
                 additionalProperties,
             )
         }
@@ -1454,7 +1986,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Status{token=$token, state=$state, apiUrl=$apiUrl, endpointWebSocketUrl=$endpointWebSocketUrl, errorMessage=$errorMessage, targetHttpPortUrlPrefix=$targetHttpPortUrlPrefix, additionalProperties=$additionalProperties}"
+            "Status{token=$token, state=$state, apiUrl=$apiUrl, endpointWebSocketUrl=$endpointWebSocketUrl, errorMessage=$errorMessage, mcpUrl=$mcpUrl, sandbox=$sandbox, signedStreamUrl=$signedStreamUrl, targetHttpPortUrlPrefix=$targetHttpPortUrlPrefix, terminationReason=$terminationReason, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

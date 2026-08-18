@@ -32,6 +32,7 @@ internal class IosInstanceCreateParamsTest {
                             .clientIp("clientIp")
                             .build()
                     )
+                    .forceBundleId("x")
                     .hardTimeout("hardTimeout")
                     .inactivityTimeout("inactivityTimeout")
                     .addInitialAsset(
@@ -40,6 +41,7 @@ internal class IosInstanceCreateParamsTest {
                             .source(IosInstanceCreateParams.Spec.InitialAsset.Source.URL)
                             .assetId("assetId")
                             .assetName("assetName")
+                            .encryptionKey("encryptionKey")
                             .launchMode(
                                 IosInstanceCreateParams.Spec.InitialAsset.LaunchMode
                                     .FOREGROUND_IF_RUNNING
@@ -47,7 +49,18 @@ internal class IosInstanceCreateParamsTest {
                             .url("url")
                             .build()
                     )
+                    .jurisdiction(IosInstanceCreateParams.Spec.Jurisdiction.US)
+                    .model(IosInstanceCreateParams.Spec.Model.IPHONE)
                     .region("region")
+                    .sandbox(
+                        IosInstanceCreateParams.Spec.Sandbox.builder()
+                            .xcode(
+                                IosInstanceCreateParams.Spec.Sandbox.Xcode.builder()
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .build()
+                    )
                     .build()
             )
             .build()
@@ -77,6 +90,7 @@ internal class IosInstanceCreateParamsTest {
                                 .clientIp("clientIp")
                                 .build()
                         )
+                        .forceBundleId("x")
                         .hardTimeout("hardTimeout")
                         .inactivityTimeout("inactivityTimeout")
                         .addInitialAsset(
@@ -85,6 +99,7 @@ internal class IosInstanceCreateParamsTest {
                                 .source(IosInstanceCreateParams.Spec.InitialAsset.Source.URL)
                                 .assetId("assetId")
                                 .assetName("assetName")
+                                .encryptionKey("encryptionKey")
                                 .launchMode(
                                     IosInstanceCreateParams.Spec.InitialAsset.LaunchMode
                                         .FOREGROUND_IF_RUNNING
@@ -92,7 +107,18 @@ internal class IosInstanceCreateParamsTest {
                                 .url("url")
                                 .build()
                         )
+                        .jurisdiction(IosInstanceCreateParams.Spec.Jurisdiction.US)
+                        .model(IosInstanceCreateParams.Spec.Model.IPHONE)
                         .region("region")
+                        .sandbox(
+                            IosInstanceCreateParams.Spec.Sandbox.builder()
+                                .xcode(
+                                    IosInstanceCreateParams.Spec.Sandbox.Xcode.builder()
+                                        .enabled(true)
+                                        .build()
+                                )
+                                .build()
+                        )
                         .build()
                 )
                 .build()
@@ -138,6 +164,7 @@ internal class IosInstanceCreateParamsTest {
                                 .clientIp("clientIp")
                                 .build()
                         )
+                        .forceBundleId("x")
                         .hardTimeout("hardTimeout")
                         .inactivityTimeout("inactivityTimeout")
                         .addInitialAsset(
@@ -146,6 +173,7 @@ internal class IosInstanceCreateParamsTest {
                                 .source(IosInstanceCreateParams.Spec.InitialAsset.Source.URL)
                                 .assetId("assetId")
                                 .assetName("assetName")
+                                .encryptionKey("encryptionKey")
                                 .launchMode(
                                     IosInstanceCreateParams.Spec.InitialAsset.LaunchMode
                                         .FOREGROUND_IF_RUNNING
@@ -153,7 +181,18 @@ internal class IosInstanceCreateParamsTest {
                                 .url("url")
                                 .build()
                         )
+                        .jurisdiction(IosInstanceCreateParams.Spec.Jurisdiction.US)
+                        .model(IosInstanceCreateParams.Spec.Model.IPHONE)
                         .region("region")
+                        .sandbox(
+                            IosInstanceCreateParams.Spec.Sandbox.builder()
+                                .xcode(
+                                    IosInstanceCreateParams.Spec.Sandbox.Xcode.builder()
+                                        .enabled(true)
+                                        .build()
+                                )
+                                .build()
+                        )
                         .build()
                 )
                 .build()
@@ -180,6 +219,7 @@ internal class IosInstanceCreateParamsTest {
                             .clientIp("clientIp")
                             .build()
                     )
+                    .forceBundleId("x")
                     .hardTimeout("hardTimeout")
                     .inactivityTimeout("inactivityTimeout")
                     .addInitialAsset(
@@ -188,6 +228,7 @@ internal class IosInstanceCreateParamsTest {
                             .source(IosInstanceCreateParams.Spec.InitialAsset.Source.URL)
                             .assetId("assetId")
                             .assetName("assetName")
+                            .encryptionKey("encryptionKey")
                             .launchMode(
                                 IosInstanceCreateParams.Spec.InitialAsset.LaunchMode
                                     .FOREGROUND_IF_RUNNING
@@ -195,7 +236,18 @@ internal class IosInstanceCreateParamsTest {
                             .url("url")
                             .build()
                     )
+                    .jurisdiction(IosInstanceCreateParams.Spec.Jurisdiction.US)
+                    .model(IosInstanceCreateParams.Spec.Model.IPHONE)
                     .region("region")
+                    .sandbox(
+                        IosInstanceCreateParams.Spec.Sandbox.builder()
+                            .xcode(
+                                IosInstanceCreateParams.Spec.Sandbox.Xcode.builder()
+                                    .enabled(true)
+                                    .build()
+                            )
+                            .build()
+                    )
                     .build()
             )
     }

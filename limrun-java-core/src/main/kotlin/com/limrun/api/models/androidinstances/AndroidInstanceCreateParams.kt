@@ -437,6 +437,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws LimrunInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): Body = apply {
             if (validated) {
                 return@apply
@@ -615,6 +624,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws LimrunInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): Metadata = apply {
             if (validated) {
                 return@apply
@@ -705,6 +723,16 @@ private constructor(
 
             private var validated: Boolean = false
 
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws LimrunInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
+             */
             fun validate(): Labels = apply {
                 if (validated) {
                     return@apply
@@ -774,6 +802,7 @@ private constructor(
         private val hardTimeout: JsonField<String>,
         private val inactivityTimeout: JsonField<String>,
         private val initialAssets: JsonField<List<InitialAsset>>,
+        private val jurisdiction: JsonField<Jurisdiction>,
         private val region: JsonField<String>,
         private val sandbox: JsonField<Sandbox>,
         private val additionalProperties: MutableMap<String, JsonValue>,
@@ -791,6 +820,9 @@ private constructor(
             @JsonProperty("initialAssets")
             @ExcludeMissing
             initialAssets: JsonField<List<InitialAsset>> = JsonMissing.of(),
+            @JsonProperty("jurisdiction")
+            @ExcludeMissing
+            jurisdiction: JsonField<Jurisdiction> = JsonMissing.of(),
             @JsonProperty("region") @ExcludeMissing region: JsonField<String> = JsonMissing.of(),
             @JsonProperty("sandbox") @ExcludeMissing sandbox: JsonField<Sandbox> = JsonMissing.of(),
         ) : this(
@@ -798,6 +830,7 @@ private constructor(
             hardTimeout,
             inactivityTimeout,
             initialAssets,
+            jurisdiction,
             region,
             sandbox,
             mutableMapOf(),
@@ -819,8 +852,9 @@ private constructor(
         fun hardTimeout(): Optional<String> = hardTimeout.getOptional("hardTimeout")
 
         /**
-         * After how many minutes of inactivity should the instance be terminated. Example values
-         * 1m, 10m, 3h. Default is 3m. Providing "0" disables inactivity checks altogether.
+         * After how many minutes of inactivity should the instance be terminated. The timer starts
+         * once the instance becomes ready. Example values 1m, 10m, 3h. Default is 3m. Providing "0"
+         * uses the organization's default inactivity timeout.
          *
          * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
          *   server responded with an unexpected value).
@@ -836,8 +870,32 @@ private constructor(
             initialAssets.getOptional("initialAssets")
 
         /**
-         * The region where the instance will be created. If not given, will be decided based on
-         * scheduling clues and availability.
+         * Restricts scheduling to regions in the given jurisdiction. Unlike region, this is a hard
+         * constraint: the request never overflows to a region outside the jurisdiction and fails
+         * when no region in the jurisdiction has capacity. A region belongs to a jurisdiction when
+         * its name starts with the jurisdiction prefix, e.g. "eu-north1" is in "eu". A region
+         * preference pointing outside the jurisdiction is ignored.
+         *
+         * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun jurisdiction(): Optional<Jurisdiction> = jurisdiction.getOptional("jurisdiction")
+
+        /**
+         * Where the instance will be created. If not given, the region is decided based on
+         * scheduling clues (client IP) and availability.
+         *
+         * A region is a preference, not a hard pin: the request always overflows to every other
+         * available region, ordered by proximity, when the preferred ones are full.
+         *
+         * Accepted values:
+         * * A specific region name (e.g. "us-west1"). It is tried first, then the remaining regions
+         *   in order of proximity to it. Scheduling clues (client IP) are ignored when a region is
+         *   given.
+         * * A region group name (e.g. "us", "eu"). Its member regions are tried first in their
+         *   listed order, then the remaining regions by proximity to the first member.
+         * * A pipe-separated, ordered list of regions (e.g. "us-east1|us-west1"). Those are tried
+         *   first in the given order, then the remaining regions by proximity to the first.
          *
          * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g. if the
          *   server responded with an unexpected value).
@@ -887,6 +945,16 @@ private constructor(
         fun _initialAssets(): JsonField<List<InitialAsset>> = initialAssets
 
         /**
+         * Returns the raw JSON value of [jurisdiction].
+         *
+         * Unlike [jurisdiction], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("jurisdiction")
+        @ExcludeMissing
+        fun _jurisdiction(): JsonField<Jurisdiction> = jurisdiction
+
+        /**
          * Returns the raw JSON value of [region].
          *
          * Unlike [region], this method doesn't throw if the JSON field has an unexpected type.
@@ -925,6 +993,7 @@ private constructor(
             private var hardTimeout: JsonField<String> = JsonMissing.of()
             private var inactivityTimeout: JsonField<String> = JsonMissing.of()
             private var initialAssets: JsonField<MutableList<InitialAsset>>? = null
+            private var jurisdiction: JsonField<Jurisdiction> = JsonMissing.of()
             private var region: JsonField<String> = JsonMissing.of()
             private var sandbox: JsonField<Sandbox> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -935,6 +1004,7 @@ private constructor(
                 hardTimeout = spec.hardTimeout
                 inactivityTimeout = spec.inactivityTimeout
                 initialAssets = spec.initialAssets.map { it.toMutableList() }
+                jurisdiction = spec.jurisdiction
                 region = spec.region
                 sandbox = spec.sandbox
                 additionalProperties = spec.additionalProperties.toMutableMap()
@@ -983,9 +1053,9 @@ private constructor(
             }
 
             /**
-             * After how many minutes of inactivity should the instance be terminated. Example
-             * values 1m, 10m, 3h. Default is 3m. Providing "0" disables inactivity checks
-             * altogether.
+             * After how many minutes of inactivity should the instance be terminated. The timer
+             * starts once the instance becomes ready. Example values 1m, 10m, 3h. Default is 3m.
+             * Providing "0" uses the organization's default inactivity timeout.
              */
             fun inactivityTimeout(inactivityTimeout: String) =
                 inactivityTimeout(JsonField.of(inactivityTimeout))
@@ -1028,8 +1098,41 @@ private constructor(
             }
 
             /**
-             * The region where the instance will be created. If not given, will be decided based on
-             * scheduling clues and availability.
+             * Restricts scheduling to regions in the given jurisdiction. Unlike region, this is a
+             * hard constraint: the request never overflows to a region outside the jurisdiction and
+             * fails when no region in the jurisdiction has capacity. A region belongs to a
+             * jurisdiction when its name starts with the jurisdiction prefix, e.g. "eu-north1" is
+             * in "eu". A region preference pointing outside the jurisdiction is ignored.
+             */
+            fun jurisdiction(jurisdiction: Jurisdiction) = jurisdiction(JsonField.of(jurisdiction))
+
+            /**
+             * Sets [Builder.jurisdiction] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.jurisdiction] with a well-typed [Jurisdiction] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun jurisdiction(jurisdiction: JsonField<Jurisdiction>) = apply {
+                this.jurisdiction = jurisdiction
+            }
+
+            /**
+             * Where the instance will be created. If not given, the region is decided based on
+             * scheduling clues (client IP) and availability.
+             *
+             * A region is a preference, not a hard pin: the request always overflows to every other
+             * available region, ordered by proximity, when the preferred ones are full.
+             *
+             * Accepted values:
+             * * A specific region name (e.g. "us-west1"). It is tried first, then the remaining
+             *   regions in order of proximity to it. Scheduling clues (client IP) are ignored when
+             *   a region is given.
+             * * A region group name (e.g. "us", "eu"). Its member regions are tried first in their
+             *   listed order, then the remaining regions by proximity to the first member.
+             * * A pipe-separated, ordered list of regions (e.g. "us-east1|us-west1"). Those are
+             *   tried first in the given order, then the remaining regions by proximity to the
+             *   first.
              */
             fun region(region: String) = region(JsonField.of(region))
 
@@ -1083,6 +1186,7 @@ private constructor(
                     hardTimeout,
                     inactivityTimeout,
                     (initialAssets ?: JsonMissing.of()).map { it.toImmutable() },
+                    jurisdiction,
                     region,
                     sandbox,
                     additionalProperties.toMutableMap(),
@@ -1091,6 +1195,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws LimrunInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): Spec = apply {
             if (validated) {
                 return@apply
@@ -1100,6 +1213,7 @@ private constructor(
             hardTimeout()
             inactivityTimeout()
             initialAssets().ifPresent { it.forEach { it.validate() } }
+            jurisdiction().ifPresent { it.validate() }
             region()
             sandbox().ifPresent { it.validate() }
             validated = true
@@ -1125,6 +1239,7 @@ private constructor(
                 (if (hardTimeout.asKnown().isPresent) 1 else 0) +
                 (if (inactivityTimeout.asKnown().isPresent) 1 else 0) +
                 (initialAssets.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+                (jurisdiction.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (region.asKnown().isPresent) 1 else 0) +
                 (sandbox.asKnown().getOrNull()?.validity() ?: 0)
 
@@ -1314,6 +1429,16 @@ private constructor(
 
             private var validated: Boolean = false
 
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws LimrunInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
+             */
             fun validate(): Clue = apply {
                 if (validated) {
                     return@apply
@@ -1437,6 +1562,16 @@ private constructor(
 
                 private var validated: Boolean = false
 
+                /**
+                 * Validates that the types of all values in this object match their expected types
+                 * recursively.
+                 *
+                 * This method is _not_ forwards compatible with new types from the API for existing
+                 * fields.
+                 *
+                 * @throws LimrunInvalidDataException if any value type in this object doesn't match
+                 *   its expected type.
+                 */
                 fun validate(): Kind = apply {
                     if (validated) {
                         return@apply
@@ -1897,6 +2032,16 @@ private constructor(
 
             private var validated: Boolean = false
 
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws LimrunInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
+             */
             fun validate(): InitialAsset = apply {
                 if (validated) {
                     return@apply
@@ -2030,6 +2175,16 @@ private constructor(
 
                 private var validated: Boolean = false
 
+                /**
+                 * Validates that the types of all values in this object match their expected types
+                 * recursively.
+                 *
+                 * This method is _not_ forwards compatible with new types from the API for existing
+                 * fields.
+                 *
+                 * @throws LimrunInvalidDataException if any value type in this object doesn't match
+                 *   its expected type.
+                 */
                 fun validate(): Kind = apply {
                     if (validated) {
                         return@apply
@@ -2222,6 +2377,16 @@ private constructor(
 
                 private var validated: Boolean = false
 
+                /**
+                 * Validates that the types of all values in this object match their expected types
+                 * recursively.
+                 *
+                 * This method is _not_ forwards compatible with new types from the API for existing
+                 * fields.
+                 *
+                 * @throws LimrunInvalidDataException if any value type in this object doesn't match
+                 *   its expected type.
+                 */
                 fun validate(): Configuration = apply {
                     if (validated) {
                         return@apply
@@ -2339,6 +2504,16 @@ private constructor(
 
                     private var validated: Boolean = false
 
+                    /**
+                     * Validates that the types of all values in this object match their expected
+                     * types recursively.
+                     *
+                     * This method is _not_ forwards compatible with new types from the API for
+                     * existing fields.
+                     *
+                     * @throws LimrunInvalidDataException if any value type in this object doesn't
+                     *   match its expected type.
+                     */
                     fun validate(): Kind = apply {
                         if (validated) {
                             return@apply
@@ -2473,6 +2648,16 @@ private constructor(
 
                     private var validated: Boolean = false
 
+                    /**
+                     * Validates that the types of all values in this object match their expected
+                     * types recursively.
+                     *
+                     * This method is _not_ forwards compatible with new types from the API for
+                     * existing fields.
+                     *
+                     * @throws LimrunInvalidDataException if any value type in this object doesn't
+                     *   match its expected type.
+                     */
                     fun validate(): ChromeFlag = apply {
                         if (validated) {
                             return@apply
@@ -2644,6 +2829,16 @@ private constructor(
 
                 private var validated: Boolean = false
 
+                /**
+                 * Validates that the types of all values in this object match their expected types
+                 * recursively.
+                 *
+                 * This method is _not_ forwards compatible with new types from the API for existing
+                 * fields.
+                 *
+                 * @throws LimrunInvalidDataException if any value type in this object doesn't match
+                 *   its expected type.
+                 */
                 fun validate(): Source = apply {
                     if (validated) {
                         return@apply
@@ -2717,6 +2912,160 @@ private constructor(
 
             override fun toString() =
                 "InitialAsset{kind=$kind, assetIds=$assetIds, assetName=$assetName, assetNames=$assetNames, configuration=$configuration, source=$source, url=$url, urls=$urls, additionalProperties=$additionalProperties}"
+        }
+
+        /**
+         * Restricts scheduling to regions in the given jurisdiction. Unlike region, this is a hard
+         * constraint: the request never overflows to a region outside the jurisdiction and fails
+         * when no region in the jurisdiction has capacity. A region belongs to a jurisdiction when
+         * its name starts with the jurisdiction prefix, e.g. "eu-north1" is in "eu". A region
+         * preference pointing outside the jurisdiction is ignored.
+         */
+        class Jurisdiction @JsonCreator private constructor(private val value: JsonField<String>) :
+            Enum {
+
+            /**
+             * Returns this class instance's raw value.
+             *
+             * This is usually only useful if this instance was deserialized from data that doesn't
+             * match any known member, and you want to know that value. For example, if the SDK is
+             * on an older version than the API, then the API may respond with new members that the
+             * SDK is unaware of.
+             */
+            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+            companion object {
+
+                @JvmField val US = of("us")
+
+                @JvmField val EU = of("eu")
+
+                @JvmField val AS = of("as")
+
+                @JvmStatic fun of(value: String) = Jurisdiction(JsonField.of(value))
+            }
+
+            /** An enum containing [Jurisdiction]'s known values. */
+            enum class Known {
+                US,
+                EU,
+                AS,
+            }
+
+            /**
+             * An enum containing [Jurisdiction]'s known values, as well as an [_UNKNOWN] member.
+             *
+             * An instance of [Jurisdiction] can contain an unknown value in a couple of cases:
+             * - It was deserialized from data that doesn't match any known member. For example, if
+             *   the SDK is on an older version than the API, then the API may respond with new
+             *   members that the SDK is unaware of.
+             * - It was constructed with an arbitrary value using the [of] method.
+             */
+            enum class Value {
+                US,
+                EU,
+                AS,
+                /**
+                 * An enum member indicating that [Jurisdiction] was instantiated with an unknown
+                 * value.
+                 */
+                _UNKNOWN,
+            }
+
+            /**
+             * Returns an enum member corresponding to this class instance's value, or
+             * [Value._UNKNOWN] if the class was instantiated with an unknown value.
+             *
+             * Use the [known] method instead if you're certain the value is always known or if you
+             * want to throw for the unknown case.
+             */
+            fun value(): Value =
+                when (this) {
+                    US -> Value.US
+                    EU -> Value.EU
+                    AS -> Value.AS
+                    else -> Value._UNKNOWN
+                }
+
+            /**
+             * Returns an enum member corresponding to this class instance's value.
+             *
+             * Use the [value] method instead if you're uncertain the value is always known and
+             * don't want to throw for the unknown case.
+             *
+             * @throws LimrunInvalidDataException if this class instance's value is a not a known
+             *   member.
+             */
+            fun known(): Known =
+                when (this) {
+                    US -> Known.US
+                    EU -> Known.EU
+                    AS -> Known.AS
+                    else -> throw LimrunInvalidDataException("Unknown Jurisdiction: $value")
+                }
+
+            /**
+             * Returns this class instance's primitive wire representation.
+             *
+             * This differs from the [toString] method because that method is primarily for
+             * debugging and generally doesn't throw.
+             *
+             * @throws LimrunInvalidDataException if this class instance's value does not have the
+             *   expected primitive type.
+             */
+            fun asString(): String =
+                _value().asString().orElseThrow {
+                    LimrunInvalidDataException("Value is not a String")
+                }
+
+            private var validated: Boolean = false
+
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws LimrunInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
+             */
+            fun validate(): Jurisdiction = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                known()
+                validated = true
+            }
+
+            fun isValid(): Boolean =
+                try {
+                    validate()
+                    true
+                } catch (e: LimrunInvalidDataException) {
+                    false
+                }
+
+            /**
+             * Returns a score indicating how many valid values are contained in this object
+             * recursively.
+             *
+             * Used for best match union deserialization.
+             */
+            @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+            override fun equals(other: Any?): Boolean {
+                if (this === other) {
+                    return true
+                }
+
+                return other is Jurisdiction && value == other.value
+            }
+
+            override fun hashCode() = value.hashCode()
+
+            override fun toString() = value.toString()
         }
 
         class Sandbox
@@ -2827,6 +3176,16 @@ private constructor(
 
             private var validated: Boolean = false
 
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws LimrunInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
+             */
             fun validate(): Sandbox = apply {
                 if (validated) {
                     return@apply
@@ -2858,6 +3217,7 @@ private constructor(
             @JsonCreator(mode = JsonCreator.Mode.DISABLED)
             private constructor(
                 private val enabled: JsonField<Boolean>,
+                private val version: JsonField<Version>,
                 private val additionalProperties: MutableMap<String, JsonValue>,
             ) {
 
@@ -2865,14 +3225,23 @@ private constructor(
                 private constructor(
                     @JsonProperty("enabled")
                     @ExcludeMissing
-                    enabled: JsonField<Boolean> = JsonMissing.of()
-                ) : this(enabled, mutableMapOf())
+                    enabled: JsonField<Boolean> = JsonMissing.of(),
+                    @JsonProperty("version")
+                    @ExcludeMissing
+                    version: JsonField<Version> = JsonMissing.of(),
+                ) : this(enabled, version, mutableMapOf())
 
                 /**
                  * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g.
                  *   if the server responded with an unexpected value).
                  */
                 fun enabled(): Optional<Boolean> = enabled.getOptional("enabled")
+
+                /**
+                 * @throws LimrunInvalidDataException if the JSON field has an unexpected type (e.g.
+                 *   if the server responded with an unexpected value).
+                 */
+                fun version(): Optional<Version> = version.getOptional("version")
 
                 /**
                  * Returns the raw JSON value of [enabled].
@@ -2883,6 +3252,16 @@ private constructor(
                 @JsonProperty("enabled")
                 @ExcludeMissing
                 fun _enabled(): JsonField<Boolean> = enabled
+
+                /**
+                 * Returns the raw JSON value of [version].
+                 *
+                 * Unlike [version], this method doesn't throw if the JSON field has an unexpected
+                 * type.
+                 */
+                @JsonProperty("version")
+                @ExcludeMissing
+                fun _version(): JsonField<Version> = version
 
                 @JsonAnySetter
                 private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -2909,11 +3288,13 @@ private constructor(
                 class Builder internal constructor() {
 
                     private var enabled: JsonField<Boolean> = JsonMissing.of()
+                    private var version: JsonField<Version> = JsonMissing.of()
                     private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                     @JvmSynthetic
                     internal fun from(playwrightAndroid: PlaywrightAndroid) = apply {
                         enabled = playwrightAndroid.enabled
+                        version = playwrightAndroid.version
                         additionalProperties = playwrightAndroid.additionalProperties.toMutableMap()
                     }
 
@@ -2927,6 +3308,17 @@ private constructor(
                      * not yet supported value.
                      */
                     fun enabled(enabled: JsonField<Boolean>) = apply { this.enabled = enabled }
+
+                    fun version(version: Version) = version(JsonField.of(version))
+
+                    /**
+                     * Sets [Builder.version] to an arbitrary JSON value.
+                     *
+                     * You should usually call [Builder.version] with a well-typed [Version] value
+                     * instead. This method is primarily for setting the field to an undocumented or
+                     * not yet supported value.
+                     */
+                    fun version(version: JsonField<Version>) = apply { this.version = version }
 
                     fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                         this.additionalProperties.clear()
@@ -2956,17 +3348,28 @@ private constructor(
                      * Further updates to this [Builder] will not mutate the returned instance.
                      */
                     fun build(): PlaywrightAndroid =
-                        PlaywrightAndroid(enabled, additionalProperties.toMutableMap())
+                        PlaywrightAndroid(enabled, version, additionalProperties.toMutableMap())
                 }
 
                 private var validated: Boolean = false
 
+                /**
+                 * Validates that the types of all values in this object match their expected types
+                 * recursively.
+                 *
+                 * This method is _not_ forwards compatible with new types from the API for existing
+                 * fields.
+                 *
+                 * @throws LimrunInvalidDataException if any value type in this object doesn't match
+                 *   its expected type.
+                 */
                 fun validate(): PlaywrightAndroid = apply {
                     if (validated) {
                         return@apply
                     }
 
                     enabled()
+                    version().ifPresent { it.validate() }
                     validated = true
                 }
 
@@ -2985,7 +3388,153 @@ private constructor(
                  * Used for best match union deserialization.
                  */
                 @JvmSynthetic
-                internal fun validity(): Int = (if (enabled.asKnown().isPresent) 1 else 0)
+                internal fun validity(): Int =
+                    (if (enabled.asKnown().isPresent) 1 else 0) +
+                        (version.asKnown().getOrNull()?.validity() ?: 0)
+
+                class Version
+                @JsonCreator
+                private constructor(private val value: JsonField<String>) : Enum {
+
+                    /**
+                     * Returns this class instance's raw value.
+                     *
+                     * This is usually only useful if this instance was deserialized from data that
+                     * doesn't match any known member, and you want to know that value. For example,
+                     * if the SDK is on an older version than the API, then the API may respond with
+                     * new members that the SDK is unaware of.
+                     */
+                    @com.fasterxml.jackson.annotation.JsonValue
+                    fun _value(): JsonField<String> = value
+
+                    companion object {
+
+                        @JvmField val _1_56_1_LIM_1 = of("1.56.1-lim.1")
+
+                        @JvmField val _1_60_0_LIM_1 = of("1.60.0-lim.1")
+
+                        @JvmStatic fun of(value: String) = Version(JsonField.of(value))
+                    }
+
+                    /** An enum containing [Version]'s known values. */
+                    enum class Known {
+                        _1_56_1_LIM_1,
+                        _1_60_0_LIM_1,
+                    }
+
+                    /**
+                     * An enum containing [Version]'s known values, as well as an [_UNKNOWN] member.
+                     *
+                     * An instance of [Version] can contain an unknown value in a couple of cases:
+                     * - It was deserialized from data that doesn't match any known member. For
+                     *   example, if the SDK is on an older version than the API, then the API may
+                     *   respond with new members that the SDK is unaware of.
+                     * - It was constructed with an arbitrary value using the [of] method.
+                     */
+                    enum class Value {
+                        _1_56_1_LIM_1,
+                        _1_60_0_LIM_1,
+                        /**
+                         * An enum member indicating that [Version] was instantiated with an unknown
+                         * value.
+                         */
+                        _UNKNOWN,
+                    }
+
+                    /**
+                     * Returns an enum member corresponding to this class instance's value, or
+                     * [Value._UNKNOWN] if the class was instantiated with an unknown value.
+                     *
+                     * Use the [known] method instead if you're certain the value is always known or
+                     * if you want to throw for the unknown case.
+                     */
+                    fun value(): Value =
+                        when (this) {
+                            _1_56_1_LIM_1 -> Value._1_56_1_LIM_1
+                            _1_60_0_LIM_1 -> Value._1_60_0_LIM_1
+                            else -> Value._UNKNOWN
+                        }
+
+                    /**
+                     * Returns an enum member corresponding to this class instance's value.
+                     *
+                     * Use the [value] method instead if you're uncertain the value is always known
+                     * and don't want to throw for the unknown case.
+                     *
+                     * @throws LimrunInvalidDataException if this class instance's value is a not a
+                     *   known member.
+                     */
+                    fun known(): Known =
+                        when (this) {
+                            _1_56_1_LIM_1 -> Known._1_56_1_LIM_1
+                            _1_60_0_LIM_1 -> Known._1_60_0_LIM_1
+                            else -> throw LimrunInvalidDataException("Unknown Version: $value")
+                        }
+
+                    /**
+                     * Returns this class instance's primitive wire representation.
+                     *
+                     * This differs from the [toString] method because that method is primarily for
+                     * debugging and generally doesn't throw.
+                     *
+                     * @throws LimrunInvalidDataException if this class instance's value does not
+                     *   have the expected primitive type.
+                     */
+                    fun asString(): String =
+                        _value().asString().orElseThrow {
+                            LimrunInvalidDataException("Value is not a String")
+                        }
+
+                    private var validated: Boolean = false
+
+                    /**
+                     * Validates that the types of all values in this object match their expected
+                     * types recursively.
+                     *
+                     * This method is _not_ forwards compatible with new types from the API for
+                     * existing fields.
+                     *
+                     * @throws LimrunInvalidDataException if any value type in this object doesn't
+                     *   match its expected type.
+                     */
+                    fun validate(): Version = apply {
+                        if (validated) {
+                            return@apply
+                        }
+
+                        known()
+                        validated = true
+                    }
+
+                    fun isValid(): Boolean =
+                        try {
+                            validate()
+                            true
+                        } catch (e: LimrunInvalidDataException) {
+                            false
+                        }
+
+                    /**
+                     * Returns a score indicating how many valid values are contained in this object
+                     * recursively.
+                     *
+                     * Used for best match union deserialization.
+                     */
+                    @JvmSynthetic
+                    internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+                    override fun equals(other: Any?): Boolean {
+                        if (this === other) {
+                            return true
+                        }
+
+                        return other is Version && value == other.value
+                    }
+
+                    override fun hashCode() = value.hashCode()
+
+                    override fun toString() = value.toString()
+                }
 
                 override fun equals(other: Any?): Boolean {
                     if (this === other) {
@@ -2994,15 +3543,18 @@ private constructor(
 
                     return other is PlaywrightAndroid &&
                         enabled == other.enabled &&
+                        version == other.version &&
                         additionalProperties == other.additionalProperties
                 }
 
-                private val hashCode: Int by lazy { Objects.hash(enabled, additionalProperties) }
+                private val hashCode: Int by lazy {
+                    Objects.hash(enabled, version, additionalProperties)
+                }
 
                 override fun hashCode(): Int = hashCode
 
                 override fun toString() =
-                    "PlaywrightAndroid{enabled=$enabled, additionalProperties=$additionalProperties}"
+                    "PlaywrightAndroid{enabled=$enabled, version=$version, additionalProperties=$additionalProperties}"
             }
 
             override fun equals(other: Any?): Boolean {
@@ -3035,6 +3587,7 @@ private constructor(
                 hardTimeout == other.hardTimeout &&
                 inactivityTimeout == other.inactivityTimeout &&
                 initialAssets == other.initialAssets &&
+                jurisdiction == other.jurisdiction &&
                 region == other.region &&
                 sandbox == other.sandbox &&
                 additionalProperties == other.additionalProperties
@@ -3046,6 +3599,7 @@ private constructor(
                 hardTimeout,
                 inactivityTimeout,
                 initialAssets,
+                jurisdiction,
                 region,
                 sandbox,
                 additionalProperties,
@@ -3055,7 +3609,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Spec{clues=$clues, hardTimeout=$hardTimeout, inactivityTimeout=$inactivityTimeout, initialAssets=$initialAssets, region=$region, sandbox=$sandbox, additionalProperties=$additionalProperties}"
+            "Spec{clues=$clues, hardTimeout=$hardTimeout, inactivityTimeout=$inactivityTimeout, initialAssets=$initialAssets, jurisdiction=$jurisdiction, region=$region, sandbox=$sandbox, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

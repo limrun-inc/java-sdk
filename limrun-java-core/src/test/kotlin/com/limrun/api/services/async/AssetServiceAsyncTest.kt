@@ -2,35 +2,31 @@
 
 package com.limrun.api.services.async
 
-import com.limrun.api.TestServerExtension
 import com.limrun.api.client.okhttp.LimrunOkHttpClientAsync
 import com.limrun.api.models.assets.AssetGetOrCreateParams
 import com.limrun.api.models.assets.AssetGetParams
 import com.limrun.api.models.assets.AssetListParams
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 
-@ExtendWith(TestServerExtension::class)
 internal class AssetServiceAsyncTest {
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun list() {
-        val client =
-            LimrunOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
-                .build()
+        val client = LimrunOkHttpClientAsync.builder().apiKey("My API Key").build()
         val assetServiceAsync = client.assets()
 
         val assetsFuture =
             assetServiceAsync.list(
                 AssetListParams.builder()
+                    .includeAppStore(true)
                     .includeDownloadUrl(true)
                     .includeUploadUrl(true)
+                    .kindFilter(AssetListParams.KindFilter.APP)
                     .limit(50L)
                     .nameFilter("nameFilter")
+                    .namePrefixFilter("namePrefixFilter")
                     .build()
             )
 
@@ -38,14 +34,10 @@ internal class AssetServiceAsyncTest {
         assets.forEach { it.validate() }
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun delete() {
-        val client =
-            LimrunOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
-                .build()
+        val client = LimrunOkHttpClientAsync.builder().apiKey("My API Key").build()
         val assetServiceAsync = client.assets()
 
         val future = assetServiceAsync.delete("assetId")
@@ -53,14 +45,10 @@ internal class AssetServiceAsyncTest {
         val response = future.get()
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun get() {
-        val client =
-            LimrunOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
-                .build()
+        val client = LimrunOkHttpClientAsync.builder().apiKey("My API Key").build()
         val assetServiceAsync = client.assets()
 
         val assetFuture =
@@ -76,18 +64,21 @@ internal class AssetServiceAsyncTest {
         asset.validate()
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun getOrCreate() {
-        val client =
-            LimrunOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
-                .build()
+        val client = LimrunOkHttpClientAsync.builder().apiKey("My API Key").build()
         val assetServiceAsync = client.assets()
 
         val responseFuture =
-            assetServiceAsync.getOrCreate(AssetGetOrCreateParams.builder().name("name").build())
+            assetServiceAsync.getOrCreate(
+                AssetGetOrCreateParams.builder()
+                    .name("name")
+                    .kind(AssetGetOrCreateParams.Kind.APP)
+                    .platform(AssetGetOrCreateParams.Platform.IOS)
+                    .ttl("ttl")
+                    .build()
+            )
 
         val response = responseFuture.get()
         response.validate()

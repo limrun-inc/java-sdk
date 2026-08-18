@@ -41,8 +41,10 @@ internal class AndroidInstanceTest {
                         .token("token")
                         .state(AndroidInstance.Status.State.UNKNOWN)
                         .adbWebSocketUrl("adbWebSocketUrl")
+                        .apiUrl("apiUrl")
                         .endpointWebSocketUrl("endpointWebSocketUrl")
                         .errorMessage("errorMessage")
+                        .mcpUrl("mcpUrl")
                         .sandbox(
                             AndroidInstance.Status.Sandbox.builder()
                                 .playwrightAndroid(
@@ -52,7 +54,9 @@ internal class AndroidInstanceTest {
                                 )
                                 .build()
                         )
+                        .signedStreamUrl("signedStreamUrl")
                         .targetHttpPortUrlPrefix("targetHttpPortUrlPrefix")
+                        .terminationReason("InactivityTimeout")
                         .build()
                 )
                 .build()
@@ -86,8 +90,10 @@ internal class AndroidInstanceTest {
                     .token("token")
                     .state(AndroidInstance.Status.State.UNKNOWN)
                     .adbWebSocketUrl("adbWebSocketUrl")
+                    .apiUrl("apiUrl")
                     .endpointWebSocketUrl("endpointWebSocketUrl")
                     .errorMessage("errorMessage")
+                    .mcpUrl("mcpUrl")
                     .sandbox(
                         AndroidInstance.Status.Sandbox.builder()
                             .playwrightAndroid(
@@ -97,7 +103,9 @@ internal class AndroidInstanceTest {
                             )
                             .build()
                     )
+                    .signedStreamUrl("signedStreamUrl")
                     .targetHttpPortUrlPrefix("targetHttpPortUrlPrefix")
+                    .terminationReason("InactivityTimeout")
                     .build()
             )
     }
@@ -133,8 +141,10 @@ internal class AndroidInstanceTest {
                         .token("token")
                         .state(AndroidInstance.Status.State.UNKNOWN)
                         .adbWebSocketUrl("adbWebSocketUrl")
+                        .apiUrl("apiUrl")
                         .endpointWebSocketUrl("endpointWebSocketUrl")
                         .errorMessage("errorMessage")
+                        .mcpUrl("mcpUrl")
                         .sandbox(
                             AndroidInstance.Status.Sandbox.builder()
                                 .playwrightAndroid(
@@ -144,7 +154,9 @@ internal class AndroidInstanceTest {
                                 )
                                 .build()
                         )
+                        .signedStreamUrl("signedStreamUrl")
                         .targetHttpPortUrlPrefix("targetHttpPortUrlPrefix")
+                        .terminationReason("InactivityTimeout")
                         .build()
                 )
                 .build()

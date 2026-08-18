@@ -2,25 +2,18 @@
 
 package com.limrun.api.services.blocking
 
-import com.limrun.api.TestServerExtension
 import com.limrun.api.client.okhttp.LimrunOkHttpClient
 import com.limrun.api.core.JsonValue
 import com.limrun.api.models.iosinstances.IosInstanceCreateParams
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 
-@ExtendWith(TestServerExtension::class)
 internal class IosInstanceServiceTest {
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun create() {
-        val client =
-            LimrunOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
-                .build()
+        val client = LimrunOkHttpClient.builder().apiKey("My API Key").build()
         val iosInstanceService = client.iosInstances()
 
         val iosInstance =
@@ -46,6 +39,7 @@ internal class IosInstanceServiceTest {
                                     .clientIp("clientIp")
                                     .build()
                             )
+                            .forceBundleId("x")
                             .hardTimeout("hardTimeout")
                             .inactivityTimeout("inactivityTimeout")
                             .addInitialAsset(
@@ -54,6 +48,7 @@ internal class IosInstanceServiceTest {
                                     .source(IosInstanceCreateParams.Spec.InitialAsset.Source.URL)
                                     .assetId("assetId")
                                     .assetName("assetName")
+                                    .encryptionKey("encryptionKey")
                                     .launchMode(
                                         IosInstanceCreateParams.Spec.InitialAsset.LaunchMode
                                             .FOREGROUND_IF_RUNNING
@@ -61,7 +56,18 @@ internal class IosInstanceServiceTest {
                                     .url("url")
                                     .build()
                             )
+                            .jurisdiction(IosInstanceCreateParams.Spec.Jurisdiction.US)
+                            .model(IosInstanceCreateParams.Spec.Model.IPHONE)
                             .region("region")
+                            .sandbox(
+                                IosInstanceCreateParams.Spec.Sandbox.builder()
+                                    .xcode(
+                                        IosInstanceCreateParams.Spec.Sandbox.Xcode.builder()
+                                            .enabled(true)
+                                            .build()
+                                    )
+                                    .build()
+                            )
                             .build()
                     )
                     .build()
@@ -70,14 +76,10 @@ internal class IosInstanceServiceTest {
         iosInstance.validate()
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun list() {
-        val client =
-            LimrunOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
-                .build()
+        val client = LimrunOkHttpClient.builder().apiKey("My API Key").build()
         val iosInstanceService = client.iosInstances()
 
         val page = iosInstanceService.list()
@@ -85,27 +87,19 @@ internal class IosInstanceServiceTest {
         page.items().forEach { it.validate() }
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun delete() {
-        val client =
-            LimrunOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
-                .build()
+        val client = LimrunOkHttpClient.builder().apiKey("My API Key").build()
         val iosInstanceService = client.iosInstances()
 
         iosInstanceService.delete("id")
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun get() {
-        val client =
-            LimrunOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
-                .build()
+        val client = LimrunOkHttpClient.builder().apiKey("My API Key").build()
         val iosInstanceService = client.iosInstances()
 
         val iosInstance = iosInstanceService.get("id")

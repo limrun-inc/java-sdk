@@ -61,12 +61,18 @@ internal class AndroidInstanceCreateParamsTest {
                             .addUrl("string")
                             .build()
                     )
+                    .jurisdiction(AndroidInstanceCreateParams.Spec.Jurisdiction.US)
                     .region("region")
                     .sandbox(
                         AndroidInstanceCreateParams.Spec.Sandbox.builder()
                             .playwrightAndroid(
                                 AndroidInstanceCreateParams.Spec.Sandbox.PlaywrightAndroid.builder()
                                     .enabled(true)
+                                    .version(
+                                        AndroidInstanceCreateParams.Spec.Sandbox.PlaywrightAndroid
+                                            .Version
+                                            ._1_56_1_LIM_1
+                                    )
                                     .build()
                             )
                             .build()
@@ -131,6 +137,7 @@ internal class AndroidInstanceCreateParamsTest {
                                 .addUrl("string")
                                 .build()
                         )
+                        .jurisdiction(AndroidInstanceCreateParams.Spec.Jurisdiction.US)
                         .region("region")
                         .sandbox(
                             AndroidInstanceCreateParams.Spec.Sandbox.builder()
@@ -138,6 +145,12 @@ internal class AndroidInstanceCreateParamsTest {
                                     AndroidInstanceCreateParams.Spec.Sandbox.PlaywrightAndroid
                                         .builder()
                                         .enabled(true)
+                                        .version(
+                                            AndroidInstanceCreateParams.Spec.Sandbox
+                                                .PlaywrightAndroid
+                                                .Version
+                                                ._1_56_1_LIM_1
+                                        )
                                         .build()
                                 )
                                 .build()
@@ -218,6 +231,7 @@ internal class AndroidInstanceCreateParamsTest {
                                 .addUrl("string")
                                 .build()
                         )
+                        .jurisdiction(AndroidInstanceCreateParams.Spec.Jurisdiction.US)
                         .region("region")
                         .sandbox(
                             AndroidInstanceCreateParams.Spec.Sandbox.builder()
@@ -225,6 +239,12 @@ internal class AndroidInstanceCreateParamsTest {
                                     AndroidInstanceCreateParams.Spec.Sandbox.PlaywrightAndroid
                                         .builder()
                                         .enabled(true)
+                                        .version(
+                                            AndroidInstanceCreateParams.Spec.Sandbox
+                                                .PlaywrightAndroid
+                                                .Version
+                                                ._1_56_1_LIM_1
+                                        )
                                         .build()
                                 )
                                 .build()
@@ -284,12 +304,18 @@ internal class AndroidInstanceCreateParamsTest {
                             .addUrl("string")
                             .build()
                     )
+                    .jurisdiction(AndroidInstanceCreateParams.Spec.Jurisdiction.US)
                     .region("region")
                     .sandbox(
                         AndroidInstanceCreateParams.Spec.Sandbox.builder()
                             .playwrightAndroid(
                                 AndroidInstanceCreateParams.Spec.Sandbox.PlaywrightAndroid.builder()
                                     .enabled(true)
+                                    .version(
+                                        AndroidInstanceCreateParams.Spec.Sandbox.PlaywrightAndroid
+                                            .Version
+                                            ._1_56_1_LIM_1
+                                    )
                                     .build()
                             )
                             .build()

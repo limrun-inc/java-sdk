@@ -2,25 +2,18 @@
 
 package com.limrun.api.services.async
 
-import com.limrun.api.TestServerExtension
 import com.limrun.api.client.okhttp.LimrunOkHttpClientAsync
 import com.limrun.api.core.JsonValue
 import com.limrun.api.models.iosinstances.IosInstanceCreateParams
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 
-@ExtendWith(TestServerExtension::class)
 internal class IosInstanceServiceAsyncTest {
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun create() {
-        val client =
-            LimrunOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
-                .build()
+        val client = LimrunOkHttpClientAsync.builder().apiKey("My API Key").build()
         val iosInstanceServiceAsync = client.iosInstances()
 
         val iosInstanceFuture =
@@ -46,6 +39,7 @@ internal class IosInstanceServiceAsyncTest {
                                     .clientIp("clientIp")
                                     .build()
                             )
+                            .forceBundleId("x")
                             .hardTimeout("hardTimeout")
                             .inactivityTimeout("inactivityTimeout")
                             .addInitialAsset(
@@ -54,6 +48,7 @@ internal class IosInstanceServiceAsyncTest {
                                     .source(IosInstanceCreateParams.Spec.InitialAsset.Source.URL)
                                     .assetId("assetId")
                                     .assetName("assetName")
+                                    .encryptionKey("encryptionKey")
                                     .launchMode(
                                         IosInstanceCreateParams.Spec.InitialAsset.LaunchMode
                                             .FOREGROUND_IF_RUNNING
@@ -61,7 +56,18 @@ internal class IosInstanceServiceAsyncTest {
                                     .url("url")
                                     .build()
                             )
+                            .jurisdiction(IosInstanceCreateParams.Spec.Jurisdiction.US)
+                            .model(IosInstanceCreateParams.Spec.Model.IPHONE)
                             .region("region")
+                            .sandbox(
+                                IosInstanceCreateParams.Spec.Sandbox.builder()
+                                    .xcode(
+                                        IosInstanceCreateParams.Spec.Sandbox.Xcode.builder()
+                                            .enabled(true)
+                                            .build()
+                                    )
+                                    .build()
+                            )
                             .build()
                     )
                     .build()
@@ -71,14 +77,10 @@ internal class IosInstanceServiceAsyncTest {
         iosInstance.validate()
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun list() {
-        val client =
-            LimrunOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
-                .build()
+        val client = LimrunOkHttpClientAsync.builder().apiKey("My API Key").build()
         val iosInstanceServiceAsync = client.iosInstances()
 
         val pageFuture = iosInstanceServiceAsync.list()
@@ -87,14 +89,10 @@ internal class IosInstanceServiceAsyncTest {
         page.items().forEach { it.validate() }
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun delete() {
-        val client =
-            LimrunOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
-                .build()
+        val client = LimrunOkHttpClientAsync.builder().apiKey("My API Key").build()
         val iosInstanceServiceAsync = client.iosInstances()
 
         val future = iosInstanceServiceAsync.delete("id")
@@ -102,14 +100,10 @@ internal class IosInstanceServiceAsyncTest {
         val response = future.get()
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun get() {
-        val client =
-            LimrunOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .apiKey("My API Key")
-                .build()
+        val client = LimrunOkHttpClientAsync.builder().apiKey("My API Key").build()
         val iosInstanceServiceAsync = client.iosInstances()
 
         val iosInstanceFuture = iosInstanceServiceAsync.get("id")
